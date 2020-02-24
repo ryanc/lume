@@ -20,5 +20,4 @@ func main() {
 	c.SetState("all", &lifx.State{Power: "on", Color: "green"})
 	time.Sleep(10)
 	c.SetState("all", &lifx.State{Power: "off"})
-	fmt.Println(lifx.EndpointState(lifx.Endpoint))
 }
