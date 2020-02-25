@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -15,19 +16,60 @@ func NewSession(token string) *Session {
 	}
 }
 
-func (s *Session) NewRequest(method, url string, body io.Reader) *http.Request {
-	req, _ := http.NewRequest(method, url, body)
+func (s *Session) NewRequest(method, url string, body io.Reader) (req *http.Request, err error) {
+	req, err = http.NewRequest(method, url, body)
+	if err != nil {
+		return
+	}
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", s.token))
-	return req
+	return
 }
 
-func (s *Session) SetState(selector string, state *State) error {
-	j, _ := json.Marshal(state)
-	req := s.NewRequest("PUT", EndpointState(selector), bytes.NewBuffer(j))
+func (s *Session) Request(method, url string, body io.Reader) ([]Result, error) {
+	req, err := s.NewRequest(method, url, body)
+	if err != nil {
+		return []Result{}, err
+	}
+
 	resp, err := s.Client.Do(req)
 	if err != nil {
-		return err
+		return []Result{}, err
 	}
-	fmt.Println(resp)
-	return nil
+
+	switch resp.StatusCode {
+	case http.StatusAccepted:
+		return []Result{}, nil
+	case http.StatusMultiStatus:
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return []Result{}, err
+		}
+
+		r := Results{}
+		err = json.Unmarshal(body, &r)
+		if err != nil {
+			return []Result{}, err
+		}
+
+		return r.Results, nil
+	}
+	return []Result{}, nil
+}
+
+func (s *Session) SetState(selector string, state *State) ([]Result, error) {
+	j, err := json.Marshal(state)
+	if err != nil {
+		return []Result{}, err
+	}
+
+	res, err := s.Request("PUT", EndpointState(selector), bytes.NewBuffer(j))
+	if err != nil {
+		return []Result{}, err
+	}
+
+	return res, nil
+}
+
+func (s *Session) PowerOff(selector string) {
+	s.SetState(selector, &State{Power: "off"})
 }

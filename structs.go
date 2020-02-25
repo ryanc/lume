@@ -21,4 +21,14 @@ type (
 		token   string
 		Client  *http.Client
 	}
+
+	Results struct {
+		Results []Result `json:results`
+	}
+
+	Result struct {
+		ID     string `json:"id"`
+		Label  string `json:"label"`
+		Status string `json:"status"`
+	}
 )
