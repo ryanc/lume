@@ -2,6 +2,7 @@ package lifx
 
 import (
 	"bytes"
+	//"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -9,14 +10,17 @@ import (
 	"net/http"
 )
 
-func NewSession(token string) *Session {
-	return &Session{
+func NewClient(token string) *Client {
+	tr := &http.Transport{
+		//TLSNextProto: make(map[string]func(authority string, c *tls.Conn) http.RoundTripper),
+	}
+	return &Client{
 		token:  token,
-		Client: &http.Client{},
+		Client: &http.Client{Transport: tr},
 	}
 }
 
-func (s *Session) NewRequest(method, url string, body io.Reader) (req *http.Request, err error) {
+func (s *Client) NewRequest(method, url string, body io.Reader) (req *http.Request, err error) {
 	req, err = http.NewRequest(method, url, body)
 	if err != nil {
 		return
@@ -25,7 +29,7 @@ func (s *Session) NewRequest(method, url string, body io.Reader) (req *http.Requ
 	return
 }
 
-func (s *Session) Request(method, url string, body io.Reader) ([]Result, error) {
+func (s *Client) Request(method, url string, body io.Reader) ([]Result, error) {
 	req, err := s.NewRequest(method, url, body)
 	if err != nil {
 		return nil, err
@@ -56,7 +60,7 @@ func (s *Session) Request(method, url string, body io.Reader) ([]Result, error) 
 	return nil, nil
 }
 
-func (s *Session) SetState(selector string, state *State) ([]Result, error) {
+func (s *Client) SetState(selector string, state *State) ([]Result, error) {
 	j, err := json.Marshal(state)
 	if err != nil {
 		return nil, err
@@ -70,7 +74,7 @@ func (s *Session) SetState(selector string, state *State) ([]Result, error) {
 	return res, nil
 }
 
-func (s *Session) Toggle(selector string, duration float64) ([]Result, error) {
+func (s *Client) Toggle(selector string, duration float64) ([]Result, error) {
 	m := make(map[string]interface{})
 	m["duration"] = duration
 	j, err := json.Marshal(m)
@@ -86,19 +90,19 @@ func (s *Session) Toggle(selector string, duration float64) ([]Result, error) {
 	return res, nil
 }
 
-func (s *Session) PowerOff(selector string) ([]Result, error) {
+func (s *Client) PowerOff(selector string) ([]Result, error) {
 	return s.SetState(selector, &State{Power: "off"})
 
 }
 
-func (s *Session) FastPowerOff(selector string) {
+func (s *Client) FastPowerOff(selector string) {
 	s.SetState(selector, &State{Power: "off", Fast: true})
 }
 
-func (s *Session) PowerOn(selector string) ([]Result, error) {
+func (s *Client) PowerOn(selector string) ([]Result, error) {
 	return s.SetState(selector, &State{Power: "on"})
 }
 
-func (s *Session) FastPowerOn(selector string) {
+func (s *Client) FastPowerOn(selector string) {
 	s.SetState(selector, &State{Power: "on", Fast: true})
 }

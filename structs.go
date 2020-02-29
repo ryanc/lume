@@ -16,10 +16,9 @@ type (
 		Fast       bool    `json:"fast,omitempty"`
 	}
 
-	Session struct {
-		BaseUrl string
-		token   string
-		Client  *http.Client
+	Client struct {
+		token  string
+		Client *http.Client
 	}
 
 	Results struct {
