@@ -20,6 +20,8 @@ type (
 		H, K int16
 		S, B float32
 	}
+
+	NamedColor string
 )
 
 func NewRGBColor(r, g, b uint8) (*RGBColor, error) {
@@ -59,4 +61,8 @@ func (c HSBKColor) ColorString() string {
 
 func (c HSBKColor) MarshalText() ([]byte, error) {
 	return []byte(c.ColorString()), nil
+}
+
+func (c NamedColor) ColorString() string {
+	return string(c)
 }
