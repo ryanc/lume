@@ -60,7 +60,7 @@ func (s *Client) Request(method, url string, body io.Reader) ([]Result, error) {
 	return nil, nil
 }
 
-func (s *Client) SetState(selector string, state *State) ([]Result, error) {
+func (s *Client) SetState(selector string, state State) ([]Result, error) {
 	j, err := json.Marshal(state)
 	if err != nil {
 		return nil, err
@@ -89,18 +89,18 @@ func (s *Client) Toggle(selector string, duration float64) ([]Result, error) {
 }
 
 func (s *Client) PowerOff(selector string) ([]Result, error) {
-	return s.SetState(selector, &State{Power: "off"})
+	return s.SetState(selector, State{Power: "off"})
 
 }
 
 func (s *Client) FastPowerOff(selector string) {
-	s.SetState(selector, &State{Power: "off", Fast: true})
+	s.SetState(selector, State{Power: "off", Fast: true})
 }
 
 func (s *Client) PowerOn(selector string) ([]Result, error) {
-	return s.SetState(selector, &State{Power: "on"})
+	return s.SetState(selector, State{Power: "on"})
 }
 
 func (s *Client) FastPowerOn(selector string) {
-	s.SetState(selector, &State{Power: "on", Fast: true})
+	s.SetState(selector, State{Power: "on", Fast: true})
 }
