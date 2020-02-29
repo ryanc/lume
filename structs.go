@@ -28,6 +28,10 @@ type (
 	Result struct {
 		ID     string `json:"id"`
 		Label  string `json:"label"`
-		Status string `json:"status"`
+		Status Status `json:"status"`
+	}
+
+	Toggle struct {
+		Duration float64 `json:"duration,omitempty"`
 	}
 )
