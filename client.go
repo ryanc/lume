@@ -34,22 +34,22 @@ func NewClient(accessToken string) *Client {
 	}
 }
 
-func (s *Client) NewRequest(method, url string, body io.Reader) (req *http.Request, err error) {
+func (c *Client) NewRequest(method, url string, body io.Reader) (req *http.Request, err error) {
 	req, err = http.NewRequest(method, url, body)
 	if err != nil {
 		return
 	}
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", s.accessToken))
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", c.accessToken))
 	return
 }
 
-func (s *Client) Request(method, url string, body io.Reader) ([]Result, error) {
-	req, err := s.NewRequest(method, url, body)
+func (c *Client) Request(method, url string, body io.Reader) ([]Result, error) {
+	req, err := c.NewRequest(method, url, body)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := s.Client.Do(req)
+	resp, err := c.Client.Do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +80,7 @@ func (s *Client) Request(method, url string, body io.Reader) ([]Result, error) {
 	return nil, nil
 }
 
-func (s *Client) SetState(selector string, state State) ([]Result, error) {
+func (c *Client) SetState(selector string, state State) ([]Result, error) {
 	j, err := json.Marshal(state)
 	if err != nil {
 		return nil, err
@@ -88,7 +88,7 @@ func (s *Client) SetState(selector string, state State) ([]Result, error) {
 
 	fmt.Println(string(j))
 
-	res, err := s.Request("PUT", EndpointState(selector), bytes.NewBuffer(j))
+	res, err := c.Request("PUT", EndpointState(selector), bytes.NewBuffer(j))
 	if err != nil {
 		return nil, err
 	}
@@ -96,13 +96,18 @@ func (s *Client) SetState(selector string, state State) ([]Result, error) {
 	return res, nil
 }
 
-func (s *Client) SetStates(states States) ([]Result, error) {
+func (c *Client) FastSetState(selector string, state State) ([]Result, error) {
+	state.Fast = true
+	return c.SetState(selector, state)
+}
+
+func (c *Client) SetStates(states States) ([]Result, error) {
 	j, err := json.Marshal(states)
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := s.Request("PUT", EndpointStates(), bytes.NewBuffer(j))
+	res, err := c.Request("PUT", EndpointStates(), bytes.NewBuffer(j))
 	if err != nil {
 		return nil, err
 	}
@@ -110,13 +115,13 @@ func (s *Client) SetStates(states States) ([]Result, error) {
 	return res, nil
 }
 
-func (s *Client) Toggle(selector string, duration float64) ([]Result, error) {
+func (c *Client) Toggle(selector string, duration float64) ([]Result, error) {
 	j, err := json.Marshal(&Toggle{Duration: duration})
 	if err != nil {
 		return nil, err
 	}
 
-	res, err := s.Request("POST", EndpointToggle(selector), bytes.NewBuffer(j))
+	res, err := c.Request("POST", EndpointToggle(selector), bytes.NewBuffer(j))
 	if err != nil {
 		return nil, err
 	}
@@ -124,18 +129,18 @@ func (s *Client) Toggle(selector string, duration float64) ([]Result, error) {
 	return res, nil
 }
 
-func (s *Client) PowerOff(selector string) ([]Result, error) {
-	return s.SetState(selector, State{Power: "off"})
+func (c *Client) PowerOff(selector string) ([]Result, error) {
+	return c.SetState(selector, State{Power: "off"})
 }
 
-func (s *Client) FastPowerOff(selector string) {
-	s.SetState(selector, State{Power: "off", Fast: true})
+func (c *Client) FastPowerOff(selector string) {
+	c.SetState(selector, State{Power: "off", Fast: true})
 }
 
-func (s *Client) PowerOn(selector string) ([]Result, error) {
-	return s.SetState(selector, State{Power: "on"})
+func (c *Client) PowerOn(selector string) ([]Result, error) {
+	return c.SetState(selector, State{Power: "on"})
 }
 
-func (s *Client) FastPowerOn(selector string) {
-	s.SetState(selector, State{Power: "on", Fast: true})
+func (c *Client) FastPowerOn(selector string) {
+	c.SetState(selector, State{Power: "on", Fast: true})
 }
