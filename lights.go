@@ -7,6 +7,12 @@ import (
 	"fmt"
 )
 
+const (
+	OK       Status = "ok"
+	TimedOut Status = "timed_out"
+	Offline  Status = "offline"
+)
+
 type (
 	Status string
 
@@ -33,6 +39,10 @@ type (
 		Duration float64 `json:"duration,omitempty"`
 	}
 )
+
+func (s Status) Success() bool {
+	return s == OK
+}
 
 func (c *Client) SetState(selector string, state State) ([]Result, error) {
 	j, err := json.Marshal(state)
