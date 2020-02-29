@@ -15,25 +15,6 @@ type (
 type (
 	Status string
 
-	State struct {
-		Power      string  `json:"power,omitempty"`
-		Color      Color   `json:"color,omitempty"`
-		Brightness float64 `json:"brightness,omitempty"`
-		Duration   float64 `json:"duration,omitempty"`
-		Infrared   float64 `json:"infrared,omitempty"`
-		Fast       bool    `json:"fast,omitempty"`
-	}
-
-	StateWithSelector struct {
-		State
-		Selector string `json:"selector"`
-	}
-
-	States struct {
-		States   []StateWithSelector `json:"states",omitempty`
-		Defaults State               `json:"defaults",omitempty`
-	}
-
 	Client struct {
 		accessToken string
 		Client      *http.Client
@@ -47,10 +28,6 @@ type (
 		ID     string `json:"id"`
 		Label  string `json:"label"`
 		Status Status `json:"status"`
-	}
-
-	Toggle struct {
-		Duration float64 `json:"duration,omitempty"`
 	}
 
 	RGBColor struct {
