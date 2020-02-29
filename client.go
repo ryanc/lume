@@ -11,6 +11,19 @@ import (
 	"net/http"
 )
 
+var errorMap = map[int]error{
+	http.StatusNotFound:            errors.New("Selector did not match any lights"),
+	http.StatusUnauthorized:        errors.New("Bad access token"),
+	http.StatusForbidden:           errors.New("Bad OAuth scope"),
+	http.StatusUnprocessableEntity: errors.New("Missing or malformed parameters"),
+	http.StatusUpgradeRequired:     errors.New("HTTP was used to make the request instead of HTTPS. Repeat the request using HTTPS instead"),
+	http.StatusTooManyRequests:     errors.New("The request exceeded a rate limit"),
+	http.StatusInternalServerError: errors.New("Something went wrong on LIFX's end"),
+	http.StatusBadGateway:          errors.New("Something went wrong on LIFX's end"),
+	http.StatusServiceUnavailable:  errors.New("Something went wrong on LIFX's end"),
+	523:                            errors.New("Something went wrong on LIFX's end"),
+}
+
 func NewClient(token string) *Client {
 	tr := &http.Transport{
 		//TLSNextProto: make(map[string]func(authority string, c *tls.Conn) http.RoundTripper),
@@ -42,8 +55,6 @@ func (s *Client) Request(method, url string, body io.Reader) ([]Result, error) {
 	}
 
 	switch resp.StatusCode {
-	case http.StatusNotFound:
-		return nil, errors.New("Selector did not match any lights")
 	case http.StatusAccepted:
 		return nil, nil
 	case http.StatusMultiStatus:
@@ -60,6 +71,12 @@ func (s *Client) Request(method, url string, body io.Reader) ([]Result, error) {
 
 		return r.Results, nil
 	}
+
+	err, ok := errorMap[resp.StatusCode]
+	if ok {
+		return nil, err
+	}
+
 	return nil, nil
 }
 
