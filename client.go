@@ -4,6 +4,7 @@ import (
 	"bytes"
 	//"crypto/tls"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -41,6 +42,8 @@ func (s *Client) Request(method, url string, body io.Reader) ([]Result, error) {
 	}
 
 	switch resp.StatusCode {
+	case http.StatusNotFound:
+		return nil, errors.New("Selector did not match any lights")
 	case http.StatusAccepted:
 		return nil, nil
 	case http.StatusMultiStatus:
