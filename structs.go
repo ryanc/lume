@@ -29,8 +29,8 @@ type (
 	}
 
 	Client struct {
-		token  string
-		Client *http.Client
+		accessToken string
+		Client      *http.Client
 	}
 
 	Results struct {

@@ -24,13 +24,13 @@ var errorMap = map[int]error{
 	523:                            errors.New("Something went wrong on LIFX's end"),
 }
 
-func NewClient(token string) *Client {
+func NewClient(accessToken string) *Client {
 	tr := &http.Transport{
 		//TLSNextProto: make(map[string]func(authority string, c *tls.Conn) http.RoundTripper),
 	}
 	return &Client{
-		token:  token,
-		Client: &http.Client{Transport: tr},
+		accessToken: accessToken,
+		Client:      &http.Client{Transport: tr},
 	}
 }
 
@@ -39,7 +39,7 @@ func (s *Client) NewRequest(method, url string, body io.Reader) (req *http.Reque
 	if err != nil {
 		return
 	}
-	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", s.token))
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", s.accessToken))
 	return
 }
 
