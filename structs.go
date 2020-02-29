@@ -2,7 +2,6 @@ package lifx
 
 import (
 	"fmt"
-	"net/http"
 	"strings"
 )
 
@@ -14,21 +13,6 @@ type (
 
 type (
 	Status string
-
-	Client struct {
-		accessToken string
-		Client      *http.Client
-	}
-
-	Results struct {
-		Results []Result `json:results`
-	}
-
-	Result struct {
-		ID     string `json:"id"`
-		Label  string `json:"label"`
-		Status Status `json:"status"`
-	}
 
 	RGBColor struct {
 		R, G, B uint8
