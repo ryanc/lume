@@ -12,8 +12,6 @@ type (
 )
 
 type (
-	Status string
-
 	RGBColor struct {
 		R, G, B uint8
 	}

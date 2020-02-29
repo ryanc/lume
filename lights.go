@@ -8,6 +8,8 @@ import (
 )
 
 type (
+	Status string
+
 	State struct {
 		Power      string  `json:"power,omitempty"`
 		Color      Color   `json:"color,omitempty"`
