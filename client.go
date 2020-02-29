@@ -86,6 +86,8 @@ func (s *Client) SetState(selector string, state State) ([]Result, error) {
 		return nil, err
 	}
 
+	fmt.Println(string(j))
+
 	res, err := s.Request("PUT", EndpointState(selector), bytes.NewBuffer(j))
 	if err != nil {
 		return nil, err
@@ -124,7 +126,6 @@ func (s *Client) Toggle(selector string, duration float64) ([]Result, error) {
 
 func (s *Client) PowerOff(selector string) ([]Result, error) {
 	return s.SetState(selector, State{Power: "off"})
-
 }
 
 func (s *Client) FastPowerOff(selector string) {
