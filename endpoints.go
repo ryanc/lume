@@ -14,5 +14,10 @@ func BuildURL(rawurl, rawpath string) string {
 
 var (
 	Endpoint      = "https://api.lifx.com/v1"
-	EndpointState = func(selector string) string { return BuildURL(Endpoint, fmt.Sprintf("/lights/%s/state", selector)) }
+	EndpointState = func(selector string) string {
+		return BuildURL(Endpoint, fmt.Sprintf("/lights/%s/state", selector))
+	}
+	EndpointToggle = func(selector string) string {
+		return BuildURL(Endpoint, fmt.Sprintf("/lights/%s/toggle", selector))
+	}
 )
