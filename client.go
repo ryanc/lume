@@ -74,6 +74,20 @@ func (s *Client) SetState(selector string, state State) ([]Result, error) {
 	return res, nil
 }
 
+func (s *Client) SetStates(states States) ([]Result, error) {
+	j, err := json.Marshal(states)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := s.Request("PUT", EndpointStates(), bytes.NewBuffer(j))
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
 func (s *Client) Toggle(selector string, duration float64) ([]Result, error) {
 	j, err := json.Marshal(&Toggle{Duration: duration})
 	if err != nil {

@@ -17,6 +17,9 @@ var (
 	EndpointState = func(selector string) string {
 		return BuildURL(Endpoint, fmt.Sprintf("/lights/%s/state", selector))
 	}
+	EndpointStates = func() string {
+		return BuildURL(Endpoint, "/lights/states")
+	}
 	EndpointToggle = func(selector string) string {
 		return BuildURL(Endpoint, fmt.Sprintf("/lights/%s/toggle", selector))
 	}

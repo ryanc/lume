@@ -18,6 +18,16 @@ type (
 		Fast       bool    `json:"fast,omitempty"`
 	}
 
+	StateWithSelector struct {
+		State
+		Selector string `json:"selector"`
+	}
+
+	States struct {
+		States   []StateWithSelector `json:"states",omitempty`
+		Defaults State               `json:"defaults",omitempty`
+	}
+
 	Client struct {
 		token  string
 		Client *http.Client
