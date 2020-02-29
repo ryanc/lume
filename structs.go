@@ -7,6 +7,8 @@ import (
 const API_BASE_URL = "https://api.lifx.com/v1"
 
 type (
+	Status string
+
 	State struct {
 		Power      string  `json:"power,omitempty"`
 		Color      string  `json:"color,omitempty"`
@@ -35,3 +37,13 @@ type (
 		Duration float64 `json:"duration,omitempty"`
 	}
 )
+
+const (
+	OK       Status = "ok"
+	TimedOut Status = "timed_out"
+	Offline  Status = "offline"
+)
+
+func (s Status) Success() bool {
+	return s == OK
+}
