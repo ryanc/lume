@@ -56,6 +56,7 @@ func (c *Client) NewRequest(method, url string, body io.Reader) (req *http.Reque
 		return
 	}
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", c.accessToken))
+	req.Header.Add("Content-Type", "application/json")
 	return
 }
 
