@@ -10,6 +10,8 @@ import (
 	"net/http"
 )
 
+const UserAgent = "go-lifx"
+
 type (
 	Client struct {
 		accessToken string
@@ -57,6 +59,7 @@ func (c *Client) NewRequest(method, url string, body io.Reader) (req *http.Reque
 	}
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", c.accessToken))
 	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("User-Agent", UserAgent)
 	return
 }
 
