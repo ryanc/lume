@@ -20,6 +20,13 @@ var (
 	EndpointStates = func() string {
 		return BuildURL(Endpoint, "/lights/states")
 	}
+	EndpointColor = func(color string) string {
+		u, _ := url.Parse(BuildURL(Endpoint, "/color"))
+		q := u.Query()
+		q.Set("string", color)
+		u.RawQuery = q.Encode()
+		return u.String()
+	}
 	EndpointToggle = func(selector string) string {
 		return BuildURL(Endpoint, fmt.Sprintf("/lights/%s/toggle", selector))
 	}

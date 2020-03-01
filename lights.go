@@ -4,7 +4,6 @@ import (
 	"bytes"
 	//"crypto/tls"
 	"encoding/json"
-	"fmt"
 )
 
 const (
@@ -50,14 +49,22 @@ func (c *Client) SetState(selector string, state State) ([]Result, error) {
 		return nil, err
 	}
 
-	fmt.Println(string(j))
-
-	res, err := c.Request("PUT", EndpointState(selector), bytes.NewBuffer(j))
+	resp, err := c.Request("PUT", EndpointState(selector), bytes.NewBuffer(j))
 	if err != nil {
 		return nil, err
 	}
 
-	return res, nil
+	if state.Fast {
+		return nil, nil
+	}
+
+	s := &Results{}
+	err = c.UnmarshalResponse(resp, s)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.Results, nil
 }
 
 func (c *Client) FastSetState(selector string, state State) ([]Result, error) {
@@ -71,12 +78,18 @@ func (c *Client) SetStates(states States) ([]Result, error) {
 		return nil, err
 	}
 
-	res, err := c.Request("PUT", EndpointStates(), bytes.NewBuffer(j))
+	resp, err := c.Request("PUT", EndpointStates(), bytes.NewBuffer(j))
 	if err != nil {
 		return nil, err
 	}
 
-	return res, nil
+	s := &Results{}
+	err = c.UnmarshalResponse(resp, s)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.Results, nil
 }
 
 func (c *Client) Toggle(selector string, duration float64) ([]Result, error) {
@@ -85,12 +98,18 @@ func (c *Client) Toggle(selector string, duration float64) ([]Result, error) {
 		return nil, err
 	}
 
-	res, err := c.Request("POST", EndpointToggle(selector), bytes.NewBuffer(j))
+	resp, err := c.Request("POST", EndpointToggle(selector), bytes.NewBuffer(j))
 	if err != nil {
 		return nil, err
 	}
 
-	return res, nil
+	s := &Results{}
+	err = c.UnmarshalResponse(resp, s)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.Results, nil
 }
 
 func (c *Client) PowerOff(selector string) ([]Result, error) {

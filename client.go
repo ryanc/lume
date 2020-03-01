@@ -59,7 +59,7 @@ func (c *Client) NewRequest(method, url string, body io.Reader) (req *http.Reque
 	return
 }
 
-func (c *Client) Request(method, url string, body io.Reader) ([]Result, error) {
+func (c *Client) Request(method, url string, body io.Reader) (*http.Response, error) {
 	req, err := c.NewRequest(method, url, body)
 	if err != nil {
 		return nil, err
@@ -71,27 +71,28 @@ func (c *Client) Request(method, url string, body io.Reader) ([]Result, error) {
 	}
 
 	switch resp.StatusCode {
-	case http.StatusAccepted:
-		return nil, nil
-	case http.StatusMultiStatus:
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			return nil, err
-		}
-
-		r := Results{}
-		err = json.Unmarshal(body, &r)
-		if err != nil {
-			return nil, err
-		}
-
-		return r.Results, nil
+	case http.StatusOK, http.StatusAccepted, http.StatusMultiStatus:
+		return resp, nil
 	}
 
 	err, ok := errorMap[resp.StatusCode]
 	if ok {
-		return nil, err
+		return resp, err
 	}
 
-	return nil, nil
+	return resp, nil
+}
+
+func (c *Client) UnmarshalResponse(resp *http.Response, s interface{}) error {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(body, &s)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -17,8 +17,10 @@ type (
 	}
 
 	HSBKColor struct {
-		H, K int16
-		S, B float32
+		H float32 `json:"hue,omitempty"`
+		S float32 `json:"saturation,omitempty"`
+		B float32 `json:"brightness,omitempty"`
+		K int16   `json:"kelvin,omitempty"`
 	}
 
 	NamedColor string
@@ -45,7 +47,7 @@ func (c RGBColor) Hex() string {
 func (c HSBKColor) ColorString() string {
 	var s []string
 	if c.H >= 0 {
-		s = append(s, fmt.Sprintf("hue:%d", c.H))
+		s = append(s, fmt.Sprintf("hue:%f", c.H))
 	}
 	if c.S >= 0 {
 		s = append(s, fmt.Sprintf("saturation:%g", c.S))
@@ -65,4 +67,19 @@ func (c HSBKColor) MarshalText() ([]byte, error) {
 
 func (c NamedColor) ColorString() string {
 	return string(c)
+}
+
+func (c *Client) ValidateColor(color Color) (Color, error) {
+	resp, err := c.Request("GET", EndpointColor(color.ColorString()), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	s := &HSBKColor{}
+	err = c.UnmarshalResponse(resp, s)
+	if err != nil {
+		return nil, err
+	}
+
+	return s, nil
 }
