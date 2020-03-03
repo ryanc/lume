@@ -26,6 +26,24 @@ type (
 	NamedColor string
 )
 
+var (
+	Candlelight    = HSBKColor{H: 0, S: 0, B: -1, K: 1500}
+	Sunset         = HSBKColor{H: 0, S: 0, B: -1, K: 2000}
+	UltraWarm      = HSBKColor{H: 0, S: 0, B: -1, K: 2500}
+	Incandescent   = HSBKColor{H: 0, S: 0, B: -1, K: 2700}
+	Warm           = HSBKColor{H: 0, S: 0, B: -1, K: 3000}
+	Cool           = HSBKColor{H: 0, S: 0, B: -1, K: 4000}
+	CoolDaylight   = HSBKColor{H: 0, S: 0, B: -1, K: 4500}
+	SoftDaylight   = HSBKColor{H: 0, S: 0, B: -1, K: 5000}
+	Daylight       = HSBKColor{H: 0, S: 0, B: -1, K: 5600}
+	NoonDaylight   = HSBKColor{H: 0, S: 0, B: -1, K: 6000}
+	BrightDaylight = HSBKColor{H: 0, S: 0, B: -1, K: 6500}
+	CloudDaylight  = HSBKColor{H: 0, S: 0, B: -1, K: 7000}
+	BlueDaylight   = HSBKColor{H: 0, S: 0, B: -1, K: 7500}
+	BlueOvercast   = HSBKColor{H: 0, S: 0, B: -1, K: 8000}
+	BlueIce        = HSBKColor{H: 0, S: 0, B: -1, K: 9000}
+)
+
 func NewRGBColor(r, g, b uint8) (*RGBColor, error) {
 	return &RGBColor{R: r, G: g, B: b}, nil
 }
