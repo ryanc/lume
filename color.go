@@ -27,21 +27,21 @@ type (
 )
 
 var (
-	Candlelight    = HSBKColor{H: 0, S: 0, B: -1, K: 1500}
-	Sunset         = HSBKColor{H: 0, S: 0, B: -1, K: 2000}
-	UltraWarm      = HSBKColor{H: 0, S: 0, B: -1, K: 2500}
-	Incandescent   = HSBKColor{H: 0, S: 0, B: -1, K: 2700}
-	Warm           = HSBKColor{H: 0, S: 0, B: -1, K: 3000}
-	Cool           = HSBKColor{H: 0, S: 0, B: -1, K: 4000}
-	CoolDaylight   = HSBKColor{H: 0, S: 0, B: -1, K: 4500}
-	SoftDaylight   = HSBKColor{H: 0, S: 0, B: -1, K: 5000}
-	Daylight       = HSBKColor{H: 0, S: 0, B: -1, K: 5600}
-	NoonDaylight   = HSBKColor{H: 0, S: 0, B: -1, K: 6000}
-	BrightDaylight = HSBKColor{H: 0, S: 0, B: -1, K: 6500}
-	CloudDaylight  = HSBKColor{H: 0, S: 0, B: -1, K: 7000}
-	BlueDaylight   = HSBKColor{H: 0, S: 0, B: -1, K: 7500}
-	BlueOvercast   = HSBKColor{H: 0, S: 0, B: -1, K: 8000}
-	BlueIce        = HSBKColor{H: 0, S: 0, B: -1, K: 9000}
+	Candlelight    = func() *HSBKColor { return &HSBKColor{H: 0, S: 0, K: 1500} }
+	Sunset         = func() *HSBKColor { return &HSBKColor{H: 0, S: 0, K: 2000} }
+	UltraWarm      = func() *HSBKColor { return &HSBKColor{H: 0, S: 0, K: 2500} }
+	Incandescent   = func() *HSBKColor { return &HSBKColor{H: 0, S: 0, K: 2700} }
+	Warm           = func() *HSBKColor { return &HSBKColor{H: 0, S: 0, K: 3000} }
+	Cool           = func() *HSBKColor { return &HSBKColor{H: 0, S: 0, K: 4000} }
+	CoolDaylight   = func() *HSBKColor { return &HSBKColor{H: 0, S: 0, K: 4500} }
+	SoftDaylight   = func() *HSBKColor { return &HSBKColor{H: 0, S: 0, K: 5000} }
+	Daylight       = func() *HSBKColor { return &HSBKColor{H: 0, S: 0, K: 5600} }
+	NoonDaylight   = func() *HSBKColor { return &HSBKColor{H: 0, S: 0, K: 6000} }
+	BrightDaylight = func() *HSBKColor { return &HSBKColor{H: 0, S: 0, K: 6500} }
+	CloudDaylight  = func() *HSBKColor { return &HSBKColor{H: 0, S: 0, K: 7000} }
+	BlueDaylight   = func() *HSBKColor { return &HSBKColor{H: 0, S: 0, K: 7500} }
+	BlueOvercast   = func() *HSBKColor { return &HSBKColor{H: 0, S: 0, K: 8000} }
+	BlueIce        = func() *HSBKColor { return &HSBKColor{H: 0, S: 0, K: 9000} }
 )
 
 func NewRGBColor(r, g, b uint8) (*RGBColor, error) {
