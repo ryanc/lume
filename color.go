@@ -17,10 +17,10 @@ type (
 	}
 
 	HSBKColor struct {
-		H float32 `json:"hue,omitempty"`
-		S float32 `json:"saturation,omitempty"`
-		B float32 `json:"brightness,omitempty"`
-		K int16   `json:"kelvin,omitempty"`
+		H float32 `json:"hue"`
+		S float32 `json:"saturation"`
+		B float32 `json:"brightness"`
+		K int16   `json:"kelvin"`
 	}
 
 	NamedColor string
