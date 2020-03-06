@@ -87,7 +87,11 @@ func (c *Client) Request(method, url string, body io.Reader) (*http.Response, er
 	}
 
 	switch resp.StatusCode {
-	case http.StatusOK, http.StatusAccepted, http.StatusMultiStatus:
+	case http.StatusOK:
+		fallthrough
+	case http.StatusAccepted:
+		fallthrough
+	case http.StatusMultiStatus:
 		return resp, nil
 	}
 
