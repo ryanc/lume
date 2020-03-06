@@ -65,7 +65,7 @@ func (c RGBColor) Hex() string {
 func (c HSBKColor) ColorString() string {
 	var s []string
 	if c.H >= 0 {
-		s = append(s, fmt.Sprintf("hue:%f", c.H))
+		s = append(s, fmt.Sprintf("hue:%g", c.H))
 	}
 	if c.S >= 0 {
 		s = append(s, fmt.Sprintf("saturation:%g", c.S))
