@@ -4,6 +4,8 @@ import (
 	"bytes"
 	//"crypto/tls"
 	"encoding/json"
+	"log"
+	"net/http"
 )
 
 const (
@@ -44,23 +46,33 @@ func (s Status) Success() bool {
 }
 
 func (c *Client) SetState(selector string, state State) ([]Result, error) {
-	j, err := json.Marshal(state)
-	if err != nil {
+	var (
+		err  error
+		s    *Response
+		j    []byte
+		req  *http.Request
+		resp *http.Response
+	)
+
+	if j, err = json.Marshal(state); err != nil {
+		log.Println(err)
 		return nil, err
 	}
 
-	resp, err := c.Request("PUT", EndpointState(selector), bytes.NewBuffer(j))
-	if err != nil {
+	if req, err = c.NewRequest("PUT", EndpointState(selector), bytes.NewBuffer(j)); err != nil {
+		log.Println(err)
 		return nil, err
 	}
 
-	if state.Fast {
-		return nil, nil
+	if resp, err = c.Client.Do(req); err != nil {
+		log.Println(err)
+		return nil, err
 	}
 
-	s := &Results{}
-	err = c.UnmarshalResponse(resp, s)
-	if err != nil {
+	defer resp.Body.Close()
+
+	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
+		log.Println(err)
 		return nil, err
 	}
 
@@ -83,7 +95,7 @@ func (c *Client) SetStates(states States) ([]Result, error) {
 		return nil, err
 	}
 
-	s := &Results{}
+	s := &Response{}
 	err = c.UnmarshalResponse(resp, s)
 	if err != nil {
 		return nil, err
@@ -95,6 +107,7 @@ func (c *Client) SetStates(states States) ([]Result, error) {
 func (c *Client) Toggle(selector string, duration float64) ([]Result, error) {
 	j, err := json.Marshal(&Toggle{Duration: duration})
 	if err != nil {
+		log.Println(err)
 		return nil, err
 	}
 
@@ -103,7 +116,7 @@ func (c *Client) Toggle(selector string, duration float64) ([]Result, error) {
 		return nil, err
 	}
 
-	s := &Results{}
+	s := &Response{}
 	err = c.UnmarshalResponse(resp, s)
 	if err != nil {
 		return nil, err
