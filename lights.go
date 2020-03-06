@@ -71,6 +71,10 @@ func (c *Client) SetState(selector string, state State) ([]Result, error) {
 
 	defer resp.Body.Close()
 
+	if state.Fast && resp.StatusCode == http.StatusAccepted {
+		return nil, nil
+	}
+
 	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
 		log.Println(err)
 		return nil, err
