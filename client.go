@@ -18,14 +18,26 @@ type (
 		Client      *http.Client
 	}
 
-	Results struct {
-		Results []Result `json:results`
-	}
-
 	Result struct {
 		ID     string `json:"id"`
 		Label  string `json:"label"`
 		Status Status `json:"status"`
+	}
+
+	Error struct {
+		Field   string   `json:"field"`
+		Message []string `json:"message"`
+	}
+
+	Warning struct {
+		Warning string `json:"warning"`
+	}
+
+	Response struct {
+		Error    string    `json:"error"`
+		Errors   []Error   `json:"errors"`
+		Warnings []Warning `json:"warnings"`
+		Results  []Result  `json:"results"`
 	}
 )
 
