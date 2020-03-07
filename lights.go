@@ -1,10 +1,8 @@
 package lifx
 
 import (
-	"bytes"
 	//"crypto/tls"
 	"encoding/json"
-	"log"
 	"net/http"
 )
 
@@ -45,30 +43,16 @@ func (s Status) Success() bool {
 	return s == OK
 }
 
-func (c *Client) SetState(selector string, state State) ([]Result, error) {
+func (c *Client) SetState(selector string, state State) (*Response, error) {
 	var (
 		err  error
 		s    *Response
-		j    []byte
-		req  *http.Request
 		resp *http.Response
 	)
 
-	if j, err = json.Marshal(state); err != nil {
-		log.Println(err)
+	if resp, err = c.setStateRequest(selector, state); err != nil {
 		return nil, err
 	}
-
-	if req, err = c.NewRequest("PUT", EndpointState(selector), bytes.NewBuffer(j)); err != nil {
-		log.Println(err)
-		return nil, err
-	}
-
-	if resp, err = c.Client.Do(req); err != nil {
-		log.Println(err)
-		return nil, err
-	}
-
 	defer resp.Body.Close()
 
 	if state.Fast && resp.StatusCode == http.StatusAccepted {
@@ -76,60 +60,56 @@ func (c *Client) SetState(selector string, state State) ([]Result, error) {
 	}
 
 	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
-		log.Println(err)
 		return nil, err
 	}
 
-	return s.Results, nil
+	return s, nil
 }
 
-func (c *Client) FastSetState(selector string, state State) ([]Result, error) {
+func (c *Client) FastSetState(selector string, state State) (*Response, error) {
 	state.Fast = true
 	return c.SetState(selector, state)
 }
 
-func (c *Client) SetStates(states States) ([]Result, error) {
-	j, err := json.Marshal(states)
-	if err != nil {
+func (c *Client) SetStates(selector string, states States) (*Response, error) {
+	var (
+		err  error
+		s    *Response
+		resp *http.Response
+	)
+
+	if resp, err = c.setStatesRequest(selector, states); err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Request("PUT", EndpointStates(), bytes.NewBuffer(j))
-	if err != nil {
-		return nil, err
-	}
-
-	s := &Response{}
-	err = c.UnmarshalResponse(resp, s)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.Results, nil
+	return s, nil
 }
 
-func (c *Client) Toggle(selector string, duration float64) ([]Result, error) {
-	j, err := json.Marshal(&Toggle{Duration: duration})
-	if err != nil {
-		log.Println(err)
+func (c *Client) Toggle(selector string, duration float64) (*Response, error) {
+	var (
+		err  error
+		s    *Response
+		resp *http.Response
+	)
+
+	if resp, err = c.toggleRequest(selector, duration); err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Request("POST", EndpointToggle(selector), bytes.NewBuffer(j))
-	if err != nil {
-		return nil, err
-	}
-
-	s := &Response{}
-	err = c.UnmarshalResponse(resp, s)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.Results, nil
+	return s, nil
 }
 
-func (c *Client) PowerOff(selector string) ([]Result, error) {
+func (c *Client) PowerOff(selector string) (*Response, error) {
 	return c.SetState(selector, State{Power: "off"})
 }
 
@@ -137,7 +117,7 @@ func (c *Client) FastPowerOff(selector string) {
 	c.SetState(selector, State{Power: "off", Fast: true})
 }
 
-func (c *Client) PowerOn(selector string) ([]Result, error) {
+func (c *Client) PowerOn(selector string) (*Response, error) {
 	return c.SetState(selector, State{Power: "on"})
 }
 

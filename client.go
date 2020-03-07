@@ -2,12 +2,13 @@ package lifx
 
 import (
 	//"crypto/tls"
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
+	"net/url"
 )
 
 const UserAgent = "go-lifx"
@@ -75,44 +76,94 @@ func (c *Client) NewRequest(method, url string, body io.Reader) (req *http.Reque
 	return
 }
 
-func (c *Client) Request(method, url string, body io.Reader) (*http.Response, error) {
-	req, err := c.NewRequest(method, url, body)
-	if err != nil {
+func (c *Client) setStateRequest(selector string, state State) (*http.Response, error) {
+	var (
+		err  error
+		j    []byte
+		req  *http.Request
+		resp *http.Response
+	)
+
+	if j, err = json.Marshal(state); err != nil {
 		return nil, err
 	}
 
-	resp, err := c.Client.Do(req)
-	if err != nil {
+	if req, err = c.NewRequest("PUT", EndpointState(selector), bytes.NewBuffer(j)); err != nil {
 		return nil, err
 	}
 
-	switch resp.StatusCode {
-	case http.StatusOK:
-		fallthrough
-	case http.StatusAccepted:
-		fallthrough
-	case http.StatusMultiStatus:
-		return resp, nil
-	}
-
-	err, ok := errorMap[resp.StatusCode]
-	if ok {
-		return resp, err
+	if resp, err = c.Client.Do(req); err != nil {
+		return nil, err
 	}
 
 	return resp, nil
 }
 
-func (c *Client) UnmarshalResponse(resp *http.Response, s interface{}) error {
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return err
+func (c *Client) setStatesRequest(selector string, states States) (*http.Response, error) {
+	var (
+		err  error
+		j    []byte
+		req  *http.Request
+		resp *http.Response
+	)
+
+	if j, err = json.Marshal(states); err != nil {
+		return nil, err
 	}
 
-	err = json.Unmarshal(body, &s)
-	if err != nil {
-		return err
+	if req, err = c.NewRequest("PUT", EndpointStates(), bytes.NewBuffer(j)); err != nil {
+		return nil, err
 	}
 
-	return nil
+	if resp, err = c.Client.Do(req); err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
+func (c *Client) toggleRequest(selector string, duration float64) (*http.Response, error) {
+	var (
+		err  error
+		j    []byte
+		req  *http.Request
+		resp *http.Response
+	)
+
+	if j, err = json.Marshal(&Toggle{Duration: duration}); err != nil {
+		return nil, err
+	}
+
+	if req, err = c.NewRequest("POST", EndpointToggle(selector), bytes.NewBuffer(j)); err != nil {
+		return nil, err
+	}
+
+	if resp, err = c.Client.Do(req); err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
+func (c *Client) validateColor(color Color) (*http.Response, error) {
+	var (
+		err  error
+		req  *http.Request
+		resp *http.Response
+		q    url.Values
+	)
+
+	if req, err = c.NewRequest("GET", EndpointColor(), nil); err != nil {
+		return nil, err
+	}
+
+	q = req.URL.Query()
+	q.Set("string", color.ColorString())
+	req.URL.RawQuery = q.Encode()
+
+	if resp, err = c.Client.Do(req); err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }

@@ -1,7 +1,9 @@
 package lifx
 
 import (
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"strings"
 )
 
@@ -88,14 +90,19 @@ func (c NamedColor) ColorString() string {
 }
 
 func (c *Client) ValidateColor(color Color) (Color, error) {
-	resp, err := c.Request("GET", EndpointColor(color.ColorString()), nil)
-	if err != nil {
+	var (
+		err  error
+		s    *HSBKColor
+		resp *http.Response
+	)
+
+	if resp, err = c.validateColor(color); err != nil {
 		return nil, err
 	}
+	fmt.Println(resp)
+	defer resp.Body.Close()
 
-	s := &HSBKColor{}
-	err = c.UnmarshalResponse(resp, s)
-	if err != nil {
+	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
 		return nil, err
 	}
 
