@@ -15,6 +15,44 @@ const (
 type (
 	Status string
 
+	Selector struct {
+		ID   string `json:"id"`
+		Name string `json:"name"`
+	}
+
+	Product struct {
+		Name         string       `json:"name"`
+		Identifier   string       `json:"identifier"`
+		Company      string       `json:"company"`
+		Capabilities Capabilities `json:"capabilities"`
+	}
+
+	Capabilities struct {
+		HasColor             bool    `json:"has_color"`
+		HasVariableColorTemp bool    `json:"has_variable_color_temp"`
+		HasIR                bool    `json:"has_ir"`
+		HasChain             bool    `json:"has_chain"`
+		HasMultizone         bool    `json:"has_multizone"`
+		MinKelvin            float64 `json:"min_kelvin"`
+		MaxKelvin            float64 `json:"max_kelvin"`
+	}
+
+	Light struct {
+		Id              string    `json:"id"`
+		UUID            string    `json:"uuid"`
+		Label           string    `json:"label"`
+		Connected       bool      `json:"connected"`
+		Power           string    `json:"power"`
+		Color           HSBKColor `json:"color"`
+		Brightness      float64   `json:"brightness"`
+		Effect          string    `json:"effect"`
+		Group           Selector  `json:"group"`
+		Location        Selector  `json:"location"`
+		Product         Product   `json:"product"`
+		LastSeen        string    `json:"last_seen"`
+		SecondsLastSeen float64   `json:"seconds_last_seen"`
+	}
+
 	State struct {
 		Power      string  `json:"power,omitempty"`
 		Color      Color   `json:"color,omitempty"`
@@ -98,6 +136,25 @@ func (c *Client) Toggle(selector string, duration float64) (*Response, error) {
 	)
 
 	if resp, err = c.toggleRequest(selector, duration); err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
+		return nil, err
+	}
+
+	return s, nil
+}
+
+func (c *Client) ListLights(selector string) ([]Light, error) {
+	var (
+		err  error
+		s    []Light
+		resp *http.Response
+	)
+
+	if resp, err = c.listLights(selector); err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()

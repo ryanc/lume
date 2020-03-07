@@ -167,3 +167,21 @@ func (c *Client) validateColor(color Color) (*http.Response, error) {
 
 	return resp, nil
 }
+
+func (c *Client) listLights(selector string) (*http.Response, error) {
+	var (
+		err  error
+		req  *http.Request
+		resp *http.Response
+	)
+
+	if req, err = c.NewRequest("GET", EndpointListLights(selector), nil); err != nil {
+		return nil, err
+	}
+
+	if resp, err = c.Client.Do(req); err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
