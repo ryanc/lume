@@ -62,6 +62,16 @@ type (
 		Fast       bool    `json:"fast,omitempty"`
 	}
 
+	StateDelta struct {
+		Power      *string  `json:"power,omitempty"`
+		Duration   *float64 `json:"duration,omitempty"`
+		Infrared   *float64 `json:"infrared,omitempty"`
+		Hue        *float64 `json:"hue,omitempty"`
+		Saturation *float64 `json:"saturation,omitempty"`
+		Brightness *float64 `json:"brightness,omitempty"`
+		Kelvin     *int     `json:"kelvin,omitempty"`
+	}
+
 	StateWithSelector struct {
 		State
 		Selector string `json:"selector"`
@@ -117,6 +127,25 @@ func (c *Client) SetStates(selector string, states States) (*Response, error) {
 	)
 
 	if resp, err = c.setStatesRequest(selector, states); err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
+		return nil, err
+	}
+
+	return s, nil
+}
+
+func (c *Client) StateDelta(selector string, delta StateDelta) (*Response, error) {
+	var (
+		err  error
+		s    *Response
+		resp *http.Response
+	)
+
+	if resp, err = c.stateDelta(selector, delta); err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()

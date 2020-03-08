@@ -185,3 +185,26 @@ func (c *Client) listLights(selector string) (*http.Response, error) {
 
 	return resp, nil
 }
+
+func (c *Client) stateDelta(selector string, delta StateDelta) (*http.Response, error) {
+	var (
+		err  error
+		j    []byte
+		req  *http.Request
+		resp *http.Response
+	)
+
+	if j, err = json.Marshal(delta); err != nil {
+		return nil, err
+	}
+
+	if req, err = c.NewRequest("POST", EndpointStateDelta(selector), bytes.NewBuffer(j)); err != nil {
+		return nil, err
+	}
+
+	if resp, err = c.Client.Do(req); err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
