@@ -76,7 +76,7 @@ func (c *Client) NewRequest(method, url string, body io.Reader) (req *http.Reque
 	return
 }
 
-func (c *Client) setStateRequest(selector string, state State) (*http.Response, error) {
+func (c *Client) setState(selector string, state State) (*http.Response, error) {
 	var (
 		err  error
 		j    []byte
@@ -99,7 +99,7 @@ func (c *Client) setStateRequest(selector string, state State) (*http.Response, 
 	return resp, nil
 }
 
-func (c *Client) setStatesRequest(selector string, states States) (*http.Response, error) {
+func (c *Client) setStates(selector string, states States) (*http.Response, error) {
 	var (
 		err  error
 		j    []byte
@@ -122,7 +122,7 @@ func (c *Client) setStatesRequest(selector string, states States) (*http.Respons
 	return resp, nil
 }
 
-func (c *Client) toggleRequest(selector string, duration float64) (*http.Response, error) {
+func (c *Client) toggle(selector string, duration float64) (*http.Response, error) {
 	var (
 		err  error
 		j    []byte

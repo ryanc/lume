@@ -98,7 +98,7 @@ func (c *Client) SetState(selector string, state State) (*Response, error) {
 		resp *http.Response
 	)
 
-	if resp, err = c.setStateRequest(selector, state); err != nil {
+	if resp, err = c.setState(selector, state); err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
@@ -126,7 +126,7 @@ func (c *Client) SetStates(selector string, states States) (*Response, error) {
 		resp *http.Response
 	)
 
-	if resp, err = c.setStatesRequest(selector, states); err != nil {
+	if resp, err = c.setStates(selector, states); err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
@@ -164,7 +164,7 @@ func (c *Client) Toggle(selector string, duration float64) (*Response, error) {
 		resp *http.Response
 	)
 
-	if resp, err = c.toggleRequest(selector, duration); err != nil {
+	if resp, err = c.toggle(selector, duration); err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
