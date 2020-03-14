@@ -1,6 +1,6 @@
 .PHONY: build
 build:
-	go build -o lifx ./cmd
+	go build -o lume ./cmd
 
 .PHONY: clean
 clean:
