@@ -29,22 +29,42 @@ type (
 	NamedColor string
 )
 
+const (
+	WhiteCandlelight    = 1500
+	WhiteSunset         = 2000
+	WhiteUltraWarm      = 2500
+	WhiteIncandescent   = 2700
+	WhiteWarm           = 3000
+	WhiteCool           = 4000
+	WhiteCoolDaylight   = 4500
+	WhiteSoftDaylight   = 5000
+	WhiteDaylight       = 5600
+	WhiteNoonDaylight   = 6000
+	WhiteBrightDaylight = 6500
+	WhiteCloudDaylight  = 7000
+	WhiteBlueDaylight   = 7500
+	WhiteBlueOvercast   = 8000
+	WhiteBlueIce        = 9000
+)
+
 var (
-	Candlelight    = func() HSBKColor { c, _ := NewWhite(1500); return c }
-	Sunset         = func() HSBKColor { c, _ := NewWhite(2000); return c }
-	UltraWarm      = func() HSBKColor { c, _ := NewWhite(2500); return c }
-	Incandescent   = func() HSBKColor { c, _ := NewWhite(2700); return c }
-	Warm           = func() HSBKColor { c, _ := NewWhite(3000); return c }
-	Cool           = func() HSBKColor { c, _ := NewWhite(4000); return c }
-	CoolDaylight   = func() HSBKColor { c, _ := NewWhite(4500); return c }
-	SoftDaylight   = func() HSBKColor { c, _ := NewWhite(5000); return c }
-	Daylight       = func() HSBKColor { c, _ := NewWhite(5600); return c }
-	NoonDaylight   = func() HSBKColor { c, _ := NewWhite(6000); return c }
-	BrightDaylight = func() HSBKColor { c, _ := NewWhite(6500); return c }
-	CloudDaylight  = func() HSBKColor { c, _ := NewWhite(7000); return c }
-	BlueDaylight   = func() HSBKColor { c, _ := NewWhite(7500); return c }
-	BlueOvercast   = func() HSBKColor { c, _ := NewWhite(8000); return c }
-	BlueIce        = func() HSBKColor { c, _ := NewWhite(9000); return c }
+	DefaultWhites = map[string]int{
+		"candlelight":    WhiteCandlelight,
+		"sunset":         WhiteSunset,
+		"ultrawarm":      WhiteUltraWarm,
+		"incandesent":    WhiteIncandescent,
+		"warm":           WhiteWarm,
+		"cool":           WhiteCool,
+		"cooldaylight":   WhiteCoolDaylight,
+		"softdaylight":   WhiteSoftDaylight,
+		"daylight":       WhiteDaylight,
+		"noondaylight":   WhiteNoonDaylight,
+		"brightdaylight": WhiteBrightDaylight,
+		"clouddaylight":  WhiteCloudDaylight,
+		"bluedaylight":   WhiteBlueDaylight,
+		"blueovercast":   WhiteBlueOvercast,
+		"blueice":        WhiteBlueIce,
+	}
 )
 
 func NewRGBColor(r, g, b uint8) (*RGBColor, error) {
@@ -87,6 +107,16 @@ func NewWhite(k int16) (HSBKColor, error) {
 	}
 
 	return c, nil
+}
+
+func NewWhiteString(s string) (HSBKColor, error) {
+	k, ok := DefaultWhites[s]
+
+	if !ok {
+		return HSBKColor{}, fmt.Errorf("'%s' is not a valid default white", s)
+	}
+
+	return NewWhite(int16(k))
 }
 
 func (c RGBColor) ColorString() string {
