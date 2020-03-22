@@ -30,21 +30,21 @@ type (
 )
 
 const (
-	WhiteCandlelight    = 1500
-	WhiteSunset         = 2000
-	WhiteUltraWarm      = 2500
-	WhiteIncandescent   = 2700
-	WhiteWarm           = 3000
-	WhiteCool           = 4000
-	WhiteCoolDaylight   = 4500
-	WhiteSoftDaylight   = 5000
-	WhiteDaylight       = 5600
-	WhiteNoonDaylight   = 6000
-	WhiteBrightDaylight = 6500
-	WhiteCloudDaylight  = 7000
-	WhiteBlueDaylight   = 7500
-	WhiteBlueOvercast   = 8000
-	WhiteBlueIce        = 9000
+	KelvinCandlelight    = 1500
+	KelvinSunset         = 2000
+	KelvinUltraWarm      = 2500
+	KelvinIncandescent   = 2700
+	KelvinWarm           = 3000
+	KelvinCool           = 4000
+	KelvinCoolDaylight   = 4500
+	KelvinSoftDaylight   = 5000
+	KelvinDaylight       = 5600
+	KelvinNoonDaylight   = 6000
+	KelvinBrightDaylight = 6500
+	KelvinCloudDaylight  = 7000
+	KelvinBlueDaylight   = 7500
+	KelvinBlueOvercast   = 8000
+	KelvinBlueIce        = 9000
 
 	HueWhite  = 0
 	HueRed    = 0
@@ -59,21 +59,21 @@ const (
 
 var (
 	DefaultWhites = map[string]int{
-		"candlelight":    WhiteCandlelight,
-		"sunset":         WhiteSunset,
-		"ultrawarm":      WhiteUltraWarm,
-		"incandesent":    WhiteIncandescent,
-		"warm":           WhiteWarm,
-		"cool":           WhiteCool,
-		"cooldaylight":   WhiteCoolDaylight,
-		"softdaylight":   WhiteSoftDaylight,
-		"daylight":       WhiteDaylight,
-		"noondaylight":   WhiteNoonDaylight,
-		"brightdaylight": WhiteBrightDaylight,
-		"clouddaylight":  WhiteCloudDaylight,
-		"bluedaylight":   WhiteBlueDaylight,
-		"blueovercast":   WhiteBlueOvercast,
-		"blueice":        WhiteBlueIce,
+		"candlelight":    KelvinCandlelight,
+		"sunset":         KelvinSunset,
+		"ultrawarm":      KelvinUltraWarm,
+		"incandesent":    KelvinIncandescent,
+		"warm":           KelvinWarm,
+		"cool":           KelvinCool,
+		"cooldaylight":   KelvinCoolDaylight,
+		"softdaylight":   KelvinSoftDaylight,
+		"daylight":       KelvinDaylight,
+		"noondaylight":   KelvinNoonDaylight,
+		"brightdaylight": KelvinBrightDaylight,
+		"clouddaylight":  KelvinCloudDaylight,
+		"bluedaylight":   KelvinBlueDaylight,
+		"blueovercast":   KelvinBlueOvercast,
+		"blueice":        KelvinBlueIce,
 	}
 )
 
@@ -137,7 +137,7 @@ func NewWhite(k int16) (HSBKColor, error) {
 	}
 
 	c = HSBKColor{
-		H: Float32Ptr(0.0),
+		H: Float32Ptr(HueWhite),
 		S: Float32Ptr(0.0),
 		K: Int16Ptr(k),
 	}
