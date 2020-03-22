@@ -45,6 +45,16 @@ const (
 	WhiteBlueDaylight   = 7500
 	WhiteBlueOvercast   = 8000
 	WhiteBlueIce        = 9000
+
+	HueWhite  = 0
+	HueRed    = 0
+	HueOrange = 36
+	HueYellow = 60
+	HueGreen  = 120
+	HueCyan   = 180
+	HueBlue   = 250
+	HuePurple = 280
+	HuePink   = 325
 )
 
 var (
@@ -71,6 +81,24 @@ func NewRGBColor(r, g, b uint8) (*RGBColor, error) {
 	return &RGBColor{R: r, G: g, B: b}, nil
 }
 
+func NewHSColor(h, s float32) (HSBKColor, error) {
+	var c HSBKColor
+
+	if h < 0 || h > 360 {
+		return c, errors.New("hue must be between 0.0-360.0")
+	}
+	if s < 0 || s > 1 {
+		return c, errors.New("saturation must be between 0.0-1.0")
+	}
+
+	c = HSBKColor{
+		H: Float32Ptr(h),
+		S: Float32Ptr(s),
+	}
+
+	return c, nil
+}
+
 func NewHSBColor(h, s, b float32) (HSBKColor, error) {
 	var c HSBKColor
 
@@ -92,6 +120,14 @@ func NewHSBColor(h, s, b float32) (HSBKColor, error) {
 
 	return c, nil
 }
+
+func NewRed() (HSBKColor, error)    { return NewHSColor(HueRed, 1) }
+func NewOrange() (HSBKColor, error) { return NewHSColor(HueOrange, 1) }
+func NewYellow() (HSBKColor, error) { return NewHSColor(HueYellow, 1) }
+func NewGreen() (HSBKColor, error)  { return NewHSColor(HueGreen, 1) }
+func NewCyan() (HSBKColor, error)   { return NewHSColor(HueCyan, 1) }
+func NewPurple() (HSBKColor, error) { return NewHSColor(HuePurple, 1) }
+func NewPink() (HSBKColor, error)   { return NewHSColor(HuePink, 1) }
 
 func NewWhite(k int16) (HSBKColor, error) {
 	var c HSBKColor
