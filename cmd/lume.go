@@ -35,6 +35,7 @@ func main() {
 		selector *string
 		r        *lifx.Response
 		err      error
+		color    lifx.HSBKColor
 	)
 
 	accessToken := os.Getenv("LIFX_ACCESS_TOKEN")
@@ -52,6 +53,13 @@ func main() {
 	setStateCommand.String("duration", "", "Set the duration")
 	setStateCommand.String("infrared", "", "Set the infrared brightness")
 	setStateCommand.Bool("fast", false, "Execute fast (no response)")
+
+	setWhiteCommand := flag.NewFlagSet("set-white", flag.ExitOnError)
+	setWhiteCommand.String("name", "", "Set the kelvin by name")
+	setWhiteCommand.String("kelvin", "", "Set the kelvin by value")
+	setWhiteCommand.String("brightness", "", "Set the brightness")
+	setWhiteCommand.String("duration", "", "Set the duration")
+	setWhiteCommand.Bool("fast", false, "Execute fast (no response)")
 
 	flag.Parse()
 
@@ -93,6 +101,43 @@ func main() {
 		}
 		if infrared != "" {
 			state.Infrared, err = strconv.ParseFloat(infrared, 64)
+		}
+		if fast != "" {
+			state.Fast, err = strconv.ParseBool(fast)
+		}
+
+		r, err = c.SetState(*selector, state)
+	case "set-white":
+		setWhiteCommand.Parse(os.Args[4:])
+
+		fs := Flags{setWhiteCommand}
+
+		name := fs.String("name")
+		kelvin := fs.String("kelvin")
+		brightness := fs.String("brightness")
+		duration := fs.String("duration")
+		fast := fs.String("fast")
+
+		state := lifx.State{}
+
+		if name != "" {
+			color, err := lifx.NewWhiteString(name)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+			state.Color = color
+		}
+		if kelvin != "" {
+			k, _ := strconv.ParseInt(kelvin, 10, 16)
+			color, err = lifx.NewWhite(int16(k))
+			state.Color = color
+		}
+		if brightness != "" {
+			state.Brightness, err = strconv.ParseFloat(brightness, 64)
+		}
+		if duration != "" {
+			state.Duration, err = strconv.ParseFloat(duration, 64)
 		}
 		if fast != "" {
 			state.Fast, err = strconv.ParseBool(fast)
