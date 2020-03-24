@@ -6,8 +6,6 @@ import (
 	"os"
 	"strconv"
 	"time"
-
-	fc "github.com/fatih/color"
 )
 
 import (
@@ -221,10 +219,10 @@ func PrintLights(lights []lifx.Light) {
 }
 
 func PowerColor(s string) string {
-	color := fc.New(fc.FgRed).SprintFunc()
+	fs := "\033[1;31m%s\033[0m"
 	if s == "on" {
-		color = fc.New(fc.FgGreen).SprintFunc()
+		fs = "\033[1;32m%s\033[0m"
 	}
 
-	return color(s)
+	return fmt.Sprintf(fs, s)
 }
