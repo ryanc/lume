@@ -88,19 +88,7 @@ func main() {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		calculateWidths(lights)
-		fmt.Printf("total %d\n", len(lights))
-		for _, l := range lights {
-			fmt.Printf(
-				"%*s %*s %*s %*s %*s %-*s\n",
-				idWidth, l.Id,
-				locationWidth, l.Location.Name,
-				groupWidth, l.Group.Name,
-				labelWidth, l.Label,
-				lastSeenWidth, l.LastSeen.Local().Format(time.RFC3339),
-				powerWidth, PowerColor(l.Power),
-			)
-		}
+		PrintLights(lights)
 	case "set-state":
 		setStateCommand.Parse(os.Args[4:])
 
@@ -212,6 +200,23 @@ func calculateWidths(lights []lifx.Light) {
 		if powerWidth < length {
 			powerWidth = length
 		}
+	}
+}
+
+func PrintLights(lights []lifx.Light) {
+	calculateWidths(lights)
+
+	fmt.Printf("total %d\n", len(lights))
+	for _, l := range lights {
+		fmt.Printf(
+			"%*s %*s %*s %*s %*s %-*s\n",
+			idWidth, l.Id,
+			locationWidth, l.Location.Name,
+			groupWidth, l.Group.Name,
+			labelWidth, l.Label,
+			lastSeenWidth, l.LastSeen.Local().Format(time.RFC3339),
+			powerWidth, PowerColor(l.Power),
+		)
 	}
 }
 
