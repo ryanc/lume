@@ -78,6 +78,10 @@ var (
 )
 
 func NewRGBColor(r, g, b uint8) (*RGBColor, error) {
+	if (r < 0 || r > 255) && (g < 0 || r > 255) && (b < 0 || b > 255) {
+		return nil, errors.New("values must be between 0-255")
+	}
+
 	return &RGBColor{R: r, G: g, B: b}, nil
 }
 
