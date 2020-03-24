@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
+
+	fc "github.com/fatih/color"
 )
 
 import (
@@ -33,9 +36,9 @@ func main() {
 	var (
 		command  string
 		selector *string
-		r        *lifx.Response
-		err      error
-		color    lifx.HSBKColor
+		//r        *lifx.Response
+		err   error
+		color lifx.HSBKColor
 	)
 
 	accessToken := os.Getenv("LIFX_ACCESS_TOKEN")
@@ -65,14 +68,29 @@ func main() {
 
 	command = flag.Arg(0)
 
-	fmt.Println(command)
-	fmt.Println(*selector)
-
 	c := lifx.NewClient(accessToken)
 
 	switch command {
 	case "toggle":
-		r, err = c.Toggle(*selector, 1)
+		_, err = c.Toggle(*selector, 1)
+	case "ls":
+		lights, err := c.ListLights(*selector)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		fmt.Printf("total %d\n", len(lights))
+		for _, l := range lights {
+			fmt.Printf(
+				"%*s %*s %*s %*s %*s %-*s\n",
+				IdLen(lights), l.Id,
+				LocationLen(lights), l.Location.Name,
+				GroupLen(lights), l.Group.Name,
+				LabelLen(lights), l.Label,
+				LastSeenLen(lights), l.LastSeen.Local().Format(time.RFC3339),
+				PowerLen(lights), PowerColor(l.Power),
+			)
+		}
 	case "set-state":
 		setStateCommand.Parse(os.Args[4:])
 
@@ -106,7 +124,7 @@ func main() {
 			state.Fast, err = strconv.ParseBool(fast)
 		}
 
-		r, err = c.SetState(*selector, state)
+		_, err = c.SetState(*selector, state)
 	case "set-white":
 		setWhiteCommand.Parse(os.Args[4:])
 
@@ -143,9 +161,79 @@ func main() {
 			state.Fast, err = strconv.ParseBool(fast)
 		}
 
-		r, err = c.SetState(*selector, state)
+		_, err = c.SetState(*selector, state)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+	}
+}
+
+func IdLen(lights []lifx.Light) int {
+	var length int
+	for _, l := range lights {
+		if len(l.Id) > length {
+			length = len(l.Id)
+		}
+	}
+	return length
+}
+
+func LocationLen(lights []lifx.Light) int {
+	var length int
+	for _, l := range lights {
+		if len(l.Location.Name) > length {
+			length = len(l.Location.Name)
+		}
+	}
+	return length
+}
+
+func GroupLen(lights []lifx.Light) int {
+	var length int
+	for _, l := range lights {
+		if len(l.Group.Name) > length {
+			length = len(l.Group.Name)
+		}
+	}
+	return length
+}
+
+func LabelLen(lights []lifx.Light) int {
+	var length int
+	for _, l := range lights {
+		if len(l.Label) > length {
+			length = len(l.Label)
+		}
+	}
+	return length
+}
+
+func LastSeenLen(lights []lifx.Light) int {
+	var length int
+	for _, l := range lights {
+		if len(l.LastSeen.Local().Format(time.RFC3339)) > length {
+			length = len(l.LastSeen.Local().Format(time.RFC3339))
+		}
+	}
+	return length
+}
+
+func PowerLen(lights []lifx.Light) int {
+	var length int
+	for _, l := range lights {
+		if len(l.Power) > length {
+			length = len(l.Power)
+		}
+	}
+	return length
+}
+
+func PowerColor(s string) string {
+	color := fc.New(fc.FgRed).SprintFunc()
+	if s == "on" {
+		color = fc.New(fc.FgGreen).SprintFunc()
 	}
 
-	fmt.Println(r)
-	fmt.Println(err)
+	return color(s)
 }
