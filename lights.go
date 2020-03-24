@@ -17,7 +17,7 @@ type (
 	Status string
 
 	Selector struct {
-		ID   string `json:"id"`
+		Id   string `json:"id"`
 		Name string `json:"name"`
 	}
 
