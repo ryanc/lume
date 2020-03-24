@@ -14,6 +14,15 @@ import (
 	"git.kill0.net/chill9/go-lifx"
 )
 
+var (
+	idWidth       int = 0
+	locationWidth int = 0
+	groupWidth    int = 0
+	labelWidth    int = 0
+	lastSeenWidth int = 0
+	powerWidth    int = 0
+)
+
 type Flags struct {
 	*flag.FlagSet
 }
@@ -79,16 +88,17 @@ func main() {
 			fmt.Println(err)
 			os.Exit(1)
 		}
+		calculateWidths(lights)
 		fmt.Printf("total %d\n", len(lights))
 		for _, l := range lights {
 			fmt.Printf(
 				"%*s %*s %*s %*s %*s %-*s\n",
-				IdLen(lights), l.Id,
-				LocationLen(lights), l.Location.Name,
-				GroupLen(lights), l.Group.Name,
-				LabelLen(lights), l.Label,
-				LastSeenLen(lights), l.LastSeen.Local().Format(time.RFC3339),
-				PowerLen(lights), PowerColor(l.Power),
+				idWidth, l.Id,
+				locationWidth, l.Location.Name,
+				groupWidth, l.Group.Name,
+				labelWidth, l.Label,
+				lastSeenWidth, l.LastSeen.Local().Format(time.RFC3339),
+				powerWidth, PowerColor(l.Power),
 			)
 		}
 	case "set-state":
@@ -169,64 +179,40 @@ func main() {
 	}
 }
 
-func IdLen(lights []lifx.Light) int {
+func calculateWidths(lights []lifx.Light) {
 	var length int
-	for _, l := range lights {
-		if len(l.Id) > length {
-			length = len(l.Id)
-		}
-	}
-	return length
-}
 
-func LocationLen(lights []lifx.Light) int {
-	var length int
 	for _, l := range lights {
-		if len(l.Location.Name) > length {
-			length = len(l.Location.Name)
+		length = len(l.Id)
+		if idWidth < length {
+			idWidth = length
 		}
-	}
-	return length
-}
 
-func GroupLen(lights []lifx.Light) int {
-	var length int
-	for _, l := range lights {
-		if len(l.Group.Name) > length {
-			length = len(l.Group.Name)
+		length = len(l.Location.Name)
+		if locationWidth < length {
+			locationWidth = length
 		}
-	}
-	return length
-}
 
-func LabelLen(lights []lifx.Light) int {
-	var length int
-	for _, l := range lights {
-		if len(l.Label) > length {
-			length = len(l.Label)
+		length = len(l.Group.Name)
+		if groupWidth < length {
+			groupWidth = length
 		}
-	}
-	return length
-}
 
-func LastSeenLen(lights []lifx.Light) int {
-	var length int
-	for _, l := range lights {
-		if len(l.LastSeen.Local().Format(time.RFC3339)) > length {
-			length = len(l.LastSeen.Local().Format(time.RFC3339))
+		length = len(l.Label)
+		if labelWidth < length {
+			labelWidth = length
 		}
-	}
-	return length
-}
 
-func PowerLen(lights []lifx.Light) int {
-	var length int
-	for _, l := range lights {
-		if len(l.Power) > length {
-			length = len(l.Power)
+		length = len(l.LastSeen.Local().Format(time.RFC3339))
+		if lastSeenWidth < length {
+			lastSeenWidth = length
+		}
+
+		length = len(l.Power)
+		if powerWidth < length {
+			powerWidth = length
 		}
 	}
-	return length
 }
 
 func PowerColor(s string) string {
