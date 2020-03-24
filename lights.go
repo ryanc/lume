@@ -4,6 +4,7 @@ import (
 	//"crypto/tls"
 	"encoding/json"
 	"net/http"
+	"time"
 )
 
 const (
@@ -49,7 +50,7 @@ type (
 		Group           Selector  `json:"group"`
 		Location        Selector  `json:"location"`
 		Product         Product   `json:"product"`
-		LastSeen        string    `json:"last_seen"`
+		LastSeen        time.Time `json:"last_seen"`
 		SecondsLastSeen float64   `json:"seconds_last_seen"`
 	}
 
