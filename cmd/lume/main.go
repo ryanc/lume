@@ -5,44 +5,17 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"time"
 )
 
 import (
 	"git.kill0.net/chill9/go-lifx"
+	lumecmd "git.kill0.net/chill9/go-lifx/cmd"
 )
-
-var (
-	idWidth       int = 0
-	locationWidth int = 0
-	groupWidth    int = 0
-	labelWidth    int = 0
-	lastSeenWidth int = 0
-	powerWidth    int = 0
-)
-
-type Flags struct {
-	*flag.FlagSet
-}
-
-func (f Flags) String(name string) string {
-	return f.FlagSet.Lookup(name).Value.String()
-}
-
-func (f Flags) Float64(name string) float64 {
-	val, _ := strconv.ParseFloat(f.String(name), 64)
-	return val
-}
-
-func (f Flags) Bool(name string) bool {
-	val, _ := strconv.ParseBool(f.String(name))
-	return val
-}
 
 func main() {
 	var (
 		command  string
-		selector *string
+		selector string
 		//r        *lifx.Response
 		err   error
 		color lifx.HSBKColor
@@ -54,7 +27,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	selector = flag.String("selector", "all", "LIFX selector")
+	flag.StringVar(&selector, "selector", "all", "LIFX selector")
 
 	setStateCommand := flag.NewFlagSet("set-state", flag.ExitOnError)
 	setStateCommand.String("power", "", "Set the power state (on/off)")
@@ -77,20 +50,19 @@ func main() {
 
 	c := lifx.NewClient(accessToken)
 
+	cmdArgs := lumecmd.CmdArgs{
+		Client: c,
+	}
+
 	switch command {
 	case "toggle":
-		_, err = c.Toggle(*selector, 1)
+		_, err = c.Toggle(selector, 1)
 	case "ls":
-		lights, err := c.ListLights(*selector)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-		PrintLights(lights)
+		lumecmd.LsCmd(cmdArgs)
 	case "set-state":
 		setStateCommand.Parse(os.Args[4:])
 
-		fs := Flags{setStateCommand}
+		fs := lumecmd.Flags{setStateCommand}
 
 		power := fs.String("power")
 		color := fs.String("color")
@@ -120,11 +92,11 @@ func main() {
 			state.Fast, err = strconv.ParseBool(fast)
 		}
 
-		_, err = c.SetState(*selector, state)
+		_, err = c.SetState(selector, state)
 	case "set-white":
 		setWhiteCommand.Parse(os.Args[4:])
 
-		fs := Flags{setWhiteCommand}
+		fs := lumecmd.Flags{setWhiteCommand}
 
 		name := fs.String("name")
 		kelvin := fs.String("kelvin")
@@ -157,72 +129,10 @@ func main() {
 			state.Fast, err = strconv.ParseBool(fast)
 		}
 
-		_, err = c.SetState(*selector, state)
+		_, err = c.SetState(selector, state)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
 	}
-}
-
-func calculateWidths(lights []lifx.Light) {
-	var length int
-
-	for _, l := range lights {
-		length = len(l.Id)
-		if idWidth < length {
-			idWidth = length
-		}
-
-		length = len(l.Location.Name)
-		if locationWidth < length {
-			locationWidth = length
-		}
-
-		length = len(l.Group.Name)
-		if groupWidth < length {
-			groupWidth = length
-		}
-
-		length = len(l.Label)
-		if labelWidth < length {
-			labelWidth = length
-		}
-
-		length = len(l.LastSeen.Local().Format(time.RFC3339))
-		if lastSeenWidth < length {
-			lastSeenWidth = length
-		}
-
-		length = len(l.Power)
-		if powerWidth < length {
-			powerWidth = length
-		}
-	}
-}
-
-func PrintLights(lights []lifx.Light) {
-	calculateWidths(lights)
-
-	fmt.Printf("total %d\n", len(lights))
-	for _, l := range lights {
-		fmt.Printf(
-			"%*s %*s %*s %*s %*s %-*s\n",
-			idWidth, l.Id,
-			locationWidth, l.Location.Name,
-			groupWidth, l.Group.Name,
-			labelWidth, l.Label,
-			lastSeenWidth, l.LastSeen.Local().Format(time.RFC3339),
-			powerWidth, PowerColor(l.Power),
-		)
-	}
-}
-
-func PowerColor(s string) string {
-	fs := "\033[1;31m%s\033[0m"
-	if s == "on" {
-		fs = "\033[1;32m%s\033[0m"
-	}
-
-	return fmt.Sprintf(fs, s)
 }
