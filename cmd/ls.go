@@ -1,6 +1,7 @@
 package lumecmd
 
 import (
+	"flag"
 	"fmt"
 	"time"
 
@@ -16,9 +17,20 @@ var (
 	powerWidth    int = 0
 )
 
+func init() {
+	fs := flag.NewFlagSet("toggle", flag.ExitOnError)
+	fs.String("selector", "all", "Set the selector")
+
+	RegisterCommand("ls", Command{
+		Func:  LsCmd,
+		Flags: fs,
+	})
+}
+
 func LsCmd(args CmdArgs) int {
 	c := args.Client
-	lights, err := c.ListLights(args.Selector)
+	selector := args.Flags.String("selector")
+	lights, err := c.ListLights(selector)
 	if err != nil {
 		fmt.Println(err)
 		return 1
