@@ -14,7 +14,8 @@ var (
 
 func init() {
 	fs := flag.NewFlagSet("toggle", flag.ExitOnError)
-	fs.String("selector", "all", "Set the selector")
+	selector := fs.String("selector", "all", "Set the selector")
+	fs.StringVar(selector, "s", "all", "Set the selector")
 
 	RegisterCommand("ls", Command{
 		Func:  LsCmd,
