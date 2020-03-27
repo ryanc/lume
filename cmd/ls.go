@@ -9,12 +9,7 @@ import (
 )
 
 var (
-	idWidth       int = 0
-	locationWidth int = 0
-	groupWidth    int = 0
-	labelWidth    int = 0
-	lastSeenWidth int = 0
-	powerWidth    int = 0
+	idWidth, locationWidth, groupWidth, labelWidth, lastSeenWidth, powerWidth int
 )
 
 func init() {
