@@ -3,6 +3,7 @@ package lifx
 import (
 	//"crypto/tls"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 )
@@ -88,6 +89,17 @@ type (
 	}
 )
 
+func NewAPIError(resp *http.Response) error {
+	var (
+		s   *Response
+		err error
+	)
+	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
+		return err
+	}
+	return fmt.Errorf("fatal: %s", s.Error)
+}
+
 func (s Status) Success() bool {
 	return s == OK
 }
@@ -170,6 +182,10 @@ func (c *Client) Toggle(selector string, duration float64) (*Response, error) {
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode > 299 {
+		return nil, NewAPIError(resp)
+	}
+
 	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
 		return nil, err
 	}
@@ -188,6 +204,10 @@ func (c *Client) ListLights(selector string) ([]Light, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode > 299 {
+		return nil, NewAPIError(resp)
+	}
 
 	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
 		return nil, err
