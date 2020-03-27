@@ -3,8 +3,6 @@ package lumecmd
 import (
 	"flag"
 	"fmt"
-
-	"git.kill0.net/chill9/go-lifx"
 )
 
 func init() {
@@ -29,43 +27,6 @@ func ToggleCmd(args CmdArgs) int {
 		fmt.Println(err)
 		return 1
 	}
-	PrintResults(r)
+	PrintResults(r.Results)
 	return 0
-}
-
-func PrintResults(resp *lifx.Response) {
-	var length, idWidth, labelWidth, statusWidth int
-
-	for _, r := range resp.Results {
-		length = len(r.Id)
-		if idWidth < length {
-			idWidth = length
-		}
-
-		length = len(r.Label)
-		if labelWidth < length {
-			labelWidth = length
-		}
-
-		length = len(r.Status)
-		if statusWidth < length {
-			statusWidth = length
-		}
-	}
-
-	for _, r := range resp.Results {
-		fmt.Printf("%*s %*s %*s\n",
-			idWidth, r.Id,
-			labelWidth, r.Label,
-			statusWidth, statusColor(r.Status))
-	}
-}
-
-func statusColor(s lifx.Status) string {
-	fs := "\033[1;31m%s\033[0m"
-	if s == "ok" {
-		fs = "\033[1;32m%s\033[0m"
-	}
-
-	return fmt.Sprintf(fs, s)
 }
