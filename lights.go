@@ -89,7 +89,7 @@ type (
 	}
 )
 
-func NewAPIError(resp *http.Response) error {
+func NewApiError(resp *http.Response) error {
 	var (
 		s   *Response
 		err error
@@ -98,6 +98,10 @@ func NewAPIError(resp *http.Response) error {
 		return err
 	}
 	return fmt.Errorf("fatal: %s", s.Error)
+}
+
+func IsApiError(resp *http.Response) bool {
+	return resp.StatusCode > 299
 }
 
 func (s Status) Success() bool {
@@ -182,8 +186,8 @@ func (c *Client) Toggle(selector string, duration float64) (*Response, error) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode > 299 {
-		return nil, NewAPIError(resp)
+	if IsApiError(resp) {
+		return nil, NewApiError(resp)
 	}
 
 	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
@@ -206,7 +210,7 @@ func (c *Client) ListLights(selector string) ([]Light, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode > 299 {
-		return nil, NewAPIError(resp)
+		return nil, NewApiError(resp)
 	}
 
 	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
