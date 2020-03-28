@@ -26,6 +26,18 @@ type Command struct {
 
 var commandRegistry = make(map[string]Command)
 
+var (
+	defaultSelector    string  = "all"
+	defaultDuration    float64 = 1.0
+	defaultPower       string  = ""
+	defaultColor       string  = ""
+	defaultBrightness  string  = ""
+	defaultInfrared    string  = ""
+	defaultFast        bool    = false
+	defaultWhiteKelvin string  = ""
+	defaultWhiteName   string  = ""
+)
+
 func (f Flags) String(name string) string {
 	return f.FlagSet.Lookup(name).Value.String()
 }

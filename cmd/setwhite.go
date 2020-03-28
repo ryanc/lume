@@ -15,26 +15,26 @@ func init() {
 	selector := fs.String("selector", "all", "the selector")
 	fs.StringVar(selector, "s", "all", "the selector")
 
-	power := fs.String("power", "", "power state")
-	fs.StringVar(power, "p", "", "power state")
+	power := fs.String("power", defaultPower, "power state")
+	fs.StringVar(power, "p", defaultPower, "power state")
 
-	kelvin := fs.String("kelvin", "", "kelvin level")
-	fs.StringVar(kelvin, "k", "", "kelvin level")
+	kelvin := fs.String("kelvin", defaultWhiteKelvin, "kelvin level")
+	fs.StringVar(kelvin, "k", defaultWhiteKelvin, "kelvin level")
 
-	name := fs.String("name", "", "named white level")
-	fs.StringVar(name, "n", "", "named white level")
+	name := fs.String("name", defaultWhiteName, "named white level")
+	fs.StringVar(name, "n", defaultWhiteName, "named white level")
 
-	brightness := fs.String("brightness", "", "brightness state")
-	fs.StringVar(brightness, "b", "", "brightness state")
+	brightness := fs.String("brightness", defaultBrightness, "brightness state")
+	fs.StringVar(brightness, "b", defaultBrightness, "brightness state")
 
-	duration := fs.Float64("duration", 1.0, "duration state")
-	fs.Float64Var(duration, "d", 1.0, "duration state")
+	duration := fs.Float64("duration", defaultDuration, "duration state")
+	fs.Float64Var(duration, "d", defaultDuration, "duration state")
 
-	infrared := fs.String("infrared", "", "infrared state")
-	fs.StringVar(infrared, "i", "", "infrared state")
+	infrared := fs.String("infrared", defaultInfrared, "infrared state")
+	fs.StringVar(infrared, "i", defaultInfrared, "infrared state")
 
-	fast := fs.Bool("fast", false, "fast state")
-	fs.BoolVar(fast, "f", false, "fast state")
+	fast := fs.Bool("fast", defaultFast, "fast state")
+	fs.BoolVar(fast, "f", defaultFast, "fast state")
 
 	RegisterCommand(cmdName, Command{
 		Func:  SetWhiteCmd,

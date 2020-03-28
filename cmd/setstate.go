@@ -12,26 +12,26 @@ func init() {
 
 	fs := flag.NewFlagSet(cmdName, flag.ExitOnError)
 
-	selector := fs.String("selector", "all", "Set the selector")
-	fs.StringVar(selector, "s", "all", "Set the selector")
+	selector := fs.String("selector", defaultSelector, "Set the selector")
+	fs.StringVar(selector, "s", defaultSelector, "Set the selector")
 
-	power := fs.String("power", "", "power state")
-	fs.StringVar(power, "p", "", "power state")
+	power := fs.String("power", defaultPower, "power state")
+	fs.StringVar(power, "p", defaultPower, "power state")
 
-	color := fs.String("color", "", "color state")
-	fs.StringVar(color, "c", "", "color state")
+	color := fs.String("color", defaultColor, "color state")
+	fs.StringVar(color, "c", defaultColor, "color state")
 
-	brightness := fs.String("brightness", "", "brightness state")
-	fs.StringVar(brightness, "b", "", "brightness state")
+	brightness := fs.String("brightness", defaultBrightness, "brightness state")
+	fs.StringVar(brightness, "b", defaultBrightness, "brightness state")
 
-	duration := fs.Float64("duration", 1.0, "duration state")
-	fs.Float64Var(duration, "d", 1.0, "duration state")
+	duration := fs.Float64("duration", defaultDuration, "duration state")
+	fs.Float64Var(duration, "d", defaultDuration, "duration state")
 
-	infrared := fs.String("infrared", "", "infrared state")
-	fs.StringVar(infrared, "i", "", "infrared state")
+	infrared := fs.String("infrared", defaultInfrared, "infrared state")
+	fs.StringVar(infrared, "i", defaultInfrared, "infrared state")
 
-	fast := fs.Bool("fast", false, "fast state")
-	fs.BoolVar(fast, "f", false, "fast state")
+	fast := fs.Bool("fast", defaultFast, "fast state")
+	fs.BoolVar(fast, "f", defaultFast, "fast state")
 
 	RegisterCommand(cmdName, Command{
 		Func:  SetStateCmd,

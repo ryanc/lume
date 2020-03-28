@@ -12,8 +12,8 @@ var (
 func init() {
 	var cmdName string = "ls"
 	fs := flag.NewFlagSet(cmdName, flag.ExitOnError)
-	selector := fs.String("selector", "all", "Set the selector")
-	fs.StringVar(selector, "s", "all", "Set the selector")
+	selector := fs.String("selector", defaultSelector, "Set the selector")
+	fs.StringVar(selector, "s", defaultSelector, "Set the selector")
 
 	RegisterCommand(cmdName, Command{
 		Func:  LsCmd,
