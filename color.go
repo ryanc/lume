@@ -189,6 +189,10 @@ func (c HSBKColor) MarshalText() ([]byte, error) {
 	return []byte(c.ColorString()), nil
 }
 
+func (c RGBColor) MarshalText() ([]byte, error) {
+	return []byte(c.ColorString()), nil
+}
+
 func (c NamedColor) ColorString() string {
 	return string(c)
 }
