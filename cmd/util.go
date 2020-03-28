@@ -2,6 +2,8 @@ package lumecmd
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 	"time"
 
 	"git.kill0.net/chill9/lume"
@@ -100,4 +102,22 @@ func PrintLights(lights []lifx.Light) {
 			powerWidth, powerColor(l.Power),
 		)
 	}
+}
+
+func parseRGB(s string) (lifx.RGBColor, error) {
+	var c lifx.RGBColor
+	rgb := strings.SplitN(s, ",", 3)
+	r, err := strconv.ParseUint(rgb[0], 10, 8)
+	if err != nil {
+		return c, err
+	}
+	g, err := strconv.ParseUint(rgb[1], 10, 8)
+	if err != nil {
+		return c, err
+	}
+	b, err := strconv.ParseUint(rgb[2], 10, 8)
+	if err != nil {
+		return c, err
+	}
+	return lifx.NewRGBColor(uint8(r), uint8(g), uint8(b))
 }
