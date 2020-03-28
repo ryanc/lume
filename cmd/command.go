@@ -19,6 +19,7 @@ type Flags struct {
 }
 
 type Command struct {
+	Name  string
 	Func  func(CmdArgs) int
 	Flags *flag.FlagSet
 }
