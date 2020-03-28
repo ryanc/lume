@@ -9,9 +9,8 @@ import (
 )
 
 type CmdArgs struct {
-	Flags    Flags
-	Client   *lifx.Client
-	Selector string
+	Flags  Flags
+	Client *lifx.Client
 }
 
 type Flags struct {

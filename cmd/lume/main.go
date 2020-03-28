@@ -18,10 +18,6 @@ type Config struct {
 }
 
 func main() {
-	var (
-		selector string
-	)
-
 	var config Config
 	homeDir, err := os.UserHomeDir()
 	_, err = toml.DecodeFile(path.Join(homeDir, lumercFile), &config)
@@ -41,8 +37,7 @@ func main() {
 	c := lifx.NewClient(config.AccessToken)
 
 	cmdArgs := lumecmd.CmdArgs{
-		Client:   c,
-		Selector: selector,
+		Client: c,
 	}
 
 	cmd, ok := lumecmd.GetCommand(command)
