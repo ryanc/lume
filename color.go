@@ -136,7 +136,7 @@ func NewPink() (HSBKColor, error)   { return NewHSColor(HuePink, 1) }
 func NewWhite(k int16) (HSBKColor, error) {
 	var c HSBKColor
 
-	if k < 1500 || k > 8000 {
+	if k < 1500 || k > 9000 {
 		return c, errors.New("kelvin must be between 1500-9000")
 	}
 
