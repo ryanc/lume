@@ -25,7 +25,7 @@ func LsCmd(args CmdArgs) int {
 	selector := args.Flags.String("selector")
 	lights, err := c.ListLights(selector)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("fatal: %s\n", err)
 		return 1
 	}
 	PrintLights(lights)

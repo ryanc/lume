@@ -3,7 +3,7 @@ package lifx
 import (
 	//"crypto/tls"
 	"encoding/json"
-	"fmt"
+	"errors"
 	"net/http"
 	"time"
 )
@@ -97,7 +97,7 @@ func NewApiError(resp *http.Response) error {
 	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
 		return err
 	}
-	return fmt.Errorf("fatal: %s", s.Error)
+	return errors.New(s.Error)
 }
 
 func IsApiError(resp *http.Response) bool {
@@ -119,6 +119,10 @@ func (c *Client) SetState(selector string, state State) (*Response, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
+
+	if IsApiError(resp) {
+		return nil, NewApiError(resp)
+	}
 
 	if state.Fast && resp.StatusCode == http.StatusAccepted {
 		return nil, nil

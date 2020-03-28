@@ -24,7 +24,7 @@ func ToggleCmd(args CmdArgs) int {
 	selector := args.Flags.String("selector")
 	r, err := c.Toggle(selector, duration)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Printf("fatal: %s\n", err)
 		return 1
 	}
 	PrintResults(r.Results)
