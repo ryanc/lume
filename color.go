@@ -62,7 +62,7 @@ var (
 		"candlelight":    KelvinCandlelight,
 		"sunset":         KelvinSunset,
 		"ultrawarm":      KelvinUltraWarm,
-		"incandesent":    KelvinIncandescent,
+		"incandescent":   KelvinIncandescent,
 		"warm":           KelvinWarm,
 		"cool":           KelvinCool,
 		"cooldaylight":   KelvinCoolDaylight,
