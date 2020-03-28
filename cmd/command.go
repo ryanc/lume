@@ -36,10 +36,18 @@ var (
 	defaultFast        bool    = false
 	defaultWhiteKelvin string  = ""
 	defaultWhiteName   string  = ""
+	defaultHue         string  = ""
+	defaultSaturation  string  = ""
+	defaultRGB         string  = ""
 )
 
 func (f Flags) String(name string) string {
 	return f.FlagSet.Lookup(name).Value.String()
+}
+
+func (f Flags) Float32(name string) float32 {
+	val, _ := strconv.ParseFloat(f.String(name), 32)
+	return float32(val)
 }
 
 func (f Flags) Float64(name string) float64 {
