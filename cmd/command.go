@@ -35,6 +35,11 @@ func (f Flags) Float64(name string) float64 {
 	return val
 }
 
+func (f Flags) Int16(name string) int16 {
+	val, _ := strconv.ParseInt(f.String(name), 10, 16)
+	return int16(val)
+}
+
 func (f Flags) Bool(name string) bool {
 	val, _ := strconv.ParseBool(f.String(name))
 	return val
