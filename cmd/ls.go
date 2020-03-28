@@ -10,11 +10,12 @@ var (
 )
 
 func init() {
-	fs := flag.NewFlagSet("toggle", flag.ExitOnError)
+	var cmdName string = "ls"
+	fs := flag.NewFlagSet(cmdName, flag.ExitOnError)
 	selector := fs.String("selector", "all", "Set the selector")
 	fs.StringVar(selector, "s", "all", "Set the selector")
 
-	RegisterCommand("ls", Command{
+	RegisterCommand(cmdName, Command{
 		Func:  LsCmd,
 		Flags: fs,
 	})

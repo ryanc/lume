@@ -6,13 +6,15 @@ import (
 )
 
 func init() {
-	fs := flag.NewFlagSet("toggle", flag.ExitOnError)
+	var cmdName string = "set-state"
+
+	fs := flag.NewFlagSet(cmdName, flag.ExitOnError)
 	duration := fs.Float64("duration", 1.0, "Set the duration")
 	fs.Float64Var(duration, "d", 1.0, "Set the duration")
 	selector := fs.String("selector", "all", "Set the selector")
 	fs.StringVar(selector, "s", "all", "Set the selector")
 
-	RegisterCommand("toggle", Command{
+	RegisterCommand(cmdName, Command{
 		Func:  ToggleCmd,
 		Flags: fs,
 	})
