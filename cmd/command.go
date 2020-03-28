@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"git.kill0.net/chill9/go-lifx"
+	"git.kill0.net/chill9/lume"
 )
 
 type CmdArgs struct {

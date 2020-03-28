@@ -6,8 +6,8 @@ import (
 	"os"
 	"path"
 
-	"git.kill0.net/chill9/go-lifx"
-	lumecmd "git.kill0.net/chill9/go-lifx/cmd"
+	"git.kill0.net/chill9/lume"
+	lumecmd "git.kill0.net/chill9/lume/cmd"
 	"github.com/BurntSushi/toml"
 )
 

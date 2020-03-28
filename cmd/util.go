@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"git.kill0.net/chill9/go-lifx"
+	"git.kill0.net/chill9/lume"
 )
 
 func powerColor(s string) string {

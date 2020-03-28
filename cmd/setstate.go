@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 
-	"git.kill0.net/chill9/go-lifx"
+	"git.kill0.net/chill9/lume"
 )
 
 func init() {

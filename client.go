@@ -11,7 +11,7 @@ import (
 	"net/url"
 )
 
-const UserAgent = "go-lifx"
+const UserAgent = "lume"
 
 type (
 	Client struct {
