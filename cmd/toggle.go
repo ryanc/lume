@@ -6,7 +6,7 @@ import (
 )
 
 func init() {
-	var cmdName string = "set-state"
+	var cmdName string = "toggle"
 
 	fs := flag.NewFlagSet(cmdName, flag.ExitOnError)
 
