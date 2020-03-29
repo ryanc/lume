@@ -8,9 +8,15 @@ import (
 	"git.kill0.net/chill9/lume"
 )
 
+type Config struct {
+	AccessToken string
+	Colors      map[string]string `toml:"colors"`
+}
+
 type CmdArgs struct {
 	Flags  Flags
 	Client *lifx.Client
+	Config Config
 }
 
 type Flags struct {

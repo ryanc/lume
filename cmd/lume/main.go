@@ -13,12 +13,8 @@ import (
 
 const lumercFile = ".lumerc"
 
-type Config struct {
-	AccessToken string
-}
-
 func main() {
-	var config Config
+	var config lumecmd.Config
 	homeDir, err := os.UserHomeDir()
 	_, err = toml.DecodeFile(path.Join(homeDir, lumercFile), &config)
 	if os.IsNotExist(err) {
@@ -38,6 +34,7 @@ func main() {
 
 	cmdArgs := lumecmd.CmdArgs{
 		Client: c,
+		Config: config,
 	}
 
 	cmd, ok := lumecmd.GetCommand(command)
