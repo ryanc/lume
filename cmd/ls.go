@@ -2,7 +2,6 @@ package lumecmd
 
 import (
 	"flag"
-	"fmt"
 )
 
 var (
@@ -21,14 +20,13 @@ func init() {
 	})
 }
 
-func LsCmd(args CmdArgs) int {
+func LsCmd(args CmdArgs) (int, error) {
 	c := args.Client
 	selector := args.Flags.String("selector")
 	lights, err := c.ListLights(selector)
 	if err != nil {
-		fmt.Printf("fatal: %s\n", err)
-		return 1
+		return 1, err
 	}
 	PrintLights(lights)
-	return 0
+	return 0, nil
 }

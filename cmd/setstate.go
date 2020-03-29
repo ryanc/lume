@@ -2,7 +2,6 @@ package lumecmd
 
 import (
 	"flag"
-	"fmt"
 
 	"git.kill0.net/chill9/lume"
 )
@@ -39,7 +38,7 @@ func init() {
 	})
 }
 
-func SetStateCmd(args CmdArgs) int {
+func SetStateCmd(args CmdArgs) (int, error) {
 	c := args.Client
 	state := lifx.State{}
 	selector := args.Flags.String("selector")
@@ -74,13 +73,12 @@ func SetStateCmd(args CmdArgs) int {
 
 	r, err := c.SetState(selector, state)
 	if err != nil {
-		fmt.Printf("fatal: %s\n", err)
-		return 1
+		return 1, err
 	}
 
 	if !fast {
 		PrintResults(r.Results)
 	}
 
-	return 0
+	return 0, nil
 }

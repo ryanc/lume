@@ -25,7 +25,7 @@ type Flags struct {
 
 type Command struct {
 	Name  string
-	Func  func(CmdArgs) int
+	Func  func(CmdArgs) (int, error)
 	Flags *flag.FlagSet
 }
 

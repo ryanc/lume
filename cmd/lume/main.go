@@ -46,5 +46,9 @@ func main() {
 	fs.Parse(os.Args[2:])
 
 	cmdArgs.Flags = lumecmd.Flags{fs}
-	os.Exit(cmd.Func(cmdArgs))
+	exitCode, err := cmd.Func(cmdArgs)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "fatal: %s\n", err)
+	}
+	os.Exit(exitCode)
 }

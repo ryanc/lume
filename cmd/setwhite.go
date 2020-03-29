@@ -2,7 +2,6 @@ package lumecmd
 
 import (
 	"flag"
-	"fmt"
 
 	"git.kill0.net/chill9/lume"
 )
@@ -42,7 +41,7 @@ func init() {
 	})
 }
 
-func SetWhiteCmd(args CmdArgs) int {
+func SetWhiteCmd(args CmdArgs) (int, error) {
 	c := args.Client
 	state := lifx.State{}
 	selector := args.Flags.String("selector")
@@ -57,8 +56,7 @@ func SetWhiteCmd(args CmdArgs) int {
 		kelvin := args.Flags.Int16("kelvin")
 		color, err := lifx.NewWhite(kelvin)
 		if err != nil {
-			fmt.Printf("fatal: %s\n", err)
-			return 1
+			return 1, err
 		}
 		state.Color = color
 	}
@@ -68,8 +66,7 @@ func SetWhiteCmd(args CmdArgs) int {
 		name := args.Flags.String("name")
 		color, err := lifx.NewWhiteString(name)
 		if err != nil {
-			fmt.Printf("fatal: %s\n", err)
-			return 1
+			return 1, err
 		}
 		state.Color = color
 	}
@@ -94,13 +91,12 @@ func SetWhiteCmd(args CmdArgs) int {
 
 	r, err := c.SetState(selector, state)
 	if err != nil {
-		fmt.Printf("fatal: %s\n", err)
-		return 1
+		return 1, err
 	}
 
 	if !fast {
 		PrintResults(r.Results)
 	}
 
-	return 0
+	return 0, nil
 }

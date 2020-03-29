@@ -42,10 +42,12 @@ func init() {
 	})
 }
 
-func SetColorCmd(args CmdArgs) int {
+func SetColorCmd(args CmdArgs) (int, error) {
 	c := args.Client
 	state := lifx.State{}
 	selector := args.Flags.String("selector")
+
+	fmt.Println(args.Config)
 
 	power := args.Flags.String("power")
 	if power != "" {
@@ -73,8 +75,7 @@ func SetColorCmd(args CmdArgs) int {
 	} else if rgbFlag != "" {
 		color, err := parseRGB(rgbFlag)
 		if err != nil {
-			fmt.Printf("fatal: %s\n", err)
-			return 1
+			return 1, err
 		}
 		state.Color = color
 	}
@@ -94,12 +95,12 @@ func SetColorCmd(args CmdArgs) int {
 	r, err := c.SetState(selector, state)
 	if err != nil {
 		fmt.Printf("fatal: %s\n", err)
-		return 1
+		return 1, err
 	}
 
 	if !fast {
 		PrintResults(r.Results)
 	}
 
-	return 0
+	return 0, nil
 }

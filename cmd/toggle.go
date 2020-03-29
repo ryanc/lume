@@ -2,7 +2,6 @@ package lumecmd
 
 import (
 	"flag"
-	"fmt"
 )
 
 func init() {
@@ -22,15 +21,14 @@ func init() {
 	})
 }
 
-func ToggleCmd(args CmdArgs) int {
+func ToggleCmd(args CmdArgs) (int, error) {
 	c := args.Client
 	duration := args.Flags.Float64("duration")
 	selector := args.Flags.String("selector")
 	r, err := c.Toggle(selector, duration)
 	if err != nil {
-		fmt.Printf("fatal: %s\n", err)
-		return 1
+		return 1, err
 	}
 	PrintResults(r.Results)
-	return 0
+	return 0, nil
 }
