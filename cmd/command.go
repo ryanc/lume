@@ -10,7 +10,7 @@ import (
 
 type Config struct {
 	AccessToken string
-	Colors      map[string]string `toml:"colors"`
+	Colors      map[string][]float32 `toml:"colors"`
 }
 
 type CmdArgs struct {
@@ -44,6 +44,7 @@ var (
 	defaultHue         string  = ""
 	defaultSaturation  string  = ""
 	defaultRGB         string  = ""
+	defaultName        string  = ""
 )
 
 func (f Flags) String(name string) string {

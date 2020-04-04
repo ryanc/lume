@@ -27,6 +27,9 @@ func init() {
 	rgb := fs.String("rgb", defaultRGB, "RGB value")
 	fs.StringVar(rgb, "r", defaultRGB, "RGB value")
 
+	name := fs.String("name", defaultName, "named color")
+	fs.StringVar(name, "n", defaultName, "named color")
+
 	brightness := fs.String("brightness", defaultBrightness, "brightness state")
 	fs.StringVar(brightness, "b", defaultBrightness, "brightness state")
 
@@ -57,6 +60,7 @@ func SetColorCmd(args CmdArgs) (int, error) {
 	hueFlag := args.Flags.String("hue")
 	saturationFlag := args.Flags.String("saturation")
 	rgbFlag := args.Flags.String("rgb")
+	name := args.Flags.String("name")
 
 	if hueFlag != "" || saturationFlag != "" {
 		color := lifx.HSBKColor{}
@@ -74,6 +78,16 @@ func SetColorCmd(args CmdArgs) (int, error) {
 
 	} else if rgbFlag != "" {
 		color, err := parseRGB(rgbFlag)
+		if err != nil {
+			return 1, err
+		}
+		state.Color = color
+	} else if name != "" {
+		hsb, ok := args.Config.Colors[name]
+		if !ok {
+			return 1, fmt.Errorf("%s is not a defined color", name)
+		}
+		color, err := lifx.NewHSBColor(hsb[0], hsb[1], hsb[2])
 		if err != nil {
 			return 1, err
 		}
