@@ -9,6 +9,8 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
+	"time"
 )
 
 const UserAgent = "lume"
@@ -34,7 +36,20 @@ type (
 		Warning string `json:"warning"`
 	}
 
+	RateLimit struct {
+		Limit     int
+		Remaining int
+		Reset     time.Time
+	}
+
 	Response struct {
+		StatusCode int
+		Header     http.Header
+		Body       io.ReadCloser
+		RateLimit  RateLimit
+	}
+
+	LifxResponse struct {
 		Error    string    `json:"error"`
 		Errors   []Error   `json:"errors"`
 		Warnings []Warning `json:"warnings"`
@@ -65,6 +80,40 @@ func NewClient(accessToken string) *Client {
 	}
 }
 
+func NewResponse(r *http.Response) (*Response, error) {
+	resp := Response{
+		StatusCode: r.StatusCode,
+		Header:     r.Header,
+		Body:       r.Body,
+	}
+
+	if t := r.Header.Get("X-RateLimit-Limit"); t != "" {
+		if n, err := strconv.ParseInt(t, 10, 32); err == nil {
+			resp.RateLimit.Limit = int(n)
+		} else {
+			return nil, err
+		}
+	}
+
+	if t := r.Header.Get("X-RateLimit-Remaining"); t != "" {
+		if n, err := strconv.ParseInt(t, 10, 32); err == nil {
+			resp.RateLimit.Remaining = int(n)
+		} else {
+			return nil, err
+		}
+	}
+
+	if t := r.Header.Get("X-RateLimit-Reset"); t != "" {
+		if n, err := strconv.ParseInt(t, 10, 32); err == nil {
+			resp.RateLimit.Reset = time.Unix(n, 0)
+		} else {
+			return nil, err
+		}
+	}
+
+	return &resp, nil
+}
+
 func (c *Client) NewRequest(method, url string, body io.Reader) (req *http.Request, err error) {
 	req, err = http.NewRequest(method, url, body)
 	if err != nil {
@@ -76,12 +125,13 @@ func (c *Client) NewRequest(method, url string, body io.Reader) (req *http.Reque
 	return
 }
 
-func (c *Client) setState(selector string, state State) (*http.Response, error) {
+func (c *Client) setState(selector string, state State) (*Response, error) {
 	var (
 		err  error
 		j    []byte
 		req  *http.Request
-		resp *http.Response
+		r    *http.Response
+		resp *Response
 	)
 
 	if j, err = json.Marshal(state); err != nil {
@@ -92,19 +142,25 @@ func (c *Client) setState(selector string, state State) (*http.Response, error) 
 		return nil, err
 	}
 
-	if resp, err = c.Client.Do(req); err != nil {
+	if r, err = c.Client.Do(req); err != nil {
+		return nil, err
+	}
+
+	resp, err = NewResponse(r)
+	if err != nil {
 		return nil, err
 	}
 
 	return resp, nil
 }
 
-func (c *Client) setStates(selector string, states States) (*http.Response, error) {
+func (c *Client) setStates(selector string, states States) (*Response, error) {
 	var (
 		err  error
 		j    []byte
 		req  *http.Request
-		resp *http.Response
+		r    *http.Response
+		resp *Response
 	)
 
 	if j, err = json.Marshal(states); err != nil {
@@ -115,19 +171,25 @@ func (c *Client) setStates(selector string, states States) (*http.Response, erro
 		return nil, err
 	}
 
-	if resp, err = c.Client.Do(req); err != nil {
+	if r, err = c.Client.Do(req); err != nil {
+		return nil, err
+	}
+
+	resp, err = NewResponse(r)
+	if err != nil {
 		return nil, err
 	}
 
 	return resp, nil
 }
 
-func (c *Client) toggle(selector string, duration float64) (*http.Response, error) {
+func (c *Client) toggle(selector string, duration float64) (*Response, error) {
 	var (
 		err  error
 		j    []byte
 		req  *http.Request
-		resp *http.Response
+		r    *http.Response
+		resp *Response
 	)
 
 	if j, err = json.Marshal(&Toggle{Duration: duration}); err != nil {
@@ -138,18 +200,24 @@ func (c *Client) toggle(selector string, duration float64) (*http.Response, erro
 		return nil, err
 	}
 
-	if resp, err = c.Client.Do(req); err != nil {
+	if r, err = c.Client.Do(req); err != nil {
+		return nil, err
+	}
+
+	resp, err = NewResponse(r)
+	if err != nil {
 		return nil, err
 	}
 
 	return resp, nil
 }
 
-func (c *Client) validateColor(color Color) (*http.Response, error) {
+func (c *Client) validateColor(color Color) (*Response, error) {
 	var (
 		err  error
 		req  *http.Request
-		resp *http.Response
+		r    *http.Response
+		resp *Response
 		q    url.Values
 	)
 
@@ -161,37 +229,49 @@ func (c *Client) validateColor(color Color) (*http.Response, error) {
 	q.Set("string", color.ColorString())
 	req.URL.RawQuery = q.Encode()
 
-	if resp, err = c.Client.Do(req); err != nil {
+	if r, err = c.Client.Do(req); err != nil {
+		return nil, err
+	}
+
+	resp, err = NewResponse(r)
+	if err != nil {
 		return nil, err
 	}
 
 	return resp, nil
 }
 
-func (c *Client) listLights(selector string) (*http.Response, error) {
+func (c *Client) listLights(selector string) (*Response, error) {
 	var (
 		err  error
 		req  *http.Request
-		resp *http.Response
+		r    *http.Response
+		resp *Response
 	)
 
 	if req, err = c.NewRequest("GET", EndpointListLights(selector), nil); err != nil {
 		return nil, err
 	}
 
-	if resp, err = c.Client.Do(req); err != nil {
+	if r, err = c.Client.Do(req); err != nil {
+		return nil, err
+	}
+
+	resp, err = NewResponse(r)
+	if err != nil {
 		return nil, err
 	}
 
 	return resp, nil
 }
 
-func (c *Client) stateDelta(selector string, delta StateDelta) (*http.Response, error) {
+func (c *Client) stateDelta(selector string, delta StateDelta) (*Response, error) {
 	var (
 		err  error
 		j    []byte
 		req  *http.Request
-		resp *http.Response
+		r    *http.Response
+		resp *Response
 	)
 
 	if j, err = json.Marshal(delta); err != nil {
@@ -202,7 +282,12 @@ func (c *Client) stateDelta(selector string, delta StateDelta) (*http.Response, 
 		return nil, err
 	}
 
-	if resp, err = c.Client.Do(req); err != nil {
+	if r, err = c.Client.Do(req); err != nil {
+		return nil, err
+	}
+
+	resp, err = NewResponse(r)
+	if err != nil {
 		return nil, err
 	}
 

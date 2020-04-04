@@ -201,13 +201,19 @@ func (c *Client) ValidateColor(color Color) (Color, error) {
 	var (
 		err  error
 		s    *HSBKColor
-		resp *http.Response
+		r    *http.Response
+		resp *Response
 	)
 
 	if resp, err = c.validateColor(color); err != nil {
 		return nil, err
 	}
-	fmt.Println(resp)
+
+	resp, err = NewResponse(r)
+	if err != nil {
+		return nil, err
+	}
+
 	defer resp.Body.Close()
 
 	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {

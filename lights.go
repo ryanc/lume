@@ -4,6 +4,7 @@ import (
 	//"crypto/tls"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"time"
 )
@@ -89,9 +90,9 @@ type (
 	}
 )
 
-func NewApiError(resp *http.Response) error {
+func NewApiError(resp *Response) error {
 	var (
-		s   *Response
+		s   *LifxResponse
 		err error
 	)
 	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
@@ -100,7 +101,7 @@ func NewApiError(resp *http.Response) error {
 	return errors.New(s.Error)
 }
 
-func IsApiError(resp *http.Response) bool {
+func IsApiError(resp *Response) bool {
 	return resp.StatusCode > 299
 }
 
@@ -108,11 +109,11 @@ func (s Status) Success() bool {
 	return s == OK
 }
 
-func (c *Client) SetState(selector string, state State) (*Response, error) {
+func (c *Client) SetState(selector string, state State) (*LifxResponse, error) {
 	var (
 		err  error
-		s    *Response
-		resp *http.Response
+		s    *LifxResponse
+		resp *Response
 	)
 
 	if resp, err = c.setState(selector, state); err != nil {
@@ -135,16 +136,16 @@ func (c *Client) SetState(selector string, state State) (*Response, error) {
 	return s, nil
 }
 
-func (c *Client) FastSetState(selector string, state State) (*Response, error) {
+func (c *Client) FastSetState(selector string, state State) (*LifxResponse, error) {
 	state.Fast = true
 	return c.SetState(selector, state)
 }
 
-func (c *Client) SetStates(selector string, states States) (*Response, error) {
+func (c *Client) SetStates(selector string, states States) (*LifxResponse, error) {
 	var (
 		err  error
-		s    *Response
-		resp *http.Response
+		s    *LifxResponse
+		resp *Response
 	)
 
 	if resp, err = c.setStates(selector, states); err != nil {
@@ -159,11 +160,11 @@ func (c *Client) SetStates(selector string, states States) (*Response, error) {
 	return s, nil
 }
 
-func (c *Client) StateDelta(selector string, delta StateDelta) (*Response, error) {
+func (c *Client) StateDelta(selector string, delta StateDelta) (*LifxResponse, error) {
 	var (
 		err  error
-		s    *Response
-		resp *http.Response
+		s    *LifxResponse
+		resp *Response
 	)
 
 	if resp, err = c.stateDelta(selector, delta); err != nil {
@@ -178,11 +179,11 @@ func (c *Client) StateDelta(selector string, delta StateDelta) (*Response, error
 	return s, nil
 }
 
-func (c *Client) Toggle(selector string, duration float64) (*Response, error) {
+func (c *Client) Toggle(selector string, duration float64) (*LifxResponse, error) {
 	var (
 		err  error
-		s    *Response
-		resp *http.Response
+		s    *LifxResponse
+		resp *Response
 	)
 
 	if resp, err = c.toggle(selector, duration); err != nil {
@@ -205,7 +206,7 @@ func (c *Client) ListLights(selector string) ([]Light, error) {
 	var (
 		err  error
 		s    []Light
-		resp *http.Response
+		resp *Response
 	)
 
 	if resp, err = c.listLights(selector); err != nil {
@@ -217,6 +218,8 @@ func (c *Client) ListLights(selector string) ([]Light, error) {
 		return nil, NewApiError(resp)
 	}
 
+	fmt.Println(resp.RateLimit)
+
 	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
 		return nil, err
 	}
@@ -224,7 +227,7 @@ func (c *Client) ListLights(selector string) ([]Light, error) {
 	return s, nil
 }
 
-func (c *Client) PowerOff(selector string) (*Response, error) {
+func (c *Client) PowerOff(selector string) (*LifxResponse, error) {
 	return c.SetState(selector, State{Power: "off"})
 }
 
@@ -232,7 +235,7 @@ func (c *Client) FastPowerOff(selector string) {
 	c.SetState(selector, State{Power: "off", Fast: true})
 }
 
-func (c *Client) PowerOn(selector string) (*Response, error) {
+func (c *Client) PowerOn(selector string) (*LifxResponse, error) {
 	return c.SetState(selector, State{Power: "on"})
 }
 
