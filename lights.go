@@ -218,8 +218,6 @@ func (c *Client) ListLights(selector string) ([]Light, error) {
 		return nil, NewApiError(resp)
 	}
 
-	fmt.Println(resp.RateLimit)
-
 	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
 		return nil, err
 	}
