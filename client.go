@@ -114,6 +114,20 @@ func NewResponse(r *http.Response) (*Response, error) {
 	return &resp, nil
 }
 
+func (r *Response) IsError() bool {
+	return r.StatusCode > 299
+}
+
+func (r *Response) GetLifxError() (err error) {
+	var (
+		s *LifxResponse
+	)
+	if err = json.NewDecoder(r.Body).Decode(&s); err != nil {
+		return nil
+	}
+	return errors.New(s.Error)
+}
+
 func (c *Client) NewRequest(method, url string, body io.Reader) (req *http.Request, err error) {
 	req, err = http.NewRequest(method, url, body)
 	if err != nil {

@@ -3,7 +3,6 @@ package lifx
 import (
 	//"crypto/tls"
 	"encoding/json"
-	"errors"
 	"net/http"
 	"time"
 )
@@ -89,25 +88,6 @@ type (
 	}
 )
 
-func NewApiError(resp *Response) error {
-	var (
-		s   *LifxResponse
-		err error
-	)
-	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
-		return err
-	}
-	return errors.New(s.Error)
-}
-
-func IsApiError(resp *Response) bool {
-	return resp.StatusCode > 299
-}
-
-func (s Status) Success() bool {
-	return s == OK
-}
-
 func (c *Client) SetState(selector string, state State) (*LifxResponse, error) {
 	var (
 		err  error
@@ -120,8 +100,8 @@ func (c *Client) SetState(selector string, state State) (*LifxResponse, error) {
 	}
 	defer resp.Body.Close()
 
-	if IsApiError(resp) {
-		return nil, NewApiError(resp)
+	if resp.IsError() {
+		return nil, resp.GetLifxError()
 	}
 
 	if state.Fast && resp.StatusCode == http.StatusAccepted {
@@ -190,8 +170,8 @@ func (c *Client) Toggle(selector string, duration float64) (*LifxResponse, error
 	}
 	defer resp.Body.Close()
 
-	if IsApiError(resp) {
-		return nil, NewApiError(resp)
+	if resp.IsError() {
+		return nil, resp.GetLifxError()
 	}
 
 	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
@@ -214,7 +194,7 @@ func (c *Client) ListLights(selector string) ([]Light, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode > 299 {
-		return nil, NewApiError(resp)
+		return nil, resp.GetLifxError()
 	}
 
 	if err = json.NewDecoder(resp.Body).Decode(&s); err != nil {
