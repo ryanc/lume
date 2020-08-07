@@ -75,6 +75,7 @@ func RegisterCommand(name string, cmd Command) error {
 	if _, ok := commandRegistry[name]; ok {
 		return fmt.Errorf("%s command is already registered")
 	}
+	cmd.Name = name
 	commandRegistry[name] = cmd
 	return nil
 }
