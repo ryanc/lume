@@ -27,6 +27,7 @@ type Command struct {
 	Name  string
 	Func  func(CmdArgs) (int, error)
 	Flags *flag.FlagSet
+	Use   string
 }
 
 var commandRegistry = make(map[string]Command)
