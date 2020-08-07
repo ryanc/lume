@@ -35,6 +35,7 @@ func init() {
 	RegisterCommand(cmdName, Command{
 		Func:  SetStateCmd,
 		Flags: fs,
+		Use:   "[--selector <selector>] [--power (on|off)] [--color <color>] [--brightness <brightness>] [--duration <sec>] [--infrared <infrared>] [--fast]",
 	})
 }
 

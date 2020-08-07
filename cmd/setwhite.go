@@ -38,6 +38,7 @@ func init() {
 	RegisterCommand(cmdName, Command{
 		Func:  SetWhiteCmd,
 		Flags: fs,
+		Use:   "[--selector <selector>] [--power (on|off)] [--kelvin <kelvin>] [--name <color>] [--brightness <brightness>] [--duration <sec>] [--infrared] [--fast]",
 	})
 }
 

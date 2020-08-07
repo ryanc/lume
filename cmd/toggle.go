@@ -18,6 +18,7 @@ func init() {
 	RegisterCommand(cmdName, Command{
 		Func:  ToggleCmd,
 		Flags: fs,
+		Use:   "[--selector <selector>] [--duration <sec>]",
 	})
 }
 

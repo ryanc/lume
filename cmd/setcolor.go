@@ -42,6 +42,7 @@ func init() {
 	RegisterCommand(cmdName, Command{
 		Func:  SetColorCmd,
 		Flags: fs,
+		Use:   "[--selector <selector>] [--power (on|off)] [--hue <hue>] [--saturation <saturation>] [--rgb <rbg>] [--name <color>] [--brightness <brightness>] [--duration <sec>] [--fast]",
 	})
 }
 
