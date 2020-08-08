@@ -17,7 +17,7 @@ func init() {
 	RegisterCommand(cmdName, Command{
 		Func:  LsCmd,
 		Flags: fs,
-		Use:   "[--selector=<selector>",
+		Use:   "[--selector=<selector>]",
 		Short: "List the lights",
 	})
 }
