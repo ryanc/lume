@@ -19,6 +19,7 @@ func init() {
 		Func:  ToggleCmd,
 		Flags: fs,
 		Use:   "[--selector <selector>] [--duration <sec>]",
+		Short: "Toggle the power on/off",
 	})
 }
 

@@ -28,6 +28,8 @@ type Command struct {
 	Func  func(CmdArgs) (int, error)
 	Flags *flag.FlagSet
 	Use   string
+	Short string
+	Long  string
 }
 
 var commandRegistry = make(map[string]Command)

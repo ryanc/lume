@@ -39,6 +39,7 @@ func init() {
 		Func:  SetWhiteCmd,
 		Flags: fs,
 		Use:   "[--selector <selector>] [--power (on|off)] [--kelvin <kelvin>] [--name <color>] [--brightness <brightness>] [--duration <sec>] [--infrared] [--fast]",
+		Short: "Set the white level",
 	})
 }
 

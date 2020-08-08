@@ -18,6 +18,7 @@ func init() {
 		Func:  LsCmd,
 		Flags: fs,
 		Use:   "[--selector=<selector>",
+		Short: "List the lights",
 	})
 }
 
