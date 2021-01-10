@@ -79,8 +79,8 @@ type (
 	}
 
 	States struct {
-		States   []StateWithSelector `json:"states",omitempty`
-		Defaults State               `json:"defaults",omitempty`
+		States   []StateWithSelector `json:"states,omitempty"`
+		Defaults State               `json:"defaults,omitempty"`
 	}
 
 	Toggle struct {
