@@ -24,9 +24,9 @@ func main() {
 	defer windows.SetConsoleMode(stdout, originalMode)
 
 	var config lumecmd.Config
-	homeDir, err := os.UserHomeDir()
-	_, err = toml.DecodeFile(path.Join(homeDir, lumercFile), &config)
-	if os.IsNotExist(err) {
+	config = loadConfig()
+
+	if config.AccessToken == "" {
 		config.AccessToken = os.Getenv("LIFX_ACCESS_TOKEN")
 	}
 
@@ -60,4 +60,31 @@ func main() {
 		fmt.Fprintf(os.Stderr, "fatal: %s\n", err)
 	}
 	os.Exit(exitCode)
+}
+
+func loadConfig() lumecmd.Config {
+	var config lumecmd.Config
+	var tryPath, configPath string
+
+	homeDir, err := os.UserHomeDir()
+	if err == nil {
+		tryPath = path.Join(homeDir, lumercFile)
+		if _, err := os.Stat(tryPath); !os.IsNotExist(err) {
+			configPath = tryPath
+		}
+	}
+
+	cwd, err := os.Getwd()
+	if err == nil {
+		tryPath = path.Join(cwd, lumercFile)
+		if _, err := os.Stat(tryPath); !os.IsNotExist(err) {
+			configPath = tryPath
+		}
+	}
+
+	if configPath != "" {
+		toml.DecodeFile(configPath, &config)
+	}
+
+	return config
 }
