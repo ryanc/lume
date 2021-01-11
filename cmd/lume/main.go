@@ -48,7 +48,7 @@ func main() {
 
 	cmd, ok := lumecmd.GetCommand(command)
 	if !ok {
-		fmt.Printf("lume: '%s' is not lume command. See 'lume' --help.'\n", command)
+		fmt.Printf("lume: '%s' is not lume command. See 'lume help'\n", command)
 		os.Exit(1)
 	}
 	fs := cmd.Flags
