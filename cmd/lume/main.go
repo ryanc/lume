@@ -6,14 +6,23 @@ import (
 	"os"
 	"path"
 
-	"git.kill0.net/chill9/lume"
+	lifx "git.kill0.net/chill9/lume"
 	lumecmd "git.kill0.net/chill9/lume/cmd"
 	"github.com/BurntSushi/toml"
+
+	"golang.org/x/sys/windows"
 )
 
 const lumercFile = ".lumerc"
 
 func main() {
+	var originalMode uint32
+	stdout := windows.Handle(os.Stdout.Fd())
+
+	windows.GetConsoleMode(stdout, &originalMode)
+	windows.SetConsoleMode(stdout, originalMode|windows.ENABLE_VIRTUAL_TERMINAL_PROCESSING)
+	defer windows.SetConsoleMode(stdout, originalMode)
+
 	var config lumecmd.Config
 	homeDir, err := os.UserHomeDir()
 	_, err = toml.DecodeFile(path.Join(homeDir, lumercFile), &config)
