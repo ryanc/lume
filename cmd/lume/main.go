@@ -11,14 +11,21 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
-const lumercFile = ".lumerc"
+const lumercFile string = ".lumerc"
 
 func main() {
 	var config lumecmd.Config
-	config = loadConfig()
 
-	if config.AccessToken == "" {
-		config.AccessToken = os.Getenv("LIFX_ACCESS_TOKEN")
+	configPath := getConfigPath()
+	if _, err := toml.DecodeFile(configPath, &config); err != nil {
+		fmt.Printf("fatal: failed to parse %s\n", configPath)
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	envAccessToken := os.Getenv("LIFX_ACCESS_TOKEN")
+	if envAccessToken != "" {
+		config.AccessToken = envAccessToken
 	}
 
 	if config.AccessToken == "" {
@@ -53,10 +60,10 @@ func main() {
 	os.Exit(exitCode)
 }
 
-func loadConfig() lumecmd.Config {
-	var config lumecmd.Config
+func getConfigPath() string {
 	var tryPath, configPath string
 
+	// ~/.lumerc
 	homeDir, err := os.UserHomeDir()
 	if err == nil {
 		tryPath = path.Join(homeDir, lumercFile)
@@ -65,6 +72,7 @@ func loadConfig() lumecmd.Config {
 		}
 	}
 
+	// ./.lumerc
 	cwd, err := os.Getwd()
 	if err == nil {
 		tryPath = path.Join(cwd, lumercFile)
@@ -73,9 +81,5 @@ func loadConfig() lumecmd.Config {
 		}
 	}
 
-	if configPath != "" {
-		toml.DecodeFile(configPath, &config)
-	}
-
-	return config
+	return configPath
 }
