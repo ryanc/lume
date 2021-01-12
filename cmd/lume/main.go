@@ -45,7 +45,7 @@ func main() {
 	fs := cmd.Flags
 	fs.Parse(os.Args[2:])
 
-	cmdArgs.Flags = lumecmd.Flags{fs}
+	cmdArgs.Flags = lumecmd.Flags{FlagSet: fs}
 	exitCode, err := cmd.Func(cmdArgs)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "fatal: %s\n", err)
