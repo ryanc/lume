@@ -2,11 +2,12 @@ package lumecmd
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
 
-	"git.kill0.net/chill9/lume"
+	lifx "git.kill0.net/chill9/lume"
 )
 
 func powerColor(s string) string {
@@ -49,6 +50,8 @@ func PrintResults(res []lifx.Result) {
 			widths["status"] = length
 		}
 	}
+
+	sortResults(res)
 
 	for _, r := range res {
 		fmt.Printf("%*s %*s %*s\n",
@@ -96,6 +99,8 @@ func PrintLights(lights []lifx.Light) {
 		}
 	}
 
+	sortLights(lights)
+
 	fmt.Printf("total %d\n", len(lights))
 	for _, l := range lights {
 		fmt.Printf(
@@ -126,4 +131,23 @@ func parseRGB(s string) (lifx.RGBColor, error) {
 		return c, err
 	}
 	return lifx.NewRGBColor(uint8(r), uint8(g), uint8(b))
+}
+
+func sortLights(lights []lifx.Light) {
+	sort.Slice(lights, func(i, j int) bool {
+		if lights[i].Group.Name < lights[j].Group.Name {
+			return true
+		}
+		if lights[i].Group.Name > lights[j].Group.Name {
+			return false
+		}
+		return lights[i].Label < lights[j].Label
+
+	})
+}
+
+func sortResults(res []lifx.Result) {
+	sort.Slice(res, func(i, j int) bool {
+		return res[i].Label < res[j].Label
+	})
 }
