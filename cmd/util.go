@@ -28,65 +28,71 @@ func statusColor(s lifx.Status) string {
 }
 
 func PrintResults(res []lifx.Result) {
-	var length, idWidth, labelWidth, statusWidth int
+	var length int
+	var widths map[string]int
+
+	widths = make(map[string]int)
 
 	for _, r := range res {
 		length = len(r.Id)
-		if idWidth < length {
-			idWidth = length
+		if widths["id"] < length {
+			widths["id"] = length
 		}
 
 		length = len(r.Label)
-		if labelWidth < length {
-			labelWidth = length
+		if widths["label"] < length {
+			widths["label"] = length
 		}
 
 		length = len(r.Status)
-		if statusWidth < length {
-			statusWidth = length
+		if widths["status"] < length {
+			widths["status"] = length
 		}
 	}
 
 	for _, r := range res {
 		fmt.Printf("%*s %*s %*s\n",
-			idWidth, r.Id,
-			labelWidth, r.Label,
-			statusWidth, statusColor(r.Status))
+			widths["id"], r.Id,
+			widths["label"], r.Label,
+			widths["status"], statusColor(r.Status))
 	}
 }
 
 func PrintLights(lights []lifx.Light) {
 	var length int
+	var widths map[string]int
+
+	widths = make(map[string]int)
 
 	for _, l := range lights {
 		length = len(l.Id)
-		if idWidth < length {
-			idWidth = length
+		if widths["id"] < length {
+			widths["id"] = length
 		}
 
 		length = len(l.Location.Name)
-		if locationWidth < length {
-			locationWidth = length
+		if widths["location"] < length {
+			widths["location"] = length
 		}
 
 		length = len(l.Group.Name)
-		if groupWidth < length {
-			groupWidth = length
+		if widths["group"] < length {
+			widths["group"] = length
 		}
 
 		length = len(l.Label)
-		if labelWidth < length {
-			labelWidth = length
+		if widths["label"] < length {
+			widths["label"] = length
 		}
 
 		length = len(l.LastSeen.Local().Format(time.RFC3339))
-		if lastSeenWidth < length {
-			lastSeenWidth = length
+		if widths["last_seen"] < length {
+			widths["last_seen"] = length
 		}
 
 		length = len(l.Power)
-		if powerWidth < length {
-			powerWidth = length
+		if widths["power"] < length {
+			widths["power"] = length
 		}
 	}
 
@@ -94,12 +100,12 @@ func PrintLights(lights []lifx.Light) {
 	for _, l := range lights {
 		fmt.Printf(
 			"%*s %*s %*s %*s %*s %-*s\n",
-			idWidth, l.Id,
-			locationWidth, l.Location.Name,
-			groupWidth, l.Group.Name,
-			labelWidth, l.Label,
-			lastSeenWidth, l.LastSeen.Local().Format(time.RFC3339),
-			powerWidth, powerColor(l.Power),
+			widths["id"], l.Id,
+			widths["loction"], l.Location.Name,
+			widths["group"], l.Group.Name,
+			widths["label"], l.Label,
+			widths["last_seen"], l.LastSeen.Local().Format(time.RFC3339),
+			widths["power"], powerColor(l.Power),
 		)
 	}
 }

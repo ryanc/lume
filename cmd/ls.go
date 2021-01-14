@@ -4,10 +4,6 @@ import (
 	"flag"
 )
 
-var (
-	idWidth, locationWidth, groupWidth, labelWidth, lastSeenWidth, powerWidth int
-)
-
 func init() {
 	var cmdName string = "ls"
 	fs := flag.NewFlagSet(cmdName, flag.ExitOnError)
