@@ -17,6 +17,11 @@ func main() {
 	var config lumecmd.Config
 
 	configPath := getConfigPath()
+	if configPath == "" {
+		fmt.Println("fatal: ~/.lumerc was not found")
+		os.Exit(1)
+	}
+
 	if _, err := toml.DecodeFile(configPath, &config); err != nil {
 		fmt.Printf("fatal: failed to parse %s\n", configPath)
 		fmt.Println(err)
