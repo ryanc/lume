@@ -7,5 +7,5 @@ import (
 )
 
 func main() {
-	lumecmd.Main(os.Args)
+	os.Exit(lumecmd.Main(os.Args))
 }
