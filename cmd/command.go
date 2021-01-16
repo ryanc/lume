@@ -9,7 +9,7 @@ import (
 )
 
 type Config struct {
-	AccessToken string
+	AccessToken string               `toml:"access_token"`
 	Colors      map[string][]float32 `toml:"colors"`
 }
 
