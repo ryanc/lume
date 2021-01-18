@@ -1,6 +1,7 @@
 package lumecmd
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -12,19 +13,19 @@ import (
 
 const lumercFile string = ".lumerc"
 
-func Main(args []string) int {
+func Main(args []string) (int, error) {
 	var config Config
+	var err error
 
 	configPath := getConfigPath()
 	if configPath == "" {
-		fmt.Println("fatal: ~/.lumerc was not found")
-		return 1
+		err = errors.New("fatal: ~/.lumerc was not found")
+		return ExitError, err
 	}
 
 	if _, err := toml.DecodeFile(configPath, &config); err != nil {
-		fmt.Printf("fatal: failed to parse %s\n", configPath)
-		fmt.Println(err)
-		return 1
+		err = fmt.Errorf("fatal: failed to parse %s", configPath)
+		return ExitError, err
 	}
 
 	envAccessToken := os.Getenv("LIFX_ACCESS_TOKEN")
@@ -33,8 +34,8 @@ func Main(args []string) int {
 	}
 
 	if config.AccessToken == "" {
-		fmt.Println("access token is not set")
-		return 1
+		err = errors.New("fatal: access token is not set")
+		return ExitError, err
 	}
 
 	flag.Parse()
@@ -50,8 +51,8 @@ func Main(args []string) int {
 
 	cmd, ok := GetCommand(command)
 	if !ok {
-		fmt.Printf("lume: '%s' is not lume command. See 'lume help'\n", command)
-		return 1
+		err = fmt.Errorf("lume: '%s' is not lume command. See 'lume help'", command)
+		return ExitError, err
 	}
 	fs := cmd.Flags
 	fs.Parse(args[2:])
@@ -59,9 +60,10 @@ func Main(args []string) int {
 	cmdArgs.Flags = Flags{FlagSet: fs}
 	exitCode, err := cmd.Func(cmdArgs)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "fatal: %s\n", err)
+		err = fmt.Errorf("fatal: %s", err)
 	}
-	return exitCode
+
+	return exitCode, err
 }
 
 func getConfigPath() string {

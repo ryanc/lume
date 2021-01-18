@@ -58,7 +58,7 @@ func SetWhiteCmd(args CmdArgs) (int, error) {
 		kelvin := args.Flags.Int16("kelvin")
 		color, err := lifx.NewWhite(kelvin)
 		if err != nil {
-			return 1, err
+			return ExitError, err
 		}
 		state.Color = color
 	}
@@ -68,7 +68,7 @@ func SetWhiteCmd(args CmdArgs) (int, error) {
 		name := args.Flags.String("name")
 		color, err := lifx.NewWhiteString(name)
 		if err != nil {
-			return 1, err
+			return ExitError, err
 		}
 		state.Color = color
 	}
@@ -93,12 +93,12 @@ func SetWhiteCmd(args CmdArgs) (int, error) {
 
 	r, err := c.SetState(selector, state)
 	if err != nil {
-		return 1, err
+		return ExitError, err
 	}
 
 	if !fast {
 		PrintResults(r.Results)
 	}
 
-	return 0, nil
+	return ExitSuccess, nil
 }

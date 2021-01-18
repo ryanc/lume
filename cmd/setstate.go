@@ -75,12 +75,12 @@ func SetStateCmd(args CmdArgs) (int, error) {
 
 	r, err := c.SetState(selector, state)
 	if err != nil {
-		return 1, err
+		return ExitError, err
 	}
 
 	if !fast {
 		PrintResults(r.Results)
 	}
 
-	return 0, nil
+	return ExitSuccess, nil
 }

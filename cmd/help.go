@@ -25,8 +25,8 @@ func HelpCmd(args CmdArgs) (int, error) {
 	} else if len(argv) >= 1 {
 		subCmd, ok := commandRegistry[argv[0]]
 		if !ok {
-			fmt.Printf("unknown command: %s\n", argv[0])
-			return 1, nil
+			fmt.Printf("unknown commnnd: %s\n", argv[0])
+			return ExitError, nil
 		}
 
 		if subCmd.Use != "" {
@@ -38,7 +38,7 @@ func HelpCmd(args CmdArgs) (int, error) {
 		subCmd.Flags.PrintDefaults()
 	}
 
-	return 0, nil
+	return ExitSuccess, nil
 }
 
 func printHelp(commands map[string]Command) {

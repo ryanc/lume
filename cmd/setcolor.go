@@ -81,17 +81,17 @@ func SetColorCmd(args CmdArgs) (int, error) {
 	} else if rgbFlag != "" {
 		color, err := parseRGB(rgbFlag)
 		if err != nil {
-			return 1, err
+			return ExitError, err
 		}
 		state.Color = color
 	} else if name != "" {
 		hsb, ok := args.Config.Colors[name]
 		if !ok {
-			return 1, fmt.Errorf("%s is not a defined color", name)
+			return ExitError, fmt.Errorf("%s is not a defined color", name)
 		}
 		color, err := lifx.NewHSBColor(hsb[0], hsb[1], hsb[2])
 		if err != nil {
-			return 1, err
+			return ExitError, err
 		}
 		state.Color = color
 	}
@@ -111,12 +111,12 @@ func SetColorCmd(args CmdArgs) (int, error) {
 	r, err := c.SetState(selector, state)
 	if err != nil {
 		fmt.Printf("fatal: %s\n", err)
-		return 1, err
+		return ExitError, err
 	}
 
 	if !fast {
 		PrintResults(r.Results)
 	}
 
-	return 0, nil
+	return ExitSuccess, nil
 }

@@ -29,8 +29,8 @@ func ToggleCmd(args CmdArgs) (int, error) {
 	selector := args.Flags.String("selector")
 	r, err := c.Toggle(selector, duration)
 	if err != nil {
-		return 1, err
+		return ExitError, err
 	}
 	PrintResults(r.Results)
-	return 0, nil
+	return ExitSuccess, nil
 }

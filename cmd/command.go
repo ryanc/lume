@@ -8,6 +8,11 @@ import (
 	lifx "git.kill0.net/chill9/lume"
 )
 
+const (
+	ExitSuccess = iota
+	ExitError
+)
+
 type Config struct {
 	AccessToken string               `toml:"access_token"`
 	Colors      map[string][]float32 `toml:"colors"`

@@ -23,8 +23,8 @@ func LsCmd(args CmdArgs) (int, error) {
 	selector := args.Flags.String("selector")
 	lights, err := c.ListLights(selector)
 	if err != nil {
-		return 1, err
+		return ExitError, err
 	}
 	PrintLights(lights)
-	return 0, nil
+	return ExitSuccess, nil
 }
