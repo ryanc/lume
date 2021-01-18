@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"git.kill0.net/chill9/lume"
+	lifx "git.kill0.net/chill9/lume"
 )
 
 type Config struct {
