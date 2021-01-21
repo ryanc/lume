@@ -2,6 +2,7 @@ package lumecmd
 
 import (
 	"fmt"
+	"os"
 	"sort"
 	"strconv"
 	"strings"
@@ -150,4 +151,11 @@ func sortResults(res []lifx.Result) {
 	sort.Slice(res, func(i, j int) bool {
 		return res[i].Label < res[j].Label
 	})
+}
+
+func ExitWithCode(code int, err error) {
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s\n", err)
+	}
+	os.Exit(code)
 }
