@@ -33,9 +33,8 @@ func Main(args []string) (int, error) {
 		config.AccessToken = envAccessToken
 	}
 
-	if config.AccessToken == "" {
-		err = errors.New("fatal: access token is not set")
-		return ExitError, err
+	if err = config.Validate(); err != nil {
+		return ExitError, fmt.Errorf("fatal: %s", err)
 	}
 
 	flag.Parse()
