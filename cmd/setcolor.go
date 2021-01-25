@@ -3,6 +3,7 @@ package lumecmd
 import (
 	"flag"
 	"fmt"
+	"os"
 
 	lifx "git.kill0.net/chill9/lume"
 )
@@ -52,8 +53,6 @@ func SetColorCmd(args CmdArgs) (int, error) {
 	state := lifx.State{}
 	selector := args.Flags.String("selector")
 
-	fmt.Println(args.Config)
-
 	power := args.Flags.String("power")
 	if power != "" {
 		state.Power = power
@@ -63,6 +62,11 @@ func SetColorCmd(args CmdArgs) (int, error) {
 	saturationFlag := args.Flags.String("saturation")
 	rgbFlag := args.Flags.String("rgb")
 	name := args.Flags.String("name")
+
+	if (hueFlag == "" || saturationFlag == "") && rgbFlag == "" && name == "" {
+		printCmdHelp(os.Args[1])
+		return ExitError, nil
+	}
 
 	if hueFlag != "" || saturationFlag != "" {
 		color := lifx.HSBKColor{}
