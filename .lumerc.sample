@@ -1,1 +1,11 @@
 access_token = "token"
+
+[colors]
+purple_candy = [ 280.0, 0.29, 0.71 ]
+wasabi = [ 120.0, 1.0, 0.7 ]
+honeydew = [ 120.0, 1.0, 0.97 ]
+green_mist = [ 92.0, 0.72, 0.75 ]
+pea = [ 90.0, 0.42, 0.47 ]
+cat_eye = [ 76.0, 0.74, 0.61 ]
+seagreen = [ 160.0, 1.0, 0.50 ]
+blue_mist = [ 202.0, 0.97, 0.75 ]
