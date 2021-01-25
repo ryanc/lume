@@ -24,7 +24,7 @@ func Main(args []string) (int, error) {
 	}
 
 	if _, err := toml.DecodeFile(configPath, &config); err != nil {
-		err = fmt.Errorf("fatal: failed to parse %s", configPath)
+		err = fmt.Errorf("fatal: failed to parse %s; %w", configPath, err)
 		return ExitError, err
 	}
 
