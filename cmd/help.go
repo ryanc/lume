@@ -23,19 +23,7 @@ func HelpCmd(args CmdArgs) (int, error) {
 	if len(argv) == 0 {
 		printHelp(commandRegistry)
 	} else if len(argv) >= 1 {
-		subCmd, ok := commandRegistry[argv[0]]
-		if !ok {
-			fmt.Printf("unknown commnnd: %s\n", argv[0])
-			return ExitError, nil
-		}
-
-		if subCmd.Use != "" {
-			fmt.Printf("usage:\n  lume %s %s\n", subCmd.Name, subCmd.Use)
-			fmt.Println()
-		}
-
-		fmt.Print("flags:\n")
-		subCmd.Flags.PrintDefaults()
+		printCmdHelp(argv[0])
 	}
 
 	return ExitSuccess, nil
@@ -57,4 +45,21 @@ func printHelp(commands map[string]Command) {
 	for _, c := range commands {
 		fmt.Printf("  %-*s    %s\n", maxLen, c.Name, c.Short)
 	}
+}
+
+func printCmdHelp(name string) error {
+	subCmd, ok := commandRegistry[name]
+	if !ok {
+		return fmt.Errorf("unknown commnnd: %s\n", name)
+	}
+
+	if subCmd.Use != "" {
+		fmt.Printf("usage:\n  lume %s %s\n", subCmd.Name, subCmd.Use)
+		fmt.Println()
+	}
+
+	fmt.Print("flags:\n")
+	subCmd.Flags.PrintDefaults()
+
+	return nil
 }
