@@ -75,7 +75,7 @@ func SetStateCmd(args CmdArgs) (int, error) {
 
 	r, err := c.SetState(selector, state)
 	if err != nil {
-		return ExitError, err
+		return ExitFailure, err
 	}
 
 	if !fast {

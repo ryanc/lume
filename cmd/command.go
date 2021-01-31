@@ -11,7 +11,7 @@ import (
 
 const (
 	ExitSuccess = iota
-	ExitError
+	ExitFailure
 )
 
 type Config struct {

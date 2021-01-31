@@ -20,12 +20,12 @@ func Main(args []string) (int, error) {
 	configPath := getConfigPath()
 	if configPath == "" {
 		err = errors.New("fatal: ~/.lumerc was not found")
-		return ExitError, err
+		return ExitFailure, err
 	}
 
 	if _, err := toml.DecodeFile(configPath, &config); err != nil {
 		err = fmt.Errorf("fatal: failed to parse %s; %w", configPath, err)
-		return ExitError, err
+		return ExitFailure, err
 	}
 
 	envAccessToken := os.Getenv("LIFX_ACCESS_TOKEN")
@@ -34,7 +34,7 @@ func Main(args []string) (int, error) {
 	}
 
 	if err = config.Validate(); err != nil {
-		return ExitError, fmt.Errorf("fatal: %s", err)
+		return ExitFailure, fmt.Errorf("fatal: %s", err)
 	}
 
 	flag.Parse()
@@ -51,7 +51,7 @@ func Main(args []string) (int, error) {
 	cmd, ok := GetCommand(command)
 	if !ok {
 		err = fmt.Errorf("lume: '%s' is not lume command. See 'lume help'", command)
-		return ExitError, err
+		return ExitFailure, err
 	}
 	fs := cmd.Flags
 	fs.Parse(args[2:])

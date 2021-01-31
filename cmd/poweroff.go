@@ -33,7 +33,7 @@ func PoweroffCmd(args CmdArgs) (int, error) {
 
 	r, err := c.SetState(selector, state)
 	if err != nil {
-		return ExitError, err
+		return ExitFailure, err
 	}
 	PrintResults(r.Results)
 	return ExitSuccess, nil
