@@ -17,6 +17,10 @@ func Main(args []string) (int, error) {
 	var config Config
 	var err error
 
+	if len(args) == 1 {
+		args = append(args, "help")
+	}
+
 	configPath := getConfigPath()
 	if configPath == "" {
 		err = errors.New("fatal: ~/.lumerc was not found")
@@ -39,7 +43,7 @@ func Main(args []string) (int, error) {
 
 	flag.Parse()
 
-	command := flag.Arg(0)
+	command := args[1]
 
 	c := lifx.NewClient(config.AccessToken)
 
