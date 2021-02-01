@@ -7,37 +7,37 @@ import (
 )
 
 func init() {
-	var cmdName string = "set-white"
+	RegisterCommand("set-white", Command{
+		Func: SetWhiteCmd,
+		Flags: func() *flag.FlagSet {
+			fs := flag.NewFlagSet("set-white", flag.ExitOnError)
 
-	fs := flag.NewFlagSet(cmdName, flag.ExitOnError)
+			selector := fs.String("selector", "all", "the selector")
+			fs.StringVar(selector, "s", "all", "the selector")
 
-	selector := fs.String("selector", "all", "the selector")
-	fs.StringVar(selector, "s", "all", "the selector")
+			power := fs.String("power", defaultPower, "power state")
+			fs.StringVar(power, "p", defaultPower, "power state")
 
-	power := fs.String("power", defaultPower, "power state")
-	fs.StringVar(power, "p", defaultPower, "power state")
+			kelvin := fs.String("kelvin", defaultWhiteKelvin, "kelvin level")
+			fs.StringVar(kelvin, "k", defaultWhiteKelvin, "kelvin level")
 
-	kelvin := fs.String("kelvin", defaultWhiteKelvin, "kelvin level")
-	fs.StringVar(kelvin, "k", defaultWhiteKelvin, "kelvin level")
+			name := fs.String("name", defaultWhiteName, "named white level")
+			fs.StringVar(name, "n", defaultWhiteName, "named white level")
 
-	name := fs.String("name", defaultWhiteName, "named white level")
-	fs.StringVar(name, "n", defaultWhiteName, "named white level")
+			brightness := fs.String("brightness", defaultBrightness, "brightness state")
+			fs.StringVar(brightness, "b", defaultBrightness, "brightness state")
 
-	brightness := fs.String("brightness", defaultBrightness, "brightness state")
-	fs.StringVar(brightness, "b", defaultBrightness, "brightness state")
+			duration := fs.Float64("duration", defaultDuration, "duration state")
+			fs.Float64Var(duration, "d", defaultDuration, "duration state")
 
-	duration := fs.Float64("duration", defaultDuration, "duration state")
-	fs.Float64Var(duration, "d", defaultDuration, "duration state")
+			infrared := fs.String("infrared", defaultInfrared, "infrared state")
+			fs.StringVar(infrared, "i", defaultInfrared, "infrared state")
 
-	infrared := fs.String("infrared", defaultInfrared, "infrared state")
-	fs.StringVar(infrared, "i", defaultInfrared, "infrared state")
+			fast := fs.Bool("fast", defaultFast, "fast state")
+			fs.BoolVar(fast, "f", defaultFast, "fast state")
 
-	fast := fs.Bool("fast", defaultFast, "fast state")
-	fs.BoolVar(fast, "f", defaultFast, "fast state")
-
-	RegisterCommand(cmdName, Command{
-		Func:  SetWhiteCmd,
-		Flags: fs,
+			return fs
+		}(),
 		Use:   "[--selector <selector>] [--power (on|off)] [--kelvin <kelvin>] [--name <color>] [--brightness <brightness>] [--duration <sec>] [--infrared] [--fast]",
 		Short: "Set the white level",
 	})

@@ -5,14 +5,16 @@ import (
 )
 
 func init() {
-	var cmdName string = "ls"
-	fs := flag.NewFlagSet(cmdName, flag.ExitOnError)
-	selector := fs.String("selector", defaultSelector, "Set the selector")
-	fs.StringVar(selector, "s", defaultSelector, "Set the selector")
+	RegisterCommand("ls", Command{
+		Func: LsCmd,
+		Flags: func() *flag.FlagSet {
+			fs := flag.NewFlagSet("ls", flag.ExitOnError)
 
-	RegisterCommand(cmdName, Command{
-		Func:  LsCmd,
-		Flags: fs,
+			selector := fs.String("selector", defaultSelector, "Set the selector")
+			fs.StringVar(selector, "s", defaultSelector, "Set the selector")
+
+			return fs
+		}(),
 		Use:   "[--selector=<selector>]",
 		Short: "List the lights",
 	})

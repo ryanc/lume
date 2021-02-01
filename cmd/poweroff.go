@@ -7,19 +7,19 @@ import (
 )
 
 func init() {
-	var cmdName string = "poweroff"
+	RegisterCommand("poweroff", Command{
+		Func: PoweroffCmd,
+		Flags: func() *flag.FlagSet {
+			fs := flag.NewFlagSet("poweroff", flag.ExitOnError)
 
-	fs := flag.NewFlagSet(cmdName, flag.ExitOnError)
+			duration := fs.Float64("duration", defaultDuration, "Set the duration")
+			fs.Float64Var(duration, "d", defaultDuration, "Set the duration")
 
-	duration := fs.Float64("duration", defaultDuration, "Set the duration")
-	fs.Float64Var(duration, "d", defaultDuration, "Set the duration")
+			selector := fs.String("selector", defaultSelector, "Set the selector")
+			fs.StringVar(selector, "s", defaultSelector, "Set the selector")
 
-	selector := fs.String("selector", defaultSelector, "Set the selector")
-	fs.StringVar(selector, "s", defaultSelector, "Set the selector")
-
-	RegisterCommand(cmdName, Command{
-		Func:  PoweroffCmd,
-		Flags: fs,
+			return fs
+		}(),
 		Use:   "[--selector <selector>] [--duration <sec>]",
 		Short: "Power on",
 	})

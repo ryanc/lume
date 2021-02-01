@@ -6,12 +6,13 @@ import (
 )
 
 func init() {
-	var cmdName string = "help"
-	fs := flag.NewFlagSet(cmdName, flag.ExitOnError)
+	RegisterCommand("help", Command{
+		Func: HelpCmd,
+		Flags: func() *flag.FlagSet {
+			fs := flag.NewFlagSet("help", flag.ExitOnError)
 
-	RegisterCommand(cmdName, Command{
-		Func:  HelpCmd,
-		Flags: fs,
+			return fs
+		}(),
 		Use:   "<command>",
 		Short: "Show help for a command",
 	})

@@ -9,40 +9,40 @@ import (
 )
 
 func init() {
-	var cmdName string = "set-color"
+	RegisterCommand("set-color", Command{
+		Func: SetColorCmd,
+		Flags: func() *flag.FlagSet {
+			fs := flag.NewFlagSet("set-color", flag.ExitOnError)
 
-	fs := flag.NewFlagSet(cmdName, flag.ExitOnError)
+			selector := fs.String("selector", "all", "the selector")
+			fs.StringVar(selector, "s", "all", "the selector")
 
-	selector := fs.String("selector", "all", "the selector")
-	fs.StringVar(selector, "s", "all", "the selector")
+			power := fs.String("power", defaultPower, "power state")
+			fs.StringVar(power, "p", defaultPower, "power state")
 
-	power := fs.String("power", defaultPower, "power state")
-	fs.StringVar(power, "p", defaultPower, "power state")
+			hue := fs.String("hue", defaultHue, "hue level")
+			fs.StringVar(hue, "H", defaultHue, "hue level")
 
-	hue := fs.String("hue", defaultHue, "hue level")
-	fs.StringVar(hue, "H", defaultHue, "hue level")
+			saturation := fs.String("saturation", defaultSaturation, "saturation level")
+			fs.StringVar(saturation, "S", defaultSaturation, "saturation level")
 
-	saturation := fs.String("saturation", defaultSaturation, "saturation level")
-	fs.StringVar(saturation, "S", defaultSaturation, "saturation level")
+			rgb := fs.String("rgb", defaultRGB, "RGB value")
+			fs.StringVar(rgb, "r", defaultRGB, "RGB value")
 
-	rgb := fs.String("rgb", defaultRGB, "RGB value")
-	fs.StringVar(rgb, "r", defaultRGB, "RGB value")
+			name := fs.String("name", defaultName, "named color")
+			fs.StringVar(name, "n", defaultName, "named color")
 
-	name := fs.String("name", defaultName, "named color")
-	fs.StringVar(name, "n", defaultName, "named color")
+			brightness := fs.String("brightness", defaultBrightness, "brightness state")
+			fs.StringVar(brightness, "b", defaultBrightness, "brightness state")
 
-	brightness := fs.String("brightness", defaultBrightness, "brightness state")
-	fs.StringVar(brightness, "b", defaultBrightness, "brightness state")
+			duration := fs.Float64("duration", defaultDuration, "duration state")
+			fs.Float64Var(duration, "d", defaultDuration, "duration state")
 
-	duration := fs.Float64("duration", defaultDuration, "duration state")
-	fs.Float64Var(duration, "d", defaultDuration, "duration state")
+			fast := fs.Bool("fast", defaultFast, "fast state")
+			fs.BoolVar(fast, "f", defaultFast, "fast state")
 
-	fast := fs.Bool("fast", defaultFast, "fast state")
-	fs.BoolVar(fast, "f", defaultFast, "fast state")
-
-	RegisterCommand(cmdName, Command{
-		Func:  SetColorCmd,
-		Flags: fs,
+			return fs
+		}(),
 		Use:   "[--selector <selector>] [--power (on|off)] [--hue <hue>] [--saturation <saturation>] [--rgb <rbg>] [--name <color>] [--brightness <brightness>] [--duration <sec>] [--fast]",
 		Short: "Set the color",
 	})
