@@ -1,23 +1,9 @@
 package lumecmd
 
 import (
-	"flag"
 	"fmt"
 	"sort"
 )
-
-func init() {
-	RegisterCommand("help", Command{
-		Func: HelpCmd,
-		Flags: func() *flag.FlagSet {
-			fs := flag.NewFlagSet("help", flag.ExitOnError)
-
-			return fs
-		}(),
-		Use:   "<command>",
-		Short: "Show help for a command",
-	})
-}
 
 func HelpCmd(args CmdArgs) (int, error) {
 	argv := args.Flags.Args()
