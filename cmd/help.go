@@ -3,6 +3,7 @@ package lumecmd
 import (
 	"flag"
 	"fmt"
+	"sort"
 )
 
 func init() {
@@ -32,7 +33,10 @@ func HelpCmd(args CmdArgs) (int, error) {
 
 func printHelp(commands map[string]Command) {
 	var maxLen, cmdLen int
+	var keys []string
+
 	for _, c := range commands {
+		keys = append(keys, c.Name)
 		cmdLen = len(c.Name)
 		if cmdLen > maxLen {
 			maxLen = cmdLen
@@ -41,9 +45,11 @@ func printHelp(commands map[string]Command) {
 
 	fmt.Printf("usage:\n  lume <command> [<args...>]")
 	fmt.Println()
-
 	fmt.Println("\ncommands:")
-	for _, c := range commands {
+
+	sort.Strings(keys)
+	for _, k := range keys {
+		c := commands[k]
 		fmt.Printf("  %-*s    %s\n", maxLen, c.Name, c.Short)
 	}
 }
