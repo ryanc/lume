@@ -237,6 +237,7 @@ func Main(args []string) (int, error) {
 	fs.Parse(args[2:])
 
 	cmdArgs.Flags = Flags{FlagSet: fs}
+	cmdArgs.Name = command
 	exitCode, err := cmd.Func(cmdArgs)
 	if err != nil {
 		err = fmt.Errorf("fatal: %s", err)

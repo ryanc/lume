@@ -23,6 +23,7 @@ type CmdArgs struct {
 	Flags  Flags
 	Client *lifx.Client
 	Config Config
+	Name   string
 }
 
 type Flags struct {
