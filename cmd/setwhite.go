@@ -52,6 +52,11 @@ func SetWhiteCmd(args CmdArgs) (int, error) {
 	fast := args.Flags.Bool("fast")
 	state.Fast = fast
 
+	if power == "" && kelvinFlag == "" && name == "" && brightnessFlag == "" && infraredFlag == "" {
+		printCmdHelp(args.Name)
+		return ExitFailure, nil
+	}
+
 	r, err := c.SetState(selector, state)
 	if err != nil {
 		return ExitFailure, err
