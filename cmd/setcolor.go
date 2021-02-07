@@ -2,7 +2,6 @@ package lumecmd
 
 import (
 	"fmt"
-	"os"
 
 	lifx "git.kill0.net/chill9/lume"
 )
@@ -23,7 +22,7 @@ func SetColorCmd(args CmdArgs) (int, error) {
 	name := args.Flags.String("name")
 
 	if (hueFlag == "" || saturationFlag == "") && rgbFlag == "" && name == "" {
-		printCmdHelp(os.Args[1])
+		printCmdHelp(args.Name)
 		return ExitFailure, nil
 	}
 
