@@ -11,6 +11,8 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
+const userAgent = "lume"
+
 func init() {
 	RegisterCommand("help", Command{
 		Func: HelpCmd,
@@ -221,7 +223,7 @@ func Main(args []string) (int, error) {
 
 	command := args[1]
 
-	c := lifx.NewClient(config.AccessToken)
+	c := lifx.NewClientWithUserAgent(config.AccessToken, userAgent)
 
 	cmdArgs := CmdArgs{
 		Client: c,

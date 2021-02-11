@@ -13,11 +13,12 @@ import (
 	"time"
 )
 
-const UserAgent = "lume"
+const defaultUserAgent = "go-lifx"
 
 type (
 	Client struct {
 		accessToken string
+		userAgent   string
 		Client      *http.Client
 	}
 
@@ -76,6 +77,18 @@ func NewClient(accessToken string) *Client {
 	}
 	return &Client{
 		accessToken: accessToken,
+		userAgent:   defaultUserAgent,
+		Client:      &http.Client{Transport: tr},
+	}
+}
+
+func NewClientWithUserAgent(accessToken string, userAgent string) *Client {
+	tr := &http.Transport{
+		//TLSNextProto: make(map[string]func(authority string, c *tls.Conn) http.RoundTripper),
+	}
+	return &Client{
+		accessToken: accessToken,
+		userAgent:   userAgent,
 		Client:      &http.Client{Transport: tr},
 	}
 }
@@ -135,7 +148,7 @@ func (c *Client) NewRequest(method, url string, body io.Reader) (req *http.Reque
 	}
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", c.accessToken))
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("User-Agent", UserAgent)
+	req.Header.Add("User-Agent", c.userAgent)
 	return
 }
 
