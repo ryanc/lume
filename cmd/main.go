@@ -223,7 +223,10 @@ func Main(args []string) (int, error) {
 
 	command := args[1]
 
-	c := lifx.NewClientWithUserAgent(config.AccessToken, userAgent)
+	c := lifx.NewClient(
+		config.AccessToken,
+		lifx.WithUserAgent(userAgent),
+	)
 
 	cmdArgs := CmdArgs{
 		Client: c,

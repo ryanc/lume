@@ -71,14 +71,27 @@ var errorMap = map[int]error{
 	523:                            errors.New("Something went wrong on LIFX's end"),
 }
 
-func NewClient(accessToken string) *Client {
+func NewClient(accessToken string, options ...func(*Client)) *Client {
+	var c *Client
 	tr := &http.Transport{
 		//TLSNextProto: make(map[string]func(authority string, c *tls.Conn) http.RoundTripper),
 	}
-	return &Client{
+
+	c = &Client{
 		accessToken: accessToken,
-		userAgent:   defaultUserAgent,
 		Client:      &http.Client{Transport: tr},
+	}
+
+	for _, option := range options {
+		option(c)
+	}
+
+	return c
+}
+
+func WithUserAgent(userAgent string) func(*Client) {
+	return func(c *Client) {
+		c.userAgent = userAgent
 	}
 }
 
