@@ -6,14 +6,17 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"strings"
 
 	lifx "git.kill0.net/chill9/lume"
 	"github.com/BurntSushi/toml"
 )
 
-const userAgent = "lume"
+var userAgent string
 
 func init() {
+	userAgent = initUserAgent()
+
 	RegisterCommand("help", Command{
 		Func: HelpCmd,
 		Flags: func() *flag.FlagSet {
@@ -273,4 +276,13 @@ func getConfigPath() string {
 	}
 
 	return configPath
+}
+
+func initUserAgent() string {
+	var b strings.Builder
+
+	b.WriteString("lume")
+	b.WriteRune('/')
+	b.WriteString(Version)
+	return b.String()
 }
