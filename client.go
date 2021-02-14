@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-const defaultUserAgent = "go-lifx"
+const defaultUserAgent = "lifx-go"
 
 type (
 	Client struct {
