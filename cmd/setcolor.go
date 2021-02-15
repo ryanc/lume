@@ -3,7 +3,7 @@ package lumecmd
 import (
 	"fmt"
 
-	lifx "git.kill0.net/chill9/lume"
+	"git.kill0.net/chill9/lifx-go"
 )
 
 func SetColorCmd(args CmdArgs) (int, error) {

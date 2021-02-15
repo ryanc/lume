@@ -8,7 +8,7 @@ import (
 	"path"
 	"strings"
 
-	lifx "git.kill0.net/chill9/lume"
+	"git.kill0.net/chill9/lifx-go"
 	"github.com/BurntSushi/toml"
 )
 

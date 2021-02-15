@@ -1,7 +1,7 @@
 package lumecmd
 
 import (
-	lifx "git.kill0.net/chill9/lume"
+	"git.kill0.net/chill9/lifx-go"
 )
 
 func PoweronCmd(args CmdArgs) (int, error) {

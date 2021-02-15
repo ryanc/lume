@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strconv"
 
-	lifx "git.kill0.net/chill9/lume"
+	"git.kill0.net/chill9/lifx-go"
 )
 
 const (
