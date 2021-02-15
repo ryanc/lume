@@ -174,6 +174,19 @@ func init() {
 		Use:   "[--selector <selector>] [--power (on|off)] [--kelvin <kelvin>] [--name <color>] [--brightness <brightness>] [--duration <sec>] [--infrared] [--fast]",
 		Short: "Set the white level",
 	})
+	RegisterCommand("show", Command{
+		Func: ShowCmd,
+		Flags: func() *flag.FlagSet {
+			fs := flag.NewFlagSet("show", flag.ExitOnError)
+
+			selector := fs.String("selector", defaultSelector, "Set the selector")
+			fs.StringVar(selector, "s", defaultSelector, "Set the selector")
+
+			return fs
+		}(),
+		Use:   "[--selector=<selector>]",
+		Short: "Show details about the lights",
+	})
 	RegisterCommand("toggle", Command{
 		Func: ToggleCmd,
 		Flags: func() *flag.FlagSet {

@@ -159,3 +159,14 @@ func ExitWithCode(code int, err error) {
 	}
 	os.Exit(code)
 }
+
+func YesNo(v bool) string {
+	if v {
+		return "yes"
+	}
+	return "no"
+}
+
+func PrintWithIndent(indent int, s string) {
+	fmt.Printf("%*s%s", indent, "", s)
+}
