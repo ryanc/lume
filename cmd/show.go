@@ -13,15 +13,14 @@ func ShowCmd(args CmdArgs) (int, error) {
 
 	sortLights(lights)
 
-	for _, l := range lights {
+	for i, l := range lights {
 		fmt.Printf(
-			"Light Id: %s, Label: %s, %s, Power: %s\n",
+			"Light ID: %s, %s, Power: %s\n",
 			l.Id,
-			l.Label,
 			connected(l.Connected),
 			powerColor(l.Power),
 		)
-		fmt.Printf("  Label: %s\n", l.Label)
+		fmt.Printf("  Label: %s, ID: %s\n", l.Label, l.Id)
 		fmt.Printf("  UUID: %s\n", l.UUID)
 		fmt.Printf("  Location: %s, ID: %s\n", l.Location.Name, l.Location.Id)
 		fmt.Printf("  Group: %s, ID: %s\n", l.Group.Name, l.Group.Id)
@@ -50,7 +49,10 @@ func ShowCmd(args CmdArgs) (int, error) {
 		fmt.Printf("    location_id:%s\n", l.Location.Id)
 		fmt.Printf("    location:%s\n", l.Location.Name)
 		fmt.Printf("  Last Seen: %s (%.1fs ago)\n", l.LastSeen, l.SecondsLastSeen)
-		fmt.Println()
+
+		if i < len(lights)-1 {
+			fmt.Println()
+		}
 	}
 	return ExitSuccess, nil
 }
