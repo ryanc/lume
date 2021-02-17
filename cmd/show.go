@@ -1,8 +1,13 @@
 package lumecmd
 
-import "fmt"
+import (
+	"fmt"
+)
+
+const Tabstop int = 2
 
 func ShowCmd(args CmdArgs) (int, error) {
+	var indent int
 	c := args.Client
 	selector := args.Flags.String("selector")
 	lights, err := c.ListLights(selector)
@@ -14,24 +19,26 @@ func ShowCmd(args CmdArgs) (int, error) {
 	sortLights(lights)
 
 	for i, l := range lights {
+		indent = 0
 		fmt.Printf(
 			"Light ID: %s, %s, Power: %s\n",
 			l.Id,
 			connected(l.Connected),
 			powerColor(l.Power),
 		)
-		fmt.Printf("  Label: %s, ID: %s\n", l.Label, l.Id)
-		fmt.Printf("  UUID: %s\n", l.UUID)
-		fmt.Printf("  Location: %s, ID: %s\n", l.Location.Name, l.Location.Id)
-		fmt.Printf("  Group: %s, ID: %s\n", l.Group.Name, l.Group.Id)
-		fmt.Printf("  Color: Hue: %.1f, Saturation: %.1f%%, Kelvin: %d\n",
+		indent += Tabstop
+		PrintfWithIndent(indent, "Label: %s, ID: %s\n", l.Label, l.Id)
+		PrintfWithIndent(indent, "UUID: %s\n", l.UUID)
+		PrintfWithIndent(indent, "Location: %s, ID: %s\n", l.Location.Name, l.Location.Id)
+		PrintfWithIndent(indent, "Group: %s, ID: %s\n", l.Group.Name, l.Group.Id)
+		PrintfWithIndent(indent, "Color: Hue: %.1f, Saturation: %.1f%%, Kelvin: %d\n",
 			*l.Color.H, *l.Color.S, *l.Color.K)
-		fmt.Printf("  Brightness: %.1f%%\n", l.Brightness*100)
+		PrintfWithIndent(indent, "Brightness: %.1f%%\n", l.Brightness*100)
 		if l.Effect != "" {
-			fmt.Printf("  Effect: %s\n", l.Effect)
+			PrintfWithIndent(indent, "Effect: %s\n", l.Effect)
 		}
-		fmt.Printf("  Product: %s\n", l.Product.Name)
-		fmt.Printf("  Capabilities: ")
+		PrintfWithIndent(indent, "Product: %s\n", l.Product.Name)
+		PrintfWithIndent(indent, "Capabilities: ")
 		fmt.Printf("Color: %s, ", YesNo(l.Product.Capabilities.HasColor))
 		fmt.Printf("Variable Color Temp: %s, ", YesNo(l.Product.Capabilities.HasVariableColorTemp))
 		fmt.Printf("IR: %s, ", YesNo(l.Product.Capabilities.HasIR))
@@ -41,14 +48,16 @@ func ShowCmd(args CmdArgs) (int, error) {
 		fmt.Printf("Max Kelvin: %.1f ", l.Product.Capabilities.MaxKelvin)
 		fmt.Println()
 		// List applicable selectors (most to least specific)
-		fmt.Printf("  Selectors:\n")
-		fmt.Printf("    id:%s\n", l.Id)
-		fmt.Printf("    label:%s\n", l.Label)
-		fmt.Printf("    group_id:%s\n", l.Group.Id)
-		fmt.Printf("    group:%s\n", l.Group.Name)
-		fmt.Printf("    location_id:%s\n", l.Location.Id)
-		fmt.Printf("    location:%s\n", l.Location.Name)
-		fmt.Printf("  Last Seen: %s (%.1fs ago)\n", l.LastSeen, l.SecondsLastSeen)
+		PrintfWithIndent(indent, "Selectors:\n")
+		indent += Tabstop
+		PrintfWithIndent(indent, "id:%s\n", l.Id)
+		PrintfWithIndent(indent, "label:%s\n", l.Label)
+		PrintfWithIndent(indent, "group_id:%s\n", l.Group.Id)
+		PrintfWithIndent(indent, "group:%s\n", l.Group.Name)
+		PrintfWithIndent(indent, "location_id:%s\n", l.Location.Id)
+		PrintfWithIndent(indent, "location:%s\n", l.Location.Name)
+		indent -= Tabstop
+		PrintfWithIndent(indent, "Last Seen: %s (%.1fs ago)\n", l.LastSeen, l.SecondsLastSeen)
 
 		if i < len(lights)-1 {
 			fmt.Println()

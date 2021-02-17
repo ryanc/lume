@@ -170,3 +170,8 @@ func YesNo(v bool) string {
 func PrintWithIndent(indent int, s string) {
 	fmt.Printf("%*s%s", indent, "", s)
 }
+
+func PrintfWithIndent(indent int, format string, a ...interface{}) (n int, err error) {
+	format = fmt.Sprintf("%*s%s", indent, "", format)
+	return fmt.Printf(format, a...)
+}
