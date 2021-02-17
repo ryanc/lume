@@ -1,10 +1,28 @@
 package lumecmd
 
 import (
+	"flag"
 	"fmt"
 )
 
 const Tabstop int = 2
+
+func NewCmdShow() Command {
+	return Command{
+		Name: "show",
+		Func: ShowCmd,
+		Flags: func() *flag.FlagSet {
+			fs := flag.NewFlagSet("show", flag.ExitOnError)
+
+			selector := fs.String("selector", defaultSelector, "Set the selector")
+			fs.StringVar(selector, "s", defaultSelector, "Set the selector")
+
+			return fs
+		}(),
+		Use:   "[--selector=<selector>]",
+		Short: "Show details about the lights",
+	}
+}
 
 func ShowCmd(args CmdArgs) (int, error) {
 	var indent int

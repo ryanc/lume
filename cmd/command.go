@@ -81,12 +81,11 @@ func (f Flags) Bool(name string) bool {
 	return val
 }
 
-func RegisterCommand(name string, cmd Command) error {
-	if _, ok := commandRegistry[name]; ok {
+func RegisterCommand(cmd Command) error {
+	if _, ok := commandRegistry[cmd.Name]; ok {
 		return fmt.Errorf("%s command is already registered")
 	}
-	cmd.Name = name
-	commandRegistry[name] = cmd
+	commandRegistry[cmd.Name] = cmd
 	return nil
 }
 
