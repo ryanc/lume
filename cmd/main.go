@@ -26,7 +26,10 @@ func init() {
 	RegisterCommand(NewCmdSetWhite())
 	RegisterCommand(NewCmdShow())
 	RegisterCommand(NewCmdToggle())
+	RegisterCommand(NewCmdVersion())
 }
+
+const Version = "0.1.0-pre"
 
 const lumercFile string = ".lumerc"
 

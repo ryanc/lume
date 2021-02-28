@@ -1,3 +1,20 @@
 package lumecmd
 
-const Version = "0.1.0-pre"
+import (
+	"fmt"
+)
+
+func NewCmdVersion() Command {
+	return Command{
+		Name:  "version",
+		Func:  VersionCmd,
+		Flags: nil,
+		Use:   "",
+		Short: "Show version",
+	}
+}
+
+func VersionCmd(args CmdArgs) (int, error) {
+	fmt.Println(Version)
+	return ExitSuccess, nil
+}
