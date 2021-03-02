@@ -29,7 +29,7 @@ func init() {
 	RegisterCommand(NewCmdVersion())
 }
 
-const Version = "0.1.0-pre"
+var Version string = "0.1.0-pre"
 
 const lumercFile string = ".lumerc"
 
