@@ -2,6 +2,7 @@ package lumecmd
 
 import (
 	"fmt"
+	"runtime"
 )
 
 func NewCmdVersion() Command {
@@ -15,6 +16,8 @@ func NewCmdVersion() Command {
 }
 
 func VersionCmd(args CmdArgs) (int, error) {
-	fmt.Println(Version)
+	fmt.Printf("lume %s\n", Version)
+	fmt.Printf("  os/arch: %s/%s\n", runtime.GOOS, runtime.GOARCH)
+	fmt.Printf("  go version: %s\n", runtime.Version())
 	return ExitSuccess, nil
 }
