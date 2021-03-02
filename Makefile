@@ -1,7 +1,15 @@
+ifeq ($(OS), Windows_NT)
+    EXE=lume.exe
+	RM=del /f
+else
+    EXE=lume
+    EXE=rm -f
+endif
+
 .PHONY: build
 build:
-	go build -o lume ./cmd/lume
+	go build -o ${EXE} ./cmd/lume
 
 .PHONY: clean
 clean:
-	rm -f ./lifx
+	${RM} ${EXE}
