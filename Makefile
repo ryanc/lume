@@ -1,6 +1,6 @@
 ifeq ($(OS), Windows_NT)
     EXE=lume.exe
-	RM=del /f
+	RM=del /f /q
 else
     EXE=lume
     EXE=rm -f
