@@ -1,3 +1,5 @@
+V ?= 0
+Q = $(if $(filter 1, $V),, @)
 
 ifeq ($(OS), Windows_NT)
     EXE=lume.exe
@@ -16,7 +18,7 @@ LDFLAGS := ${LDFLAGS} \
 
 .PHONY: build
 build:
-	go build -o ${EXE} -ldflags="${LDFLAGS}" ./cmd/lume
+	$(Q) go build -o ${EXE} -ldflags="${LDFLAGS}" ./cmd/lume
 
 .PHONY: clean
 clean:
