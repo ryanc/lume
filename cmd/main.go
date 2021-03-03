@@ -30,6 +30,7 @@ func init() {
 }
 
 var Version string = "0.1.0-pre"
+var BuildDate string
 
 const lumercFile string = ".lumerc"
 

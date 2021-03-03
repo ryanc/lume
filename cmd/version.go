@@ -19,5 +19,8 @@ func VersionCmd(args CmdArgs) (int, error) {
 	fmt.Printf("lume %s\n", Version)
 	fmt.Printf("  os/arch: %s/%s\n", runtime.GOOS, runtime.GOARCH)
 	fmt.Printf("  go version: %s\n", runtime.Version())
+	if BuildDate != "" {
+		fmt.Printf("  build date: %s\n", BuildDate)
+	}
 	return ExitSuccess, nil
 }
