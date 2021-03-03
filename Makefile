@@ -12,14 +12,14 @@ else
 endif
 
 LUME_VERSION ?= $(shell git describe --tags --always)
-LDFLAGS := ${LDFLAGS} \
-	-X git.kill0.net/chill9/lume/cmd.Version=${LUME_VERSION} \
-	-X git.kill0.net/chill9/lume/cmd.BuildDate=${BUILD_DATE}
+LDFLAGS := $(LDFLAGS) \
+	-X git.kill0.net/chill9/lume/cmd.Version=$(LUME_VERSION) \
+	-X git.kill0.net/chill9/lume/cmd.BuildDate=$(BUILD_DATE)
 
 .PHONY: build
 build:
-	$(Q) go build -o ${EXE} -ldflags="${LDFLAGS}" ./cmd/lume
+	$(Q) go build -o $(EXE) -ldflags="$(LDFLAGS)" ./cmd/lume
 
 .PHONY: clean
 clean:
-	${RM} ${EXE}
+	$(RM) $(EXE)
