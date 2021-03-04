@@ -21,6 +21,7 @@ type Config struct {
 
 type CmdArgs struct {
 	Flags  Flags
+	Args   []string
 	Client *lifx.Client
 	Config Config
 	Name   string

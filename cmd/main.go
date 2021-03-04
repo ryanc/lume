@@ -74,6 +74,7 @@ func Main(args []string) (int, error) {
 	cmdArgs := CmdArgs{
 		Client: c,
 		Config: config,
+		Args:   args[2:],
 	}
 
 	cmd, ok := GetCommand(command)
@@ -81,11 +82,14 @@ func Main(args []string) (int, error) {
 		err = fmt.Errorf("lume: '%s' is not lume command. See 'lume help'", command)
 		return ExitFailure, err
 	}
-	fs := cmd.Flags
-	fs.Parse(args[2:])
 
-	cmdArgs.Flags = Flags{FlagSet: fs}
+	fs := cmd.Flags
+	if fs != nil {
+		fs.Parse(args[2:])
+		cmdArgs.Flags = Flags{FlagSet: fs}
+	}
 	cmdArgs.Name = command
+
 	exitCode, err := cmd.Func(cmdArgs)
 	if err != nil {
 		err = fmt.Errorf("fatal: %s", err)

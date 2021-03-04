@@ -1,32 +1,24 @@
 package lumecmd
 
 import (
-	"flag"
 	"fmt"
 	"sort"
 )
 
 func NewCmdHelp() Command {
 	return Command{
-		Name: "help",
-		Func: HelpCmd,
-		Flags: func() *flag.FlagSet {
-			fs := flag.NewFlagSet("help", flag.ExitOnError)
-
-			return fs
-		}(),
+		Name:  "help",
+		Func:  HelpCmd,
 		Use:   "<command>",
 		Short: "Show help for a command",
 	}
 }
 
 func HelpCmd(args CmdArgs) (int, error) {
-	argv := args.Flags.Args()
-
-	if len(argv) == 0 {
+	if len(args.Args) == 0 {
 		printHelp(commandRegistry)
-	} else if len(argv) >= 1 {
-		printCmdHelp(argv[0])
+	} else if len(args.Args) >= 1 {
+		printCmdHelp(args.Args[0])
 	}
 
 	return ExitSuccess, nil
@@ -63,11 +55,15 @@ func printCmdHelp(name string) error {
 
 	if subCmd.Use != "" {
 		fmt.Printf("usage:\n  lume %s %s\n", subCmd.Name, subCmd.Use)
-		fmt.Println()
+	} else {
+		fmt.Printf("usage:\n  lume %s\n", subCmd.Name)
 	}
 
-	fmt.Print("flags:\n")
-	subCmd.Flags.PrintDefaults()
+	if subCmd.Flags != nil {
+		fmt.Println()
+		fmt.Print("flags:\n")
+		subCmd.Flags.PrintDefaults()
+	}
 
 	return nil
 }
