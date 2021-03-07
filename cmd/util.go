@@ -11,24 +11,6 @@ import (
 	"git.kill0.net/chill9/lifx-go"
 )
 
-func powerColor(s string) string {
-	fs := "\033[1;31m%s\033[0m"
-	if s == "on" {
-		fs = "\033[1;32m%s\033[0m"
-	}
-
-	return fmt.Sprintf(fs, s)
-}
-
-func statusColor(s lifx.Status) string {
-	fs := "\033[1;31m%s\033[0m"
-	if s == "ok" {
-		fs = "\033[1;32m%s\033[0m"
-	}
-
-	return fmt.Sprintf(fs, s)
-}
-
 func PrintResults(res []lifx.Result) {
 	var length int
 	var widths map[string]int
@@ -58,7 +40,7 @@ func PrintResults(res []lifx.Result) {
 		fmt.Printf("%*s %*s %*s\n",
 			widths["id"], r.Id,
 			widths["label"], r.Label,
-			widths["status"], statusColor(r.Status))
+			widths["status"], ColorizeStatus(r.Status))
 	}
 }
 
@@ -111,7 +93,7 @@ func PrintLights(lights []lifx.Light) {
 			widths["group"], l.Group.Name,
 			widths["label"], l.Label,
 			widths["last_seen"], l.LastSeen.Local().Format(time.RFC3339),
-			widths["power"], powerColor(l.Power),
+			widths["power"], ColorizePower(l.Power),
 		)
 	}
 }

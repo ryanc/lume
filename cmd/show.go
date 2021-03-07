@@ -42,7 +42,7 @@ func ShowCmd(args CmdArgs) (int, error) {
 			"Light ID: %s, %s, Power: %s\n",
 			l.Id,
 			connected(l.Connected),
-			powerColor(l.Power),
+			ColorizePower(l.Power),
 		)
 		indent += Tabstop
 		PrintfWithIndent(indent, "Label: %s, ID: %s\n", l.Label, l.Id)
