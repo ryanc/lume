@@ -22,4 +22,4 @@ build:
 
 .PHONY: clean
 clean:
-	$(RM) $(EXE)
+	$(Q) $(RM) $(EXE)
