@@ -29,8 +29,9 @@ func init() {
 	RegisterCommand(NewCmdVersion())
 }
 
-var Version string = "0.1.0-pre"
+var Version string
 var BuildDate string
+var GitCommit string
 
 const lumercFile string = ".lumerc"
 

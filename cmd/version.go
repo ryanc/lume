@@ -2,7 +2,7 @@ package lumecmd
 
 import (
 	"fmt"
-	"runtime"
+	"strings"
 )
 
 func NewCmdVersion() Command {
@@ -16,11 +16,18 @@ func NewCmdVersion() Command {
 }
 
 func VersionCmd(args CmdArgs) (int, error) {
-	fmt.Printf("lume %s\n", Version)
-	fmt.Printf("  os/arch: %s/%s\n", runtime.GOOS, runtime.GOARCH)
-	fmt.Printf("  go version: %s\n", runtime.Version())
-	if BuildDate != "" {
-		fmt.Printf("  build date: %s\n", BuildDate)
+	var b strings.Builder
+
+	fmt.Fprintf(&b, "lume %s", Version)
+	b.WriteString(" ")
+	if GitCommit != "" {
+		fmt.Fprintf(&b, "(git: %s)", GitCommit)
+		b.WriteString(" ")
 	}
+	if BuildDate != "" {
+		fmt.Fprintf(&b, "build_date: %s", BuildDate)
+	}
+
+	fmt.Println(b.String())
 	return ExitSuccess, nil
 }

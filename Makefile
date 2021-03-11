@@ -12,9 +12,11 @@ else
 endif
 
 LUME_VERSION ?= $(shell git describe --tags --always)
+GIT_COMMIT := $(shell git rev-parse --short HEAD)
 LDFLAGS := $(LDFLAGS) \
 	-X git.kill0.net/chill9/lume/cmd.Version=$(LUME_VERSION) \
-	-X git.kill0.net/chill9/lume/cmd.BuildDate=$(BUILD_DATE)
+	-X git.kill0.net/chill9/lume/cmd.BuildDate=$(BUILD_DATE) \
+	-X git.kill0.net/chill9/lume/cmd.GitCommit=$(GIT_COMMIT)
 
 .PHONY: build
 build:
