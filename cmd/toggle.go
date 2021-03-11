@@ -17,6 +17,8 @@ func NewCmdToggle() Command {
 			selector := fs.String("selector", defaultSelector, "Set the selector")
 			fs.StringVar(selector, "s", defaultSelector, "Set the selector")
 
+			fs.String("format", defaultOutputFormat, "Set the output format")
+
 			return fs
 		}(),
 		Use:   "[--selector <selector>] [--duration <sec>]",
@@ -28,10 +30,23 @@ func ToggleCmd(args CmdArgs) (int, error) {
 	c := args.Client
 	duration := args.Flags.Float64("duration")
 	selector := args.Flags.String("selector")
+	format := args.Flags.String("format")
+
+	if format == "" && args.Config.OutputFormat != "" {
+		format = args.Config.OutputFormat
+	}
+
 	r, err := c.Toggle(selector, duration)
 	if err != nil {
 		return ExitFailure, err
 	}
-	PrintResults(r.Results)
+
+	switch format {
+	case "table":
+		PrintResultsTable(r.Results)
+	default:
+		PrintResults(r.Results)
+	}
+
 	return ExitSuccess, nil
 }

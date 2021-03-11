@@ -2,10 +2,12 @@ package lumecmd
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"git.kill0.net/chill9/lifx-go"
 	"github.com/fatih/color"
+	"github.com/olekukonko/tablewriter"
 )
 
 func ColorizePower(s string) string {
@@ -35,89 +37,109 @@ func PrintfWithIndent(indent int, format string, a ...interface{}) (n int, err e
 	return fmt.Printf(format, a...)
 }
 
-func PrintResults(res []lifx.Result) {
-	var length int
-	var widths map[string]int
+func makeLightsTable(lights []lifx.Light) (hdr []string, rows [][]string) {
+	hdr = []string{"ID", "Location", "Group", "Label", "Last Seen", "Power"}
 
-	widths = make(map[string]int)
+	for _, l := range lights {
+		rows = append(rows, []string{
+			fmt.Sprint(l.Id),
+			fmt.Sprint(l.Location.Name),
+			fmt.Sprint(l.Group.Name),
+			fmt.Sprint(l.Label),
+			fmt.Sprint(l.LastSeen.Local().Format(time.RFC3339)),
+			fmt.Sprint(ColorizePower(l.Power)),
+		})
 
-	for _, r := range res {
-		length = len(r.Id)
-		if widths["id"] < length {
-			widths["id"] = length
-		}
-
-		length = len(r.Label)
-		if widths["label"] < length {
-			widths["label"] = length
-		}
-
-		length = len(r.Status)
-		if widths["status"] < length {
-			widths["status"] = length
-		}
 	}
 
-	sortResults(res)
+	return
+}
 
-	for _, r := range res {
-		fmt.Printf("%*s %*s %*s\n",
-			widths["id"], r.Id,
-			widths["label"], r.Label,
-			widths["status"], ColorizeStatus(r.Status))
+func makeResultsTable(results []lifx.Result) (hdr []string, rows [][]string) {
+	hdr = []string{"ID", "Label", "Status"}
+
+	for _, r := range results {
+		rows = append(rows, []string{
+			fmt.Sprint(r.Id),
+			fmt.Sprint(r.Label),
+			fmt.Sprint(ColorizeStatus(r.Status)),
+		})
+
 	}
+
+	return
 }
 
 func PrintLights(lights []lifx.Light) {
-	var length int
-	var widths map[string]int
-
-	widths = make(map[string]int)
-
-	for _, l := range lights {
-		length = len(l.Id)
-		if widths["id"] < length {
-			widths["id"] = length
-		}
-
-		length = len(l.Location.Name)
-		if widths["location"] < length {
-			widths["location"] = length
-		}
-
-		length = len(l.Group.Name)
-		if widths["group"] < length {
-			widths["group"] = length
-		}
-
-		length = len(l.Label)
-		if widths["label"] < length {
-			widths["label"] = length
-		}
-
-		length = len(l.LastSeen.Local().Format(time.RFC3339))
-		if widths["last_seen"] < length {
-			widths["last_seen"] = length
-		}
-
-		length = len(l.Power)
-		if widths["power"] < length {
-			widths["power"] = length
-		}
-	}
-
 	sortLights(lights)
 
-	fmt.Printf("total %d\n", len(lights))
-	for _, l := range lights {
-		fmt.Printf(
-			"%*s %*s %*s %*s %*s %-*s\n",
-			widths["id"], l.Id,
-			widths["loction"], l.Location.Name,
-			widths["group"], l.Group.Name,
-			widths["label"], l.Label,
-			widths["last_seen"], l.LastSeen.Local().Format(time.RFC3339),
-			widths["power"], ColorizePower(l.Power),
-		)
+	table := tablewriter.NewWriter(os.Stdout)
+	_, rows := makeLightsTable(lights)
+
+	for _, v := range rows {
+		table.Append(v)
 	}
+
+	fmt.Printf("total %d\n", len(lights))
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetAutoWrapText(false)
+	table.SetBorder(false)
+	table.SetCenterSeparator("")
+	table.SetColumnSeparator("")
+	table.SetHeaderLine(false)
+	table.SetNoWhiteSpace(true)
+	table.SetRowSeparator("")
+	table.SetTablePadding(" ")
+	table.Render()
+}
+
+func PrintLightsTable(lights []lifx.Light) {
+	sortLights(lights)
+
+	table := tablewriter.NewWriter(os.Stdout)
+	hdr, rows := makeLightsTable(lights)
+
+	for _, v := range rows {
+		table.Append(v)
+	}
+
+	table.SetHeader(hdr)
+	table.Render()
+}
+
+func PrintResults(results []lifx.Result) {
+	sortResults(results)
+
+	table := tablewriter.NewWriter(os.Stdout)
+	_, rows := makeResultsTable(results)
+
+	for _, v := range rows {
+		table.Append(v)
+	}
+
+	fmt.Printf("total %d\n", len(results))
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetAutoWrapText(false)
+	table.SetBorder(false)
+	table.SetCenterSeparator("")
+	table.SetColumnSeparator("")
+	table.SetHeaderLine(false)
+	table.SetNoWhiteSpace(true)
+	table.SetRowSeparator("")
+	table.SetTablePadding(" ")
+	table.Render()
+}
+
+func PrintResultsTable(results []lifx.Result) {
+	sortResults(results)
+
+	table := tablewriter.NewWriter(os.Stdout)
+	hdr, rows := makeResultsTable(results)
+
+	for _, v := range rows {
+		table.Append(v)
+	}
+
+	table.SetHeader(hdr)
+	table.Render()
 }

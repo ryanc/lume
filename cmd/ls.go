@@ -1,6 +1,8 @@
 package lumecmd
 
-import "flag"
+import (
+	"flag"
+)
 
 func NewCmdLs() Command {
 	return Command{
@@ -12,6 +14,8 @@ func NewCmdLs() Command {
 			selector := fs.String("selector", defaultSelector, "Set the selector")
 			fs.StringVar(selector, "s", defaultSelector, "Set the selector")
 
+			fs.String("format", defaultOutputFormat, "Set the output format")
+
 			return fs
 		}(),
 		Use:   "[--selector=<selector>]",
@@ -22,10 +26,23 @@ func NewCmdLs() Command {
 func LsCmd(args CmdArgs) (int, error) {
 	c := args.Client
 	selector := args.Flags.String("selector")
+	format := args.Flags.String("format")
+
+	if format == "" && args.Config.OutputFormat != "" {
+		format = args.Config.OutputFormat
+	}
+
 	lights, err := c.ListLights(selector)
 	if err != nil {
 		return ExitFailure, err
 	}
-	PrintLights(lights)
+
+	switch format {
+	case "table":
+		PrintLightsTable(lights)
+	default:
+		PrintLights(lights)
+	}
+
 	return ExitSuccess, nil
 }

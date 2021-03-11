@@ -15,8 +15,9 @@ const (
 )
 
 type Config struct {
-	AccessToken string               `toml:"access_token"`
-	Colors      map[string][]float32 `toml:"colors"`
+	AccessToken  string               `toml:"access_token"`
+	OutputFormat string               `toml:"output_format"`
+	Colors       map[string][]float32 `toml:"colors"`
 }
 
 type CmdArgs struct {
@@ -43,19 +44,20 @@ type Command struct {
 var commandRegistry = make(map[string]Command)
 
 var (
-	defaultSelector    string  = "all"
-	defaultDuration    float64 = 1.0
-	defaultPower       string  = ""
-	defaultColor       string  = ""
-	defaultBrightness  string  = ""
-	defaultInfrared    string  = ""
-	defaultFast        bool    = false
-	defaultWhiteKelvin string  = ""
-	defaultWhiteName   string  = ""
-	defaultHue         string  = ""
-	defaultSaturation  string  = ""
-	defaultRGB         string  = ""
-	defaultName        string  = ""
+	defaultSelector     string  = "all"
+	defaultDuration     float64 = 1.0
+	defaultPower        string  = ""
+	defaultColor        string  = ""
+	defaultBrightness   string  = ""
+	defaultInfrared     string  = ""
+	defaultFast         bool    = false
+	defaultWhiteKelvin  string  = ""
+	defaultWhiteName    string  = ""
+	defaultHue          string  = ""
+	defaultSaturation   string  = ""
+	defaultRGB          string  = ""
+	defaultName         string  = ""
+	defaultOutputFormat string  = ""
 )
 
 func (f Flags) String(name string) string {
