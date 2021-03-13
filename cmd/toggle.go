@@ -27,6 +27,8 @@ func NewCmdToggle() Command {
 }
 
 func ToggleCmd(args CmdArgs) (int, error) {
+	var p Printer
+
 	c := args.Client
 	duration := args.Flags.Float64("duration")
 	selector := args.Flags.String("selector")
@@ -41,12 +43,8 @@ func ToggleCmd(args CmdArgs) (int, error) {
 		return ExitFailure, err
 	}
 
-	switch format {
-	case "table":
-		PrintResultsTable(r.Results)
-	default:
-		PrintResults(r.Results)
-	}
+	p = NewPrinter(format)
+	p.Results(r.Results)
 
 	return ExitSuccess, nil
 }

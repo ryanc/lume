@@ -47,6 +47,8 @@ func NewCmdSetWhite() Command {
 }
 
 func SetWhiteCmd(args CmdArgs) (int, error) {
+	var p Printer
+
 	c := args.Client
 	state := lifx.State{}
 	selector := args.Flags.String("selector")
@@ -110,12 +112,8 @@ func SetWhiteCmd(args CmdArgs) (int, error) {
 	}
 
 	if !fast {
-		switch format {
-		case "table":
-			PrintResultsTable(r.Results)
-		default:
-			PrintResults(r.Results)
-		}
+		p = NewPrinter(format)
+		p.Results(r.Results)
 	}
 
 	return ExitSuccess, nil

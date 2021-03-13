@@ -24,6 +24,8 @@ func NewCmdLs() Command {
 }
 
 func LsCmd(args CmdArgs) (int, error) {
+	var p Printer
+
 	c := args.Client
 	selector := args.Flags.String("selector")
 	format := args.Flags.String("format")
@@ -37,12 +39,8 @@ func LsCmd(args CmdArgs) (int, error) {
 		return ExitFailure, err
 	}
 
-	switch format {
-	case "table":
-		PrintLightsTable(lights)
-	default:
-		PrintLights(lights)
-	}
+	p = NewPrinter(format)
+	p.Lights(lights)
 
 	return ExitSuccess, nil
 }

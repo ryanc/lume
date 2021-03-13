@@ -10,6 +10,98 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
+type Printer interface {
+	Results(results []lifx.Result)
+	Lights(lights []lifx.Light)
+}
+
+type defaultPrinter struct{}
+
+type tablePrinter struct{}
+
+func NewPrinter(format string) Printer {
+	switch format {
+	case "table":
+		return &tablePrinter{}
+	default:
+		return &defaultPrinter{}
+	}
+}
+
+func (dp *defaultPrinter) Results(results []lifx.Result) {
+	sortResults(results)
+
+	table := tablewriter.NewWriter(os.Stdout)
+	_, rows := makeResultsTable(results)
+
+	for _, v := range rows {
+		table.Append(v)
+	}
+
+	fmt.Printf("total %d\n", len(results))
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetAutoWrapText(false)
+	table.SetBorder(false)
+	table.SetCenterSeparator("")
+	table.SetColumnSeparator("")
+	table.SetHeaderLine(false)
+	table.SetNoWhiteSpace(true)
+	table.SetRowSeparator("")
+	table.SetTablePadding(" ")
+	table.Render()
+}
+
+func (tp *tablePrinter) Results(results []lifx.Result) {
+	sortResults(results)
+
+	table := tablewriter.NewWriter(os.Stdout)
+	hdr, rows := makeResultsTable(results)
+
+	for _, v := range rows {
+		table.Append(v)
+	}
+
+	table.SetHeader(hdr)
+	table.Render()
+}
+
+func (dp *defaultPrinter) Lights(lights []lifx.Light) {
+	sortLights(lights)
+
+	table := tablewriter.NewWriter(os.Stdout)
+	_, rows := makeLightsTable(lights)
+
+	for _, v := range rows {
+		table.Append(v)
+	}
+
+	fmt.Printf("total %d\n", len(lights))
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetAutoWrapText(false)
+	table.SetBorder(false)
+	table.SetCenterSeparator("")
+	table.SetColumnSeparator("")
+	table.SetHeaderLine(false)
+	table.SetNoWhiteSpace(true)
+	table.SetRowSeparator("")
+	table.SetTablePadding(" ")
+	table.Render()
+}
+
+func (tp *tablePrinter) Lights(lights []lifx.Light) {
+	sortLights(lights)
+
+	table := tablewriter.NewWriter(os.Stdout)
+	hdr, rows := makeLightsTable(lights)
+
+	for _, v := range rows {
+		table.Append(v)
+	}
+
+	table.SetHeader(hdr)
+	table.Render()
+}
+
 func ColorizePower(s string) string {
 	c := color.New(color.FgRed)
 	if s == "on" {
@@ -68,78 +160,4 @@ func makeResultsTable(results []lifx.Result) (hdr []string, rows [][]string) {
 	}
 
 	return
-}
-
-func PrintLights(lights []lifx.Light) {
-	sortLights(lights)
-
-	table := tablewriter.NewWriter(os.Stdout)
-	_, rows := makeLightsTable(lights)
-
-	for _, v := range rows {
-		table.Append(v)
-	}
-
-	fmt.Printf("total %d\n", len(lights))
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetAutoWrapText(false)
-	table.SetBorder(false)
-	table.SetCenterSeparator("")
-	table.SetColumnSeparator("")
-	table.SetHeaderLine(false)
-	table.SetNoWhiteSpace(true)
-	table.SetRowSeparator("")
-	table.SetTablePadding(" ")
-	table.Render()
-}
-
-func PrintLightsTable(lights []lifx.Light) {
-	sortLights(lights)
-
-	table := tablewriter.NewWriter(os.Stdout)
-	hdr, rows := makeLightsTable(lights)
-
-	for _, v := range rows {
-		table.Append(v)
-	}
-
-	table.SetHeader(hdr)
-	table.Render()
-}
-
-func PrintResults(results []lifx.Result) {
-	sortResults(results)
-
-	table := tablewriter.NewWriter(os.Stdout)
-	_, rows := makeResultsTable(results)
-
-	for _, v := range rows {
-		table.Append(v)
-	}
-
-	fmt.Printf("total %d\n", len(results))
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-	table.SetAutoWrapText(false)
-	table.SetBorder(false)
-	table.SetCenterSeparator("")
-	table.SetColumnSeparator("")
-	table.SetHeaderLine(false)
-	table.SetNoWhiteSpace(true)
-	table.SetRowSeparator("")
-	table.SetTablePadding(" ")
-	table.Render()
-}
-
-func PrintResultsTable(results []lifx.Result) {
-	sortResults(results)
-
-	table := tablewriter.NewWriter(os.Stdout)
-	hdr, rows := makeResultsTable(results)
-
-	for _, v := range rows {
-		table.Append(v)
-	}
-
-	table.SetHeader(hdr)
-	table.Render()
 }
