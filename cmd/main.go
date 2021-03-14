@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"path"
 	"strings"
 
 	"git.kill0.net/chill9/lifx-go"
@@ -32,8 +31,6 @@ func init() {
 var Version string
 var BuildDate string
 var GitCommit string
-
-const lumercFile string = ".lumerc"
 
 func Main(args []string) (int, error) {
 	var config Config
@@ -97,30 +94,6 @@ func Main(args []string) (int, error) {
 	}
 
 	return exitCode, err
-}
-
-func getConfigPath() string {
-	var tryPath, configPath string
-
-	// ~/.lumerc
-	homeDir, err := os.UserHomeDir()
-	if err == nil {
-		tryPath = path.Join(homeDir, lumercFile)
-		if _, err := os.Stat(tryPath); !os.IsNotExist(err) {
-			configPath = tryPath
-		}
-	}
-
-	// ./.lumerc
-	cwd, err := os.Getwd()
-	if err == nil {
-		tryPath = path.Join(cwd, lumercFile)
-		if _, err := os.Stat(tryPath); !os.IsNotExist(err) {
-			configPath = tryPath
-		}
-	}
-
-	return configPath
 }
 
 func initUserAgent() string {
