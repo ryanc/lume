@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "lifx-go",
+			"path": "..\\lifx-go"
+		}
+	],
+	"settings": {}
+}
