@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"path"
+
+	"github.com/BurntSushi/toml"
 )
 
 const lumercFile string = ".lumerc"
@@ -48,6 +50,28 @@ func (c *Config) validateColors() (err error) {
 		}
 	}
 	return err
+}
+
+func LoadConfig(s string) (Config, error) {
+	var err error
+	var c Config
+
+	if _, err := toml.Decode(s, &c); err != nil {
+		err = fmt.Errorf("fatal: failed to parse; %w", err)
+	}
+
+	return c, err
+}
+
+func LoadConfigFile(configPath string) (Config, error) {
+	var err error
+	var c Config
+
+	if _, err := toml.DecodeFile(configPath, &c); err != nil {
+		err = fmt.Errorf("fatal: failed to parse %s; %w", configPath, err)
+	}
+
+	return c, err
 }
 
 func getConfigPath() string {

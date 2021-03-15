@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"git.kill0.net/chill9/lifx-go"
-	"github.com/BurntSushi/toml"
 )
 
 var userAgent string
@@ -46,8 +45,7 @@ func Main(args []string) (int, error) {
 		return ExitFailure, err
 	}
 
-	if _, err := toml.DecodeFile(configPath, &config); err != nil {
-		err = fmt.Errorf("fatal: failed to parse %s; %w", configPath, err)
+	if config, err = LoadConfigFile(configPath); err != nil {
 		return ExitFailure, err
 	}
 
