@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/BurntSushi/toml"
 )
@@ -15,7 +16,14 @@ type Config struct {
 	AccessToken  string               `toml:"access_token"`
 	OutputFormat string               `toml:"output_format"`
 	Colors       map[string][]float32 `toml:"colors"`
+	userAgent    string
 }
+
+var (
+	DefaultConfig = Config{
+		userAgent: initUserAgent(),
+	}
+)
 
 // Validate configuration struct
 func (c *Config) Validate() error {
@@ -52,23 +60,38 @@ func (c *Config) validateColors() (err error) {
 	return err
 }
 
-func LoadConfig(s string) (Config, error) {
+func LoadConfig(s string) (*Config, error) {
 	var err error
-	var c Config
+	var c *Config = &Config{}
+
+	*c = DefaultConfig
 
 	if _, err := toml.Decode(s, &c); err != nil {
 		err = fmt.Errorf("fatal: failed to parse; %w", err)
 	}
 
+	envAccessToken := os.Getenv("LIFX_ACCESS_TOKEN")
+	if envAccessToken != "" {
+		c.AccessToken = envAccessToken
+	}
+
 	return c, err
 }
 
-func LoadConfigFile(configPath string) (Config, error) {
+func LoadConfigFile(configPath string) (*Config, error) {
 	var err error
-	var c Config
+
+	var c *Config = &Config{}
+
+	*c = DefaultConfig
 
 	if _, err := toml.DecodeFile(configPath, &c); err != nil {
 		err = fmt.Errorf("fatal: failed to parse %s; %w", configPath, err)
+	}
+
+	envAccessToken := os.Getenv("LIFX_ACCESS_TOKEN")
+	if envAccessToken != "" {
+		c.AccessToken = envAccessToken
 	}
 
 	return c, err
@@ -96,4 +119,13 @@ func getConfigPath() string {
 	}
 
 	return configPath
+}
+
+func initUserAgent() string {
+	var b strings.Builder
+
+	b.WriteString("lume")
+	b.WriteRune('/')
+	b.WriteString(Version)
+	return b.String()
 }

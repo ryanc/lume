@@ -5,16 +5,11 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"strings"
 
 	"git.kill0.net/chill9/lifx-go"
 )
 
-var userAgent string
-
 func init() {
-	userAgent = initUserAgent()
-
 	RegisterCommand(NewCmdHelp())
 	RegisterCommand(NewCmdLs())
 	RegisterCommand(NewCmdPoweroff())
@@ -32,7 +27,7 @@ var BuildDate string
 var GitCommit string
 
 func Main(args []string) (int, error) {
-	var config Config
+	var config *Config
 	var err error
 
 	if len(args) == 1 {
@@ -64,12 +59,12 @@ func Main(args []string) (int, error) {
 
 	c := lifx.NewClient(
 		config.AccessToken,
-		lifx.WithUserAgent(userAgent),
+		lifx.WithUserAgent(config.userAgent),
 	)
 
 	cmdArgs := CmdArgs{
 		Client: c,
-		Config: config,
+		Config: *config,
 		Args:   args[2:],
 	}
 
@@ -92,13 +87,4 @@ func Main(args []string) (int, error) {
 	}
 
 	return exitCode, err
-}
-
-func initUserAgent() string {
-	var b strings.Builder
-
-	b.WriteString("lume")
-	b.WriteRune('/')
-	b.WriteString(Version)
-	return b.String()
 }
