@@ -24,6 +24,7 @@ func VersionCmd(args CmdArgs) (int, error) {
 	if GitCommit != "" {
 		fmt.Fprintf(&b, "  revision:   %s\n", GitCommit)
 	}
+
 	if BuildDate != "" {
 		fmt.Fprintf(&b, "  build date: %s\n", BuildDate)
 	}
