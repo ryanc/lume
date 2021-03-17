@@ -4,7 +4,6 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"os"
 
 	"git.kill0.net/chill9/lifx-go"
 )
@@ -43,11 +42,7 @@ func Main(args []string) (int, error) {
 	if config, err = LoadConfigFile(configPath); err != nil {
 		return ExitFailure, err
 	}
-
-	envAccessToken := os.Getenv("LIFX_ACCESS_TOKEN")
-	if envAccessToken != "" {
-		config.AccessToken = envAccessToken
-	}
+	config.MergeWithEnv()
 
 	if err = config.Validate(); err != nil {
 		return ExitFailure, fmt.Errorf("fatal: %s", err)

@@ -60,6 +60,13 @@ func (c *Config) validateColors() (err error) {
 	return err
 }
 
+func (c *Config) MergeWithEnv() {
+	envAccessToken := os.Getenv("LIFX_ACCESS_TOKEN")
+	if envAccessToken != "" {
+		c.AccessToken = envAccessToken
+	}
+}
+
 func LoadConfig(s string) (*Config, error) {
 	var err error
 	var c *Config = &Config{}
@@ -68,11 +75,6 @@ func LoadConfig(s string) (*Config, error) {
 
 	if _, err := toml.Decode(s, &c); err != nil {
 		err = fmt.Errorf("fatal: failed to parse; %w", err)
-	}
-
-	envAccessToken := os.Getenv("LIFX_ACCESS_TOKEN")
-	if envAccessToken != "" {
-		c.AccessToken = envAccessToken
 	}
 
 	return c, err
@@ -87,11 +89,6 @@ func LoadConfigFile(configPath string) (*Config, error) {
 
 	if _, err := toml.DecodeFile(configPath, &c); err != nil {
 		err = fmt.Errorf("fatal: failed to parse %s; %w", configPath, err)
-	}
-
-	envAccessToken := os.Getenv("LIFX_ACCESS_TOKEN")
-	if envAccessToken != "" {
-		c.AccessToken = envAccessToken
 	}
 
 	return c, err
