@@ -23,15 +23,15 @@ func NewCmdLs() Command {
 	}
 }
 
-func LsCmd(args CmdArgs) (int, error) {
+func LsCmd(ctx Context) (int, error) {
 	var p Printer
 
-	c := args.Client
-	selector := args.Flags.String("selector")
-	format := args.Flags.String("format")
+	c := ctx.Client
+	selector := ctx.Flags.String("selector")
+	format := ctx.Flags.String("format")
 
-	if format == "" && args.Config.OutputFormat != "" {
-		format = args.Config.OutputFormat
+	if format == "" && ctx.Config.OutputFormat != "" {
+		format = ctx.Config.OutputFormat
 	}
 
 	lights, err := c.ListLights(selector)

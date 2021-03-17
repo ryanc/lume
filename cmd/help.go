@@ -14,11 +14,11 @@ func NewCmdHelp() Command {
 	}
 }
 
-func HelpCmd(args CmdArgs) (int, error) {
-	if len(args.Args) == 0 {
+func HelpCmd(ctx Context) (int, error) {
+	if len(ctx.Args) == 0 {
 		printHelp(commandRegistry)
-	} else if len(args.Args) >= 1 {
-		printCmdHelp(args.Args[0])
+	} else if len(ctx.Args) >= 1 {
+		printCmdHelp(ctx.Args[0])
 	}
 
 	return ExitSuccess, nil

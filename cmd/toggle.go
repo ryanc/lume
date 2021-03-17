@@ -26,16 +26,16 @@ func NewCmdToggle() Command {
 	}
 }
 
-func ToggleCmd(args CmdArgs) (int, error) {
+func ToggleCmd(ctx Context) (int, error) {
 	var p Printer
 
-	c := args.Client
-	duration := args.Flags.Float64("duration")
-	selector := args.Flags.String("selector")
-	format := args.Flags.String("format")
+	c := ctx.Client
+	duration := ctx.Flags.Float64("duration")
+	selector := ctx.Flags.String("selector")
+	format := ctx.Flags.String("format")
 
-	if format == "" && args.Config.OutputFormat != "" {
-		format = args.Config.OutputFormat
+	if format == "" && ctx.Config.OutputFormat != "" {
+		format = ctx.Config.OutputFormat
 	}
 
 	r, err := c.Toggle(selector, duration)

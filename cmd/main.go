@@ -57,7 +57,7 @@ func Main(args []string) (int, error) {
 		lifx.WithUserAgent(config.userAgent),
 	)
 
-	cmdArgs := CmdArgs{
+	Context := Context{
 		Client: c,
 		Config: *config,
 		Args:   args[2:],
@@ -72,11 +72,11 @@ func Main(args []string) (int, error) {
 	fs := cmd.Flags
 	if fs != nil {
 		fs.Parse(args[2:])
-		cmdArgs.Flags = Flags{FlagSet: fs}
+		Context.Flags = Flags{FlagSet: fs}
 	}
-	cmdArgs.Name = command
+	Context.Name = command
 
-	exitCode, err := cmd.Func(cmdArgs)
+	exitCode, err := cmd.Func(Context)
 	if err != nil {
 		err = fmt.Errorf("fatal: %s", err)
 	}

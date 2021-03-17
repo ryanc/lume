@@ -50,30 +50,30 @@ func NewCmdSetColor() Command {
 	}
 }
 
-func SetColorCmd(args CmdArgs) (int, error) {
+func SetColorCmd(ctx Context) (int, error) {
 	var p Printer
 
-	c := args.Client
+	c := ctx.Client
 	state := lifx.State{}
-	selector := args.Flags.String("selector")
-	format := args.Flags.String("format")
+	selector := ctx.Flags.String("selector")
+	format := ctx.Flags.String("format")
 
-	if format == "" && args.Config.OutputFormat != "" {
-		format = args.Config.OutputFormat
+	if format == "" && ctx.Config.OutputFormat != "" {
+		format = ctx.Config.OutputFormat
 	}
 
-	power := args.Flags.String("power")
+	power := ctx.Flags.String("power")
 	if power != "" {
 		state.Power = power
 	}
 
-	hueFlag := args.Flags.String("hue")
-	saturationFlag := args.Flags.String("saturation")
-	rgbFlag := args.Flags.String("rgb")
-	name := args.Flags.String("name")
+	hueFlag := ctx.Flags.String("hue")
+	saturationFlag := ctx.Flags.String("saturation")
+	rgbFlag := ctx.Flags.String("rgb")
+	name := ctx.Flags.String("name")
 
 	if (hueFlag == "" || saturationFlag == "") && rgbFlag == "" && name == "" {
-		printCmdHelp(args.Name)
+		printCmdHelp(ctx.Name)
 		return ExitFailure, nil
 	}
 
@@ -81,12 +81,12 @@ func SetColorCmd(args CmdArgs) (int, error) {
 		color := lifx.HSBKColor{}
 
 		if hueFlag != "" {
-			hue := args.Flags.Float32("hue")
+			hue := ctx.Flags.Float32("hue")
 			color.H = lifx.Float32Ptr(hue)
 		}
 
 		if saturationFlag != "" {
-			saturation := args.Flags.Float32("saturation")
+			saturation := ctx.Flags.Float32("saturation")
 			color.S = lifx.Float32Ptr(saturation)
 		}
 		state.Color = color
@@ -98,7 +98,7 @@ func SetColorCmd(args CmdArgs) (int, error) {
 		}
 		state.Color = color
 	} else if name != "" {
-		hsb, ok := args.Config.Colors[name]
+		hsb, ok := ctx.Config.Colors[name]
 		if !ok {
 			return ExitFailure, fmt.Errorf("%s is not a defined color", name)
 		}
@@ -109,16 +109,16 @@ func SetColorCmd(args CmdArgs) (int, error) {
 		state.Color = color
 	}
 
-	brightnessFlag := args.Flags.String("brightness")
+	brightnessFlag := ctx.Flags.String("brightness")
 	if brightnessFlag != "" {
-		brightness := args.Flags.Float64("brightness")
+		brightness := ctx.Flags.Float64("brightness")
 		state.Brightness = brightness
 	}
 
-	duration := args.Flags.Float64("duration")
+	duration := ctx.Flags.Float64("duration")
 	state.Duration = duration
 
-	fast := args.Flags.Bool("fast")
+	fast := ctx.Flags.Bool("fast")
 	state.Fast = fast
 
 	r, err := c.SetState(selector, state)

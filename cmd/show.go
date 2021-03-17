@@ -24,10 +24,10 @@ func NewCmdShow() Command {
 	}
 }
 
-func ShowCmd(args CmdArgs) (int, error) {
+func ShowCmd(ctx Context) (int, error) {
 	var indent int
-	c := args.Client
-	selector := args.Flags.String("selector")
+	c := ctx.Client
+	selector := ctx.Flags.String("selector")
 	lights, err := c.ListLights(selector)
 
 	if err != nil {

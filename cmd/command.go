@@ -13,7 +13,7 @@ const (
 	ExitFailure
 )
 
-type CmdArgs struct {
+type Context struct {
 	Flags  Flags
 	Args   []string
 	Client *lifx.Client
@@ -27,7 +27,7 @@ type Flags struct {
 
 type Command struct {
 	Name  string
-	Func  func(CmdArgs) (int, error)
+	Func  func(Context) (int, error)
 	Flags *flag.FlagSet
 	Use   string
 	Short string

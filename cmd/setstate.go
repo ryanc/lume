@@ -43,48 +43,48 @@ func NewCmdSetState() Command {
 	}
 }
 
-func SetStateCmd(args CmdArgs) (int, error) {
+func SetStateCmd(ctx Context) (int, error) {
 	var p Printer
 
-	c := args.Client
+	c := ctx.Client
 	state := lifx.State{}
-	selector := args.Flags.String("selector")
-	format := args.Flags.String("format")
+	selector := ctx.Flags.String("selector")
+	format := ctx.Flags.String("format")
 
-	if format == "" && args.Config.OutputFormat != "" {
-		format = args.Config.OutputFormat
+	if format == "" && ctx.Config.OutputFormat != "" {
+		format = ctx.Config.OutputFormat
 	}
 
-	power := args.Flags.String("power")
+	power := ctx.Flags.String("power")
 	if power != "" {
 		state.Power = power
 	}
 
-	color := args.Flags.String("color")
+	color := ctx.Flags.String("color")
 	if color != "" {
 		state.Color = lifx.NamedColor(color)
 	}
 
-	brightnessFlag := args.Flags.String("brightness")
+	brightnessFlag := ctx.Flags.String("brightness")
 	if brightnessFlag != "" {
-		brightness := args.Flags.Float64("brightness")
+		brightness := ctx.Flags.Float64("brightness")
 		state.Brightness = brightness
 	}
 
-	duration := args.Flags.Float64("duration")
+	duration := ctx.Flags.Float64("duration")
 	state.Duration = duration
 
-	infraredFlag := args.Flags.String("infrared")
+	infraredFlag := ctx.Flags.String("infrared")
 	if infraredFlag != "" {
-		infrared := args.Flags.Float64("infrared")
+		infrared := ctx.Flags.Float64("infrared")
 		state.Infrared = infrared
 	}
 
-	fast := args.Flags.Bool("fast")
+	fast := ctx.Flags.Bool("fast")
 	state.Fast = fast
 
 	if power == "" && color == "" && brightnessFlag == "" && infraredFlag == "" {
-		printCmdHelp(args.Name)
+		printCmdHelp(ctx.Name)
 		return ExitFailure, nil
 	}
 

@@ -16,7 +16,7 @@ func NewCmdVersion() Command {
 	}
 }
 
-func VersionCmd(args CmdArgs) (int, error) {
+func VersionCmd(ctx Context) (int, error) {
 	var b strings.Builder
 
 	fmt.Fprintf(&b, "lume, version %s\n", Version)
