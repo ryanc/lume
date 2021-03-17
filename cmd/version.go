@@ -30,7 +30,7 @@ func VersionCmd(args CmdArgs) (int, error) {
 	}
 
 	fmt.Fprintf(&b, "  go version: %s\n", runtime.Version())
-	fmt.Fprintf(&b, "  platform:   %s\n", runtime.GOOS+"/"+runtime.GOARCH)
+	fmt.Fprintf(&b, "  platform:   %s/%s\n", runtime.GOOS, runtime.GOARCH)
 
 	fmt.Print(b.String())
 
