@@ -19,6 +19,7 @@ func init() {
 	RegisterCommand(NewCmdShow())
 	RegisterCommand(NewCmdToggle())
 	RegisterCommand(NewCmdVersion())
+	RegisterCommand(NewCmdBreathe())
 }
 
 var Version string
