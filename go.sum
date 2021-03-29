@@ -2,6 +2,8 @@ git.kill0.net/chill9/lifx-go v0.0.0-20210215004437-f86c28b0a5ef h1:8yyXAk+qiRvro
 git.kill0.net/chill9/lifx-go v0.0.0-20210215004437-f86c28b0a5ef/go.mod h1:ZFKIcwdJ4Nqlrkn/eUHbeLt0NVhFsfxBREkVoA+jzUc=
 git.kill0.net/chill9/lifx-go v0.0.0-20210323044657-dbe1c40e1621 h1:koWq2W08HjmvsNm4D8kD0OjMZKCJ/3681P9XFMTj77I=
 git.kill0.net/chill9/lifx-go v0.0.0-20210323044657-dbe1c40e1621/go.mod h1:jInpjEqTBhrFpQKk7zPIWISvgjjfS2djXeKB3yB/8dY=
+git.kill0.net/chill9/lifx-go v0.0.0-20210329222320-2107a0586447 h1:tN+zR5aszesrZRrhS3uOqAIWLcADCIH7GFJ6SOQS9r0=
+git.kill0.net/chill9/lifx-go v0.0.0-20210329222320-2107a0586447/go.mod h1:jInpjEqTBhrFpQKk7zPIWISvgjjfS2djXeKB3yB/8dY=
 github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/fatih/color v1.10.0 h1:s36xzo75JdqLaaWoiEHk767eHiwo0598uUxyfiPkDsg=
@@ -25,3 +27,5 @@ golang.org/x/sys v0.0.0-20210110051926-789bb1bd4061 h1:DQmQoKxQWtyybCtX/3dIuDBcA
 golang.org/x/sys v0.0.0-20210110051926-789bb1bd4061/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20210320140829-1e4c9ba3b0c4 h1:EZ2mChiOa8udjfp6rRmswTbtZN/QzUQp4ptM4rnjHvc=
 golang.org/x/sys v0.0.0-20210320140829-1e4c9ba3b0c4/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20210326220804-49726bf1d181 h1:64ChN/hjER/taL4YJuA+gpLfIMT+/NFherRZixbxOhg=
+golang.org/x/sys v0.0.0-20210326220804-49726bf1d181/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
