@@ -29,6 +29,10 @@ var GitCommit string
 func Main(args []string) (int, error) {
 	var config *Config
 	var err error
+	var i int
+
+	flag.Parse()
+	i = flag.NFlag() + 1
 
 	if len(args) == 1 {
 		args = append(args, "help")
@@ -49,9 +53,8 @@ func Main(args []string) (int, error) {
 		return ExitFailure, fmt.Errorf("fatal: %s", err)
 	}
 
-	flag.Parse()
-
-	command := args[1]
+	command := args[i]
+	i++
 
 	c := lifx.NewClient(
 		config.AccessToken,
@@ -61,7 +64,7 @@ func Main(args []string) (int, error) {
 	Context := Context{
 		Client: c,
 		Config: *config,
-		Args:   args[2:],
+		Args:   args[i:],
 	}
 
 	cmd, ok := GetCommand(command)
@@ -72,7 +75,7 @@ func Main(args []string) (int, error) {
 
 	fs := cmd.Flags
 	if fs != nil {
-		fs.Parse(args[2:])
+		fs.Parse(args[i:])
 		Context.Flags = Flags{FlagSet: fs}
 	}
 	Context.Name = command
