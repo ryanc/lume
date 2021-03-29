@@ -1,5 +1,7 @@
 git.kill0.net/chill9/lifx-go v0.0.0-20210215004437-f86c28b0a5ef h1:8yyXAk+qiRvrowTeHHAOBZqGXXCr8SxWFydez61ZGp8=
 git.kill0.net/chill9/lifx-go v0.0.0-20210215004437-f86c28b0a5ef/go.mod h1:ZFKIcwdJ4Nqlrkn/eUHbeLt0NVhFsfxBREkVoA+jzUc=
+git.kill0.net/chill9/lifx-go v0.0.0-20210323044657-dbe1c40e1621 h1:koWq2W08HjmvsNm4D8kD0OjMZKCJ/3681P9XFMTj77I=
+git.kill0.net/chill9/lifx-go v0.0.0-20210323044657-dbe1c40e1621/go.mod h1:jInpjEqTBhrFpQKk7zPIWISvgjjfS2djXeKB3yB/8dY=
 github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/fatih/color v1.10.0 h1:s36xzo75JdqLaaWoiEHk767eHiwo0598uUxyfiPkDsg=
