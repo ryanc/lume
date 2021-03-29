@@ -23,7 +23,20 @@ var (
 	DefaultConfig = Config{
 		userAgent: initUserAgent(),
 	}
+	globalConfig *Config = NewConfig()
 )
+
+func NewConfig() *Config {
+	c := new(Config)
+	c.userAgent = initUserAgent()
+	c.Debug = false
+	c.OutputFormat = "simple"
+	return c
+}
+
+func GetConfig() *Config {
+	return globalConfig
+}
 
 // Validate configuration struct
 func (c *Config) Validate() error {
@@ -69,7 +82,7 @@ func (c *Config) MergeWithEnv() {
 
 func LoadConfig(s string) (*Config, error) {
 	var err error
-	var c *Config = &Config{}
+	var c *Config = GetConfig()
 
 	*c = DefaultConfig
 
@@ -83,7 +96,7 @@ func LoadConfig(s string) (*Config, error) {
 func LoadConfigFile(configPath string) (*Config, error) {
 	var err error
 
-	var c *Config = &Config{}
+	var c *Config = GetConfig()
 
 	*c = DefaultConfig
 

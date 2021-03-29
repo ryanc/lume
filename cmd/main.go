@@ -27,7 +27,7 @@ var BuildDate string
 var GitCommit string
 
 func Main(args []string) (int, error) {
-	var config *Config
+	var config *Config = GetConfig()
 	var err error
 	var i int
 
