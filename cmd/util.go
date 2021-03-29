@@ -60,3 +60,9 @@ func YesNo(v bool) string {
 	}
 	return "no"
 }
+
+func Debugf(format string, a ...interface{}) {
+	if GetConfig().Debug {
+		fmt.Printf(format, a...)
+	}
+}

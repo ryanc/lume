@@ -20,11 +20,15 @@ func init() {
 	RegisterCommand(NewCmdToggle())
 	RegisterCommand(NewCmdVersion())
 	RegisterCommand(NewCmdBreathe())
+
+	flag.BoolVar(&debugFlag, "debug", false, "debug mode")
+	flag.BoolVar(&debugFlag, "d", false, "debug mode")
 }
 
 var Version string
 var BuildDate string
 var GitCommit string
+var debugFlag bool
 
 func Main(args []string) (int, error) {
 	var config *Config = GetConfig()
@@ -53,12 +57,15 @@ func Main(args []string) (int, error) {
 		return ExitFailure, fmt.Errorf("fatal: %s", err)
 	}
 
+	config.Debug = debugFlag
+
 	command := args[i]
 	i++
 
 	c := lifx.NewClient(
 		config.AccessToken,
 		lifx.WithUserAgent(config.userAgent),
+		lifx.WithDebug(debugFlag),
 	)
 
 	Context := Context{

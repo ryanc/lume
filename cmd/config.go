@@ -17,6 +17,7 @@ type Config struct {
 	OutputFormat string               `toml:"output_format"`
 	Colors       map[string][]float32 `toml:"colors"`
 	userAgent    string
+	Debug        bool `toml:"debug"`
 }
 
 var (
