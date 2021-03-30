@@ -68,7 +68,7 @@ func Main(args []string) (int, error) {
 		lifx.WithDebug(debugFlag),
 	)
 
-	Context := Context{
+	ctx := Context{
 		Client: c,
 		Config: *config,
 		Args:   args[i:],
@@ -83,11 +83,11 @@ func Main(args []string) (int, error) {
 	fs := cmd.Flags
 	if fs != nil {
 		fs.Parse(args[i:])
-		Context.Flags = Flags{FlagSet: fs}
+		ctx.Flags = Flags{FlagSet: fs}
 	}
-	Context.Name = command
+	ctx.Name = command
 
-	exitCode, err := cmd.Func(Context)
+	exitCode, err := cmd.Func(ctx)
 	if err != nil {
 		err = fmt.Errorf("fatal: %s", err)
 	}
