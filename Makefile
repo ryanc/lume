@@ -7,7 +7,7 @@ ifeq ($(OS), Windows_NT)
 	BUILD_DATE=$(shell powershell Get-Date -Format "yyyy-MM-ddThh:mm:sszzz")
 else
     EXE=lume
-    EXE=rm -f
+    RM=rm -f
 	BUILD_DATE=$(shell date --iso-8601=seconds)
 endif
 
