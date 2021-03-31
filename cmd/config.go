@@ -110,10 +110,11 @@ func LoadConfigFile(configPath string) (*Config, error) {
 }
 
 func getConfigPath() string {
-	var tryPath, configPath string
+	var tryPath, configPath, homeDir, cwd string
+	var err error
 
 	// ~/.lumerc
-	homeDir, err := os.UserHomeDir()
+	homeDir, err = os.UserHomeDir()
 	if err == nil {
 		tryPath = path.Join(homeDir, lumercFile)
 		if _, err := os.Stat(tryPath); !os.IsNotExist(err) {
@@ -122,7 +123,7 @@ func getConfigPath() string {
 	}
 
 	// ./.lumerc
-	cwd, err := os.Getwd()
+	cwd, err = os.Getwd()
 	if err == nil {
 		tryPath = path.Join(cwd, lumercFile)
 		if _, err := os.Stat(tryPath); !os.IsNotExist(err) {
