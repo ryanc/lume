@@ -11,6 +11,7 @@ import (
 )
 
 const lumercFile string = ".lumerc"
+const lumeConfigFile string = "lume.conf"
 
 type Config struct {
 	AccessToken  string               `toml:"access_token"`
@@ -117,6 +118,15 @@ func getConfigPath() string {
 	homeDir, err = os.UserHomeDir()
 	if err == nil {
 		tryPath = path.Join(homeDir, lumercFile)
+		if _, err := os.Stat(tryPath); !os.IsNotExist(err) {
+			configPath = tryPath
+		}
+	}
+
+	// ~/.config/lume/lume.conf
+	homeDir, err = os.UserHomeDir()
+	if err == nil {
+		tryPath = path.Join(homeDir, ".config/lume", lumeConfigFile)
 		if _, err := os.Stat(tryPath); !os.IsNotExist(err) {
 			configPath = tryPath
 		}
