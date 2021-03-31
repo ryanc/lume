@@ -81,6 +81,13 @@ func RegisterCommand(cmd Command) error {
 	if _, ok := commandRegistry[cmd.Name]; ok {
 		return fmt.Errorf("%s command is already registered")
 	}
+
+	if cmd.Flags == nil {
+		cmd.Flags = flag.NewFlagSet(cmd.Name, flag.ExitOnError)
+	}
+
+	mergeGlobalFlags(cmd.Flags)
+
 	commandRegistry[cmd.Name] = cmd
 	return nil
 }
@@ -88,4 +95,11 @@ func RegisterCommand(cmd Command) error {
 func GetCommand(name string) (Command, bool) {
 	cmd, ok := commandRegistry[name]
 	return cmd, ok
+}
+
+func mergeGlobalFlags(fs *flag.FlagSet) {
+	fs.Bool("debug", false, "Enable debug mode")
+
+	outputFormat := fs.String("output-format", defaultOutputFormat, "Set the output format")
+	fs.StringVar(outputFormat, "o", defaultOutputFormat, "Set the output format")
 }

@@ -19,8 +19,6 @@ func NewCmdPoweron() Command {
 			selector := fs.String("selector", defaultSelector, "Set the selector")
 			fs.StringVar(selector, "s", defaultSelector, "Set the selector")
 
-			fs.String("format", defaultOutputFormat, "Set the output format")
-
 			return fs
 		}(),
 		Use:   "[--selector <selector>] [--duration <sec>]",
@@ -34,7 +32,7 @@ func PoweronCmd(ctx Context) (int, error) {
 	c := ctx.Client
 	duration := ctx.Flags.Float64("duration")
 	selector := ctx.Flags.String("selector")
-	format := ctx.Flags.String("format")
+	format := ctx.Flags.String("output-format")
 	state := lifx.State{Power: "on", Duration: duration}
 
 	if format == "" && ctx.Config.OutputFormat != "" {

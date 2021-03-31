@@ -37,8 +37,6 @@ func NewCmdSetWhite() Command {
 			fast := fs.Bool("fast", defaultFast, "fast state")
 			fs.BoolVar(fast, "f", defaultFast, "fast state")
 
-			fs.String("format", defaultOutputFormat, "Set the output format")
-
 			return fs
 		}(),
 		Use:   "[--selector <selector>] [--power (on|off)] [--kelvin <kelvin>] [--name <color>] [--brightness <brightness>] [--duration <sec>] [--infrared] [--fast]",
@@ -52,7 +50,7 @@ func SetWhiteCmd(ctx Context) (int, error) {
 	c := ctx.Client
 	state := lifx.State{}
 	selector := ctx.Flags.String("selector")
-	format := ctx.Flags.String("format")
+	format := ctx.Flags.String("output-format")
 
 	if format == "" && ctx.Config.OutputFormat != "" {
 		format = ctx.Config.OutputFormat

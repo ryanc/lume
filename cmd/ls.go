@@ -14,8 +14,6 @@ func NewCmdLs() Command {
 			selector := fs.String("selector", defaultSelector, "Set the selector")
 			fs.StringVar(selector, "s", defaultSelector, "Set the selector")
 
-			fs.String("format", defaultOutputFormat, "Set the output format")
-
 			return fs
 		}(),
 		Use:   "[--selector=<selector>]",
@@ -28,7 +26,7 @@ func LsCmd(ctx Context) (int, error) {
 
 	c := ctx.Client
 	selector := ctx.Flags.String("selector")
-	format := ctx.Flags.String("format")
+	format := ctx.Flags.String("output-format")
 
 	if format == "" && ctx.Config.OutputFormat != "" {
 		format = ctx.Config.OutputFormat

@@ -30,8 +30,6 @@ func NewCmdBreathe() Command {
 
 			fs.Float64("peak", lifx.DefaultBreathePeak, "Defines where in a period the target color is at its maximum (min: 0.0, max: 1.0)")
 
-			fs.String("format", defaultOutputFormat, "Set the output format")
-
 			return fs
 		}(),
 		Use:   "[--selector <selector>] --color <color> [--from-color <color>] [--period <period>] [--cycles <cycles>] [--persist <persist>] [--power-on] [--peak <peak>]",
@@ -45,7 +43,7 @@ func BreatheCmd(ctx Context) (int, error) {
 	c := ctx.Client
 	breathe := lifx.NewBreathe()
 	selector := ctx.Flags.String("selector")
-	format := ctx.Flags.String("format")
+	format := ctx.Flags.String("output-format")
 
 	if format == "" && ctx.Config.OutputFormat != "" {
 		format = ctx.Config.OutputFormat
