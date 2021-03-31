@@ -20,23 +20,17 @@ func init() {
 	RegisterCommand(NewCmdToggle())
 	RegisterCommand(NewCmdVersion())
 	RegisterCommand(NewCmdBreathe())
-
-	flag.BoolVar(&debugFlag, "debug", false, "debug mode")
-	flag.BoolVar(&debugFlag, "d", false, "debug mode")
 }
 
 var Version string
 var BuildDate string
 var GitCommit string
-var debugFlag bool
 
 func Main(args []string) (int, error) {
 	var config *Config = GetConfig()
 	var err error
-	var i int
 
 	flag.Parse()
-	i = flag.NFlag() + 1
 
 	if len(args) == 1 {
 		args = append(args, "help")
@@ -57,21 +51,18 @@ func Main(args []string) (int, error) {
 		return ExitFailure, fmt.Errorf("fatal: %s", err)
 	}
 
-	config.Debug = debugFlag
-
-	command := args[i]
-	i++
+	command := args[1]
 
 	c := lifx.NewClient(
 		config.AccessToken,
 		lifx.WithUserAgent(config.userAgent),
-		lifx.WithDebug(debugFlag),
+		lifx.WithDebug(config.Debug),
 	)
 
 	ctx := Context{
 		Client: c,
 		Config: *config,
-		Args:   args[i:],
+		Args:   args[2:],
 	}
 
 	cmd, ok := GetCommand(command)
@@ -82,7 +73,7 @@ func Main(args []string) (int, error) {
 
 	fs := cmd.Flags
 	if fs != nil {
-		fs.Parse(args[i:])
+		fs.Parse(args[2:])
 		ctx.Flags = Flags{FlagSet: fs}
 	}
 	ctx.Name = command
