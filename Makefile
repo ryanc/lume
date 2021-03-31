@@ -1,12 +1,14 @@
 V ?= 0
 Q = $(if $(filter 1, $V),, @)
 
+BIN_DIR=./bin
+
 ifeq ($(OS), Windows_NT)
-    EXE=lume.exe
+    EXE=$(BIN_DIR)/lume.exe
 	RM=del /f /q
 	BUILD_DATE=$(shell powershell Get-Date -Format "yyyy-MM-ddThh:mm:sszzz")
 else
-    EXE=lume
+    EXE=$(BIN_DIR)/lume
     RM=rm -f
 	BUILD_DATE=$(shell date --iso-8601=seconds)
 endif
