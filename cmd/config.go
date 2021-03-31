@@ -42,8 +42,9 @@ func GetConfig() *Config {
 // Validate configuration struct
 func (c *Config) Validate() error {
 	var err error
+
 	if c.AccessToken == "" {
-		err = errors.New("access_token is not set")
+		return errors.New("access_token is not set")
 	}
 
 	if err = c.validateColors(); err != nil {
