@@ -87,8 +87,6 @@ func LoadConfig(s string) (*Config, error) {
 	var err error
 	var c *Config = GetConfig()
 
-	*c = DefaultConfig
-
 	if _, err := toml.Decode(s, &c); err != nil {
 		err = fmt.Errorf("fatal: failed to parse; %w", err)
 	}
@@ -100,8 +98,6 @@ func LoadConfigFile(configPath string) (*Config, error) {
 	var err error
 
 	var c *Config = GetConfig()
-
-	*c = DefaultConfig
 
 	if _, err := toml.DecodeFile(configPath, &c); err != nil {
 		err = fmt.Errorf("fatal: failed to parse %s; %w", configPath, err)
