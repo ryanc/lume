@@ -34,8 +34,6 @@ func LsCmd(ctx Context) (int, error) {
 
 	lights, err := c.ListLights(selector)
 
-	Debugf("%+v\n", lights)
-
 	if err != nil {
 		return ExitFailure, err
 	}
