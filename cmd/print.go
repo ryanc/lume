@@ -102,6 +102,15 @@ func (tp *tablePrinter) Lights(lights []lifx.Light) {
 	table.Render()
 }
 
+func ColorizeIndicator(s string) string {
+	c := color.New(color.FgRed)
+	if s == "on" {
+		c = color.New(color.FgGreen)
+	}
+
+	return c.Sprint(GetConfig().Indicator)
+}
+
 func ColorizePower(s string) string {
 	c := color.New(color.FgRed)
 	if s == "on" {
@@ -130,10 +139,11 @@ func PrintfWithIndent(indent int, format string, a ...interface{}) (n int, err e
 }
 
 func makeLightsTable(lights []lifx.Light) (hdr []string, rows [][]string) {
-	hdr = []string{"ID", "Location", "Group", "Label", "Last Seen", "Power"}
+	hdr = []string{"", "ID", "Location", "Group", "Label", "Last Seen", "Power"}
 
 	for _, l := range lights {
 		rows = append(rows, []string{
+			fmt.Sprint(ColorizeIndicator(l.Power)),
 			fmt.Sprint(l.Id),
 			fmt.Sprint(l.Location.Name),
 			fmt.Sprint(l.Group.Name),

@@ -12,13 +12,15 @@ import (
 
 const lumercFile string = ".lumerc"
 const lumeConfigFile string = "lume.conf"
+const defaultPowerIndicator rune = '●'
 
 type Config struct {
 	AccessToken  string               `toml:"access_token"`
 	OutputFormat string               `toml:"output_format"`
 	Colors       map[string][]float32 `toml:"colors"`
 	userAgent    string
-	Debug        bool `toml:"debug"`
+	Debug        bool   `toml:"debug"`
+	Indicator    string `toml:"indicator"`
 }
 
 var (
@@ -33,6 +35,7 @@ func NewConfig() *Config {
 	c.userAgent = initUserAgent()
 	c.Debug = false
 	c.OutputFormat = "simple"
+	c.Indicator = string(defaultPowerIndicator)
 	return c
 }
 
@@ -46,6 +49,10 @@ func (c *Config) Validate() error {
 
 	if c.AccessToken == "" {
 		return errors.New("access_token is not set")
+	}
+
+	if len([]rune(c.Indicator)) != 1 {
+		return errors.New("indicator must be a single rune")
 	}
 
 	if err = c.validateColors(); err != nil {

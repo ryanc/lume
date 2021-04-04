@@ -39,12 +39,13 @@ func ShowCmd(ctx Context) (int, error) {
 	for i, l := range lights {
 		indent = 0
 		fmt.Printf(
-			"Light ID: %s, %s, Power: %s\n",
+			"%s Light ID: %s, %s, Power: %s\n",
+			ColorizeIndicator(l.Power),
 			l.Id,
 			connected(l.Connected),
 			ColorizePower(l.Power),
 		)
-		indent += Tabstop
+		indent += Tabstop + 2
 		PrintfWithIndent(indent, "Label: %s, ID: %s\n", l.Label, l.Id)
 		PrintfWithIndent(indent, "UUID: %s\n", l.UUID)
 		PrintfWithIndent(indent, "Location: %s, ID: %s\n", l.Location.Name, l.Location.Id)
