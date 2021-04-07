@@ -1,6 +1,7 @@
 V ?= 0
 Q = $(if $(filter 1, $V),, @)
 BINDIR=$(CURDIR)/bin
+DESTDIR=/usr/local/bin
 
 ifeq ($(OS), Windows_NT)
     EXE=$(BINDIR)/lume.exe
@@ -26,3 +27,7 @@ build:
 .PHONY: clean
 clean:
 	$(Q) $(RM) $(EXE)
+
+.PHONY: install
+install:
+	$(Q) install -p -D -m 0755 $(EXE) $(DESTDIR)
