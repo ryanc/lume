@@ -32,3 +32,7 @@ clean:
 .PHONY: install
 install:
 	$(Q) install -p -D -m 0755 $(EXE) $(DESTDIR)${PREFIX}/lume
+
+.PHONY: deb
+deb:
+	$(Q) dpkg-buildpackage -us -uc -b
