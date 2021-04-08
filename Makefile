@@ -1,7 +1,8 @@
 V ?= 0
 Q = $(if $(filter 1, $V),, @)
 BINDIR=$(CURDIR)/bin
-DESTDIR=/usr/local/bin
+PREFIX=/usr/bin
+DESTDIR=bin
 
 ifeq ($(OS), Windows_NT)
     EXE=$(BINDIR)/lume.exe
@@ -30,4 +31,4 @@ clean:
 
 .PHONY: install
 install:
-	$(Q) install -p -D -m 0755 $(EXE) $(DESTDIR)
+	$(Q) install -p -D -m 0755 $(EXE) $(DESTDIR)${PREFIX}/lume
