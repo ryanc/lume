@@ -26,7 +26,7 @@ build:
 	$(Q) go build -o $(EXE) -ldflags="$(LDFLAGS)" ./cmd/lume
 
 .PHONY: clean
-clean:
+clean: deb-clean
 	$(Q) $(RM) $(EXE)
 
 .PHONY: install
@@ -34,6 +34,18 @@ install:
 	$(Q) install -p -D -m 0755 $(EXE) $(DESTDIR)${PREFIX}/bin/lume
 	$(Q) install -p -D -m 0644 .lumerc.sample $(DESTDIR)${PREFIX}/share/lume/lumerc
 
+DEBDIR=$(CURDIR)/debian
+TMPLDIR=$(CURDIR)/packaging/debian
+DEBDATE=$(shell date -R)
+
 .PHONY: deb
 deb:
+	$(Q) mkdir -p $(DEBDIR)
+	$(Q) sed -e 's/__VERSION__/$(LUME_VERSION)/g' $(TMPLDIR)/rules > $(DEBDIR)/rules
+	$(Q) sed -e 's/__VERSION__/$(LUME_VERSION)/g' -e 's/__DATE__/$(DEBDATE)/g' $(TMPLDIR)/changelog > $(DEBDIR)/changelog
+	$(Q) echo 9 > $(DEBDIR)/compat
+	$(Q) cp $(TMPLDIR)/control $(DEBDIR)/control
 	$(Q) dpkg-buildpackage -us -uc -b
+
+deb-clean:
+	$(Q) rm -rf $(CURDIR)/debian
