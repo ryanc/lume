@@ -1,7 +1,7 @@
 V ?= 0
 Q = $(if $(filter 1, $V),, @)
 BINDIR=$(CURDIR)/bin
-PREFIX=/usr/bin
+PREFIX=/usr
 DESTDIR=bin
 
 ifeq ($(OS), Windows_NT)
@@ -31,7 +31,8 @@ clean:
 
 .PHONY: install
 install:
-	$(Q) install -p -D -m 0755 $(EXE) $(DESTDIR)${PREFIX}/lume
+	$(Q) install -p -D -m 0755 $(EXE) $(DESTDIR)${PREFIX}/bin/lume
+	$(Q) install -p -D -m 0644 .lumerc.sample $(DESTDIR)${PREFIX}/share/lume/lumerc
 
 .PHONY: deb
 deb:
