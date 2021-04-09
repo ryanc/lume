@@ -1,0 +1,5 @@
+lume (__VERSION__) UNRELEASED; urgency=medium
+
+  * Package generated with make deb
+
+ -- Ryan Cavicchioni <ryan@cavi.cc>  __DATE__

@@ -3,4 +3,5 @@ Maintainer: Ryan Cavicchioni <ryan@cavi.cc>
 
 Package: lume
 Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
 Description: A CLI tool for the LIFX HTTP API
