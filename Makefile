@@ -68,6 +68,7 @@ deb:
 	$(Q) echo 10 > $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/compat
 	$(Q) echo "3.0 (quilt)" > $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/source/format
 	$(Q) cp $(DEBTMPLDIR)/control $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/control
+	$(Q) cp $(DEBTMPLDIR)/copyright $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/copyright
 	$(Q) cd $(DEBBUILDDIR)/$(DEBORIGSRCDIR) && dpkg-buildpackage -us -uc
 	$(Q) mv $(DEBBUILDDIR)/*.dsc $(BUILDDIR)
 	$(Q) mv $(DEBBUILDDIR)/*.changes $(BUILDDIR)
