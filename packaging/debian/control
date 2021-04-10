@@ -1,7 +1,14 @@
 Source: lume
+Section: unknown
+Priority: optional
 Maintainer: Ryan Cavicchioni <ryan@cavi.cc>
+Build-Depends: debhelper (>= 10)
+Standards-Version: 4.1.2
+Homepage: https://git.kill0.net/chill9/lume
+Vcs-Git: https://git.kill0.net/chill9/lume.git
+Vcs-Browser: https://git.kill0.net/chill9/lume.git
 
 Package: lume
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: A CLI tool for the LIFX HTTP API

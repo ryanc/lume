@@ -61,9 +61,12 @@ deb:
 	$(Q) git archive --format tar --prefix lume-$(DEBVERSION)/ $(LUME_VERSION) | xz > $(DEBBUILDDIR)/$(DEBORIGSRC)
 	$(Q) tar xf $(DEBBUILDDIR)/$(DEBORIGSRC) -C $(DEBBUILDDIR)
 	$(Q) mkdir $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian
+	$(Q) mkdir $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/source
 	$(Q) sed -e 's/__VERSION__/$(DEBVERSION)/g' $(DEBTMPLDIR)/rules > $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/rules
+	$(Q) chmod 0755 $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/rules
 	$(Q) sed -e 's/__VERSION__/$(DEBVERSION)/g' -e 's/__DATE__/$(DEBDATE)/g' $(DEBTMPLDIR)/changelog > $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/changelog
-	$(Q) echo 9 > $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/compat
+	$(Q) echo 10 > $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/compat
+	$(Q) echo "3.0 (quilt)" > $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/source/format
 	$(Q) cp $(DEBTMPLDIR)/control $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/control
 	$(Q) cd $(DEBBUILDDIR)/$(DEBORIGSRCDIR) && dpkg-buildpackage -us -uc
 	$(Q) mv $(DEBBUILDDIR)/*.dsc $(BUILDDIR)
