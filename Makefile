@@ -65,7 +65,6 @@ deb:
 	$(Q) sed -e 's/__VERSION__/$(DEBVERSION)/g' -e 's/__DATE__/$(DEBDATE)/g' $(DEBTMPLDIR)/changelog > $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/changelog
 	$(Q) echo 9 > $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/compat
 	$(Q) cp $(DEBTMPLDIR)/control $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/control
-	$(Q) dpkg-source -b $(DEBBUILDDIR)/$(DEBORIGSRCDIR)
 	$(Q) cd $(DEBBUILDDIR)/$(DEBORIGSRCDIR) && dpkg-buildpackage -us -uc
 	$(Q) mv $(DEBBUILDDIR)/*.dsc $(BUILDDIR)
 	$(Q) mv $(DEBBUILDDIR)/*.changes $(BUILDDIR)
