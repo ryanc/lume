@@ -67,4 +67,8 @@ deb:
 	$(Q) mv $(DEBBUILDDIR)/*.tar.* $(BUILDDIR)
 
 deb-clean:
-	$(Q) rm -rf $(CURDIR)/build/deb
+	$(Q) rm -rf $(DEBBUILDDIR)
+	$(Q) rm $(BUILDDIR)/*.changes
+	$(Q) rm $(BUILDDIR)/*.buildinfo
+	$(Q) rm $(BUILDDIR)/*.deb
+	$(Q) rm $(BUILDDIR)/*.tar.*
