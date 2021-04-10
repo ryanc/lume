@@ -11,6 +11,13 @@ DEBDATE=$(shell date -R)
 DEBORIGSRC=lume_$(DEBVERSION).orig.tar.xz
 DEBORIGSRCDIR=lume-$(DEBVERSION)
 
+RPMVERSION=$(subst -,_,$(LUME_VERSION))
+RPMBUILDDIR=$(BUILDDIR)/rpm
+RPMTMPLDIR=$(CURDIR)/packaging/rpm
+RPMDATE=$(shell date "+%a %b %d %Y")
+RPMORIGSRC=lume-$(RPMVERSION).tar.xz
+RPMORIGSRCDIR=lume-$(RPMVERSION)
+
 ifeq ($(OS), Windows_NT)
     EXE=$(BINDIR)/lume.exe
 	RM=del /f /q
@@ -40,7 +47,7 @@ build:
 	$(Q) go build -o $(EXE) -ldflags="$(LDFLAGS)" ./cmd/lume
 
 .PHONY: clean
-clean: deb-clean
+clean: deb-clean rpm-clean
 	$(Q) $(RM) $(EXE)
 
 .PHONY: install
@@ -66,9 +73,23 @@ deb:
 	$(Q) mv $(DEBBUILDDIR)/*.deb $(BUILDDIR)
 	$(Q) mv $(DEBBUILDDIR)/*.tar.* $(BUILDDIR)
 
+.PHONY: rpm
+rpm:
+	$(Q) mkdir -p $(RPMBUILDDIR)/SPECS
+	$(Q) mkdir -p $(RPMBUILDDIR)/SOURCES
+	$(Q) sed -e 's/__VERSION__/$(RPMVERSION)/g' -e 's/__DATE__/$(RPMDATE)/g' $(RPMTMPLDIR)/lume.spec > $(RPMBUILDDIR)/SPECS/lume.spec
+	$(Q) git archive --format tar --prefix $(RPMORIGSRCDIR)/ $(LUME_VERSION) | xz > $(RPMBUILDDIR)/SOURCES/$(RPMORIGSRC)
+	$(Q) rpmbuild --define "_topdir $(RPMBUILDDIR)"  -ba $(RPMBUILDDIR)/SPECS/lume.spec
+	$(Q) mv $(RPMBUILDDIR)/RPMS/*/*.rpm $(BUILDDIR)
+	$(Q) mv $(RPMBUILDDIR)/SRPMS/*.rpm $(BUILDDIR)
+
 deb-clean:
 	$(Q) rm -rf $(DEBBUILDDIR)
 	$(Q) rm $(BUILDDIR)/*.changes
 	$(Q) rm $(BUILDDIR)/*.buildinfo
 	$(Q) rm $(BUILDDIR)/*.deb
 	$(Q) rm $(BUILDDIR)/*.tar.*
+
+rpm-clean:
+	$(Q) rm -rf $(RPMBUILDDIR)
+	$(Q) rm $(BUILDDIR)/*.rpm
