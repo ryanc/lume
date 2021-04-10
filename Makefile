@@ -85,11 +85,12 @@ rpm:
 
 deb-clean:
 	$(Q) rm -rf $(DEBBUILDDIR)
-	$(Q) rm $(BUILDDIR)/*.changes
-	$(Q) rm $(BUILDDIR)/*.buildinfo
-	$(Q) rm $(BUILDDIR)/*.deb
-	$(Q) rm $(BUILDDIR)/*.tar.*
+	$(Q) rm -f $(BUILDDIR)/*.dsc
+	$(Q) rm -f $(BUILDDIR)/*.changes
+	$(Q) rm -f $(BUILDDIR)/*.buildinfo
+	$(Q) rm -f $(BUILDDIR)/*.deb
+	$(Q) rm -f $(BUILDDIR)/*.tar.*
 
 rpm-clean:
 	$(Q) rm -rf $(RPMBUILDDIR)
-	$(Q) rm $(BUILDDIR)/*.rpm
+	$(Q) rm -f $(BUILDDIR)/*.rpm
