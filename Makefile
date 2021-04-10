@@ -60,6 +60,11 @@ deb:
 	$(Q) cp $(DEBTMPLDIR)/control $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/control
 	$(Q) dpkg-source -b $(DEBBUILDDIR)/$(DEBORIGSRCDIR)
 	$(Q) cd $(DEBBUILDDIR)/$(DEBORIGSRCDIR) && dpkg-buildpackage -us -uc
+	$(Q) mv $(DEBBUILDDIR)/*.dsc $(BUILDDIR)
+	$(Q) mv $(DEBBUILDDIR)/*.changes $(BUILDDIR)
+	$(Q) mv $(DEBBUILDDIR)/*.buildinfo $(BUILDDIR)
+	$(Q) mv $(DEBBUILDDIR)/*.deb $(BUILDDIR)
+	$(Q) mv $(DEBBUILDDIR)/*.tar.* $(BUILDDIR)
 
 deb-clean:
 	$(Q) rm -rf $(CURDIR)/build/deb
