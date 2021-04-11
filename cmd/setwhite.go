@@ -50,7 +50,10 @@ func SetWhiteCmd(ctx Context) (int, error) {
 	c := ctx.Client
 	state := lifx.State{}
 	selector := ctx.Flags.String("selector")
-	format := ctx.Flags.String("output-format")
+	format, err := getOutputFormatFromFlags(ctx.Flags)
+	if err != nil {
+		return ExitFailure, err
+	}
 
 	if format == "" && ctx.Config.OutputFormat != "" {
 		format = ctx.Config.OutputFormat

@@ -30,7 +30,10 @@ func ToggleCmd(ctx Context) (int, error) {
 	c := ctx.Client
 	duration := ctx.Flags.Float64("duration")
 	selector := ctx.Flags.String("selector")
-	format := ctx.Flags.String("output-format")
+	format, err := getOutputFormatFromFlags(ctx.Flags)
+	if err != nil {
+		return ExitFailure, err
+	}
 
 	if format == "" && ctx.Config.OutputFormat != "" {
 		format = ctx.Config.OutputFormat

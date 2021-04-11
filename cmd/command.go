@@ -1,6 +1,7 @@
 package lumecmd
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"strconv"
@@ -100,6 +101,22 @@ func GetCommand(name string) (Command, bool) {
 func mergeGlobalFlags(fs *flag.FlagSet) {
 	fs.Bool("debug", false, "Enable debug mode")
 
-	outputFormat := fs.String("output-format", defaultOutputFormat, "Set the output format")
-	fs.StringVar(outputFormat, "o", defaultOutputFormat, "Set the output format")
+	formatTable := fs.Bool("table", false, "Format output as an ASCII table")
+	fs.BoolVar(formatTable, "t", false, "Format output as an ASCII table")
+
+	fs.Bool("simple", false, "Format output simply")
+}
+
+func getOutputFormatFromFlags(fs Flags) (string, error) {
+	formatSimple := fs.Bool("simple")
+	formatTable := fs.Bool("table")
+
+	switch {
+	case formatSimple && formatTable:
+		return "", errors.New("only one output format permitted")
+	case formatTable:
+		return "table", nil
+	default:
+		return "simple", nil
+	}
 }
