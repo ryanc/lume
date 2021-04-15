@@ -25,6 +25,7 @@ Source:         %{name}-%{version}.tar.xz
 %{_bindir}/lume
 %license LICENSE
 /usr/share/lume/lumerc
+%doc %{_mandir}/man1/lume.1.*
 
 
 %changelog
