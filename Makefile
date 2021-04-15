@@ -4,6 +4,7 @@ BINDIR=$(CURDIR)/bin
 PREFIX=/usr
 DESTDIR=bin
 BUILDDIR=$(CURDIR)/build
+MANDIR=$(PREFIX)/share/man/man1
 
 DEBBUILDDIR=$(BUILDDIR)/deb
 DEBTMPLDIR=$(CURDIR)/packaging/debian
@@ -50,8 +51,11 @@ build:
 clean: deb-clean rpm-clean
 	$(Q) $(RM) $(EXE)
 
+install-man:
+	install -p -D -m 0644 lume.1 $(DESTDIR)$(MANDIR)/lume.1
+
 .PHONY: install
-install:
+install: install-man
 	$(Q) install -p -D -m 0755 $(EXE) $(DESTDIR)${PREFIX}/bin/lume
 	$(Q) install -p -D -m 0644 .lumerc.sample $(DESTDIR)${PREFIX}/share/lume/lumerc
 
