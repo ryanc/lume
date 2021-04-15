@@ -1,0 +1,182 @@
+.Dd $Mdocdate$
+
+.Dt lume \&1 "User Commands"
+
+.Sh NAME
+.Nm lume
+.Nd CLI tool for the LIFX HTTP API
+
+.Sh SYNOPSIS
+.Nm lume
+.Ar COMMAND
+.Op Ar OPTIONS ...
+
+.Sh COMMANDS
+.Bl -tag -width Ds
+.It Xo Ic breathe
+.Op Fl s Ar selector | Fl Fl selector Ns = Ns Ar selector
+.Fl Fl color Ns = Ns Ar color
+.Op Fl Fl from-color Ns = Ns Ar color
+.Op Fl Fl cycles Ns = Ns Ar cycles
+.Op Fl Fl peak Ns = Ns Ar peak
+.Op Fl Fl period Ns = Ns Ar period
+.Op Fl Fl persist
+.Op Fl Fl power-on
+.Xc
+.It Xo Ic help
+.Op Ar COMMAND
+.Xc
+Print the help message. If a command is specified, then show the subcommand's help message.
+.It Xo Ic ls
+.Op Fl s Ar selector | Fl Fl selector Ns = Ns Ar selector
+.Op Fl Fl simple | Fl Fl table
+.Xc
+List the lights and their basic state
+.It Xo Ic poweroff
+.Op Fl s Ar selector | Fl Fl selector Ns = Ns Ar selector
+.Op Fl Fl simple | Fl Fl table
+.Op Fl Fl d | Fl Fl duration
+.Xc
+Power off lights
+.It Xo Ic poweron
+.Op Fl s Ar selector | Fl Fl selector Ns = Ns Ar selector
+.Op Fl Fl simple | Fl Fl table
+.Op Fl Fl d | Fl Fl duration
+.Xc
+Power off lights
+.It Xo Ic set-color
+.Op Fl b Ar brightness | Fl Fl brightness Ns = Ns Ar brightness
+.Op Fl d | Fl Fl duration
+.Op Fl f Ar fast | Fl Fl fast Ns = Ns Ar fast
+.Op Fl H Ar hue | Fl Fl hue Ns = Ns Ar hue
+.Op Fl n Ar name | Fl Fl name Ns = Ns Ar name
+.Op Fl p Ar power | Fl Fl power Ns = Ns Ar power
+.Op Fl r Ar rgb | Fl Fl rgb Ns = Ns Ar rgb
+.Op Fl S Ar saturation | Fl Fl saturation Ns = Ns Ar saturation
+.Op Fl s Ar selector | Fl Fl selector Ns = Ns Ar selector
+.Op Fl Fl simple | Fl Fl table
+.Xc
+Set light color
+.It Xo Ic set-state
+.Op Fl b Ar brightness | Fl Fl brightness Ns = Ns Ar brightness
+.Op Fl c | Fl Fl color
+.Op Fl d | Fl Fl duration
+.Op Fl f Ar fast | Fl Fl fast Ns = Ns Ar fast
+.Op Fl i Ar infrared | Fl Fl infrared Ns = Ns Ar infrared
+.Op Fl p Ar power | Fl Fl power Ns = Ns Ar power
+.Op Fl s Ar selector | Fl Fl selector Ns = Ns Ar selector
+.Op Fl Fl simple | Fl Fl table
+.Xc
+Set light properties
+.It Xo Ic set-white
+.Op Fl b Ar brightness | Fl Fl brightness Ns = Ns Ar brightness
+.Op Fl d | Fl Fl duration
+.Op Fl f Ar fast | Fl Fl fast Ns = Ns Ar fast
+.Op Fl i Ar infrared | Fl Fl infrared Ns = Ns Ar infrared
+.Op Fl k Ar kelvin | Fl Fl kelvin Ns = Ns Ar kelvin
+.Op Fl n Ar name | Fl Fl name Ns = Ns Ar name
+.Op Fl p Ar power | Fl Fl power Ns = Ns Ar power
+.Op Fl s Ar selector | Fl Fl selector Ns = Ns Ar selector
+.Op Fl Fl simple | Fl Fl table
+.Xc
+Set light white levels
+.It Xo Ic show
+.Op Fl s Ar selector | Fl Fl selector Ns = Ns Ar selector
+.Xc
+Show extended details about the lights
+.It Xo Ic toggle
+.Op Fl Fl d | Fl Fl duration
+.Op Fl s Ar selector | Fl Fl selector Ns = Ns Ar selector
+.Op Fl Fl simple | Fl Fl table
+.Xc
+Toggle the power
+.It Xo Ic version
+.Xc
+Print the version
+.El
+
+.Sh OPTIONS 
+.Bl -tag -width Ds
+.It Fl b , Fl Fl brightness Ns = Ns Ar brightness
+The brightness level from 0.0 to 1.0. Overrides any brightness set in color (if any)
+.It Fl c , Fl Fl color Ns = Ns Ar color
+This color to use for the action.
+.Pp
+When used with the
+.Nm breathe
+effect, this
+is the "to" color.
+.It Fl Fl cycles Ns = Ns Ar cycles
+The number of times to repeat the effect. Defaults to 1.0 cycle.
+.It Fl d , Fl Fl duration Ns = Ns Ar duration
+The time in seconds to spend performing the action. Range: 0.0 – 3155760000.0 (100 years).
+.It Fl f , Fl Fl fast
+Execute the action fast without any state checks or waiting for the result from the HTTP API
+.It Fl Fl from-color Ns = Ns Ar color
+The color to start the
+.Nm breathe
+effect from. If this parameter is omitted
+then the color the bulb is currently set to is used instead.
+.It Fl H , Fl Fl hue Ns = Ns Ar hue
+Sets the hue. Range 0 - 360.
+.It Fl i , Fl Fl infrared Ns = Ns Ar infrared
+Sets the maximum  brightness of the infrared channel from 0.0 to 1.0.
+.It Fl k , Fl Fl kelvin Ns = Ns Ar kelvin
+Set the kelvin value. The saturation is automatically set to 0.
+.It Fl n , Fl Fl name Ns = Ns Ar name
+Set the color using a named color from
+.Pa lumerc
+.It Fl Fl peak Ns = Ns Ar peak
+Defines where in a period the target color is at its maximum. Minimum 0.0,
+maximum 1.0. Defaults to 0.5.
+.It Fl Fl period Ns = Ns Ar period
+The time in seconds for one cycle of the
+.Nm breathe
+effect. Defaults to 1.0
+second.
+.It Fl Fl persist
+If false set the light back to its previous value when effect ends, if true
+leave the last effect color.
+.It Fl p , Fl Fl power Ns = Ns Ar [ on | off ]
+Set the power state
+.It Fl Fl power-on
+If true, turn the bulb on if it is not already on.
+.It Fl r , Fl Fl rgb Ns = Ns Ar R,G,B
+Set the color via a comma delimited R,G,B string. Values range from 0 - 255.
+.It Fl S , Fl Fl saturation Ns = Ns Ar saturation
+Set the saturation. Range 0.0 - 1.0.
+.It Fl s , Fl Fl selector Ns = Ns Ar selector
+The selector is used to group lights together belonging in the same account
+.Pp
+Selectors can be in the following format: all, label:[value], id:[value], group_id:[value], group:[value], location_id:[value], location:[value], scene_id:[value]
+.Pp
+The default selector is "all"
+.Sh FILES
+.Bl -tag -width "~/.config/lume/lume.conf" -compact
+.It Pa ~/.lumerc
+Default
+.Nm
+configuration file
+.It Pa ~/.config/lume/lume.conf
+XDG config home
+.Nm
+configuration file
+.Sh EXAMPLES
+Sample
+.Pa lumerc
+file:
+.Bd -literal -offset indent
+access_token = "token"
+# indicator = "●"
+# output_format = "table"
+
+[colors]
+purple_candy = [ 280.0, 0.29, 0.71 ]
+wasabi = [ 120.0, 1.0, 0.7 ]
+honeydew = [ 120.0, 1.0, 0.97 ]
+green_mist = [ 92.0, 0.72, 0.75 ]
+pea = [ 90.0, 0.42, 0.47 ]
+cat_eye = [ 76.0, 0.74, 0.61 ]
+seagreen = [ 160.0, 1.0, 0.50 ]
+blue_mist = [ 202.0, 0.97, 0.75 ]
+.Ed
