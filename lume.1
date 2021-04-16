@@ -15,7 +15,7 @@
 .Bl -tag -width Ds
 .It Xo Ic breathe
 .Op Fl s Ar selector | Fl Fl selector Ns = Ns Ar selector
-.Fl Fl color Ns = Ns Ar color
+.Fl c | Fl Fl color
 .Op Fl Fl from-color Ns = Ns Ar color
 .Op Fl Fl cycles Ns = Ns Ar cycles
 .Op Fl Fl peak Ns = Ns Ar peak
@@ -35,13 +35,13 @@ List the lights and their basic state
 .It Xo Ic poweroff
 .Op Fl s Ar selector | Fl Fl selector Ns = Ns Ar selector
 .Op Fl Fl simple | Fl Fl table
-.Op Fl Fl d | Fl Fl duration
+.Op Fl d | Fl Fl duration
 .Xc
 Power off lights
 .It Xo Ic poweron
 .Op Fl s Ar selector | Fl Fl selector Ns = Ns Ar selector
 .Op Fl Fl simple | Fl Fl table
-.Op Fl Fl d | Fl Fl duration
+.Op Fl d | Fl Fl duration
 .Xc
 Power off lights
 .It Xo Ic set-color
@@ -85,7 +85,7 @@ Set light white levels
 .Xc
 Show extended details about the lights
 .It Xo Ic toggle
-.Op Fl Fl d | Fl Fl duration
+.Op Fl d | Fl Fl duration
 .Op Fl s Ar selector | Fl Fl selector Ns = Ns Ar selector
 .Op Fl Fl simple | Fl Fl table
 .Xc
