@@ -16,7 +16,8 @@ func NewCmdBreathe() Command {
 			selector := fs.String("selector", defaultSelector, "Set the selector")
 			fs.StringVar(selector, "s", defaultSelector, "Set the selector")
 
-			fs.String("color", defaultColor, "The color to use for the breathe effect")
+			color := fs.String("color", defaultColor, "The color to use for the breathe effect")
+			fs.StringVar(color, "c", defaultColor, "The color to use for the breathe effect")
 
 			fs.String("from-color", defaultColor, "The color to start the effect from")
 
