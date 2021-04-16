@@ -6,11 +6,14 @@ DESTDIR=bin
 BUILDDIR=$(CURDIR)/build
 MANDIR=$(PREFIX)/share/man/man1
 
+PKGREVISION=1
+
 DEBBUILDDIR=$(BUILDDIR)/deb
 DEBTMPLDIR=$(CURDIR)/packaging/debian
 DEBDATE=$(shell date -R)
 DEBORIGSRC=lume_$(DEBVERSION).orig.tar.xz
 DEBORIGSRCDIR=lume-$(DEBVERSION)
+DEBREVISION=$(PKGREVISION)
 
 RPMVERSION=$(subst -,_,$(LUME_VERSION))
 RPMBUILDDIR=$(BUILDDIR)/rpm
@@ -18,6 +21,7 @@ RPMTMPLDIR=$(CURDIR)/packaging/rpm
 RPMDATE=$(shell date "+%a %b %d %Y")
 RPMORIGSRC=lume-$(RPMVERSION).tar.xz
 RPMORIGSRCDIR=lume-$(RPMVERSION)
+RPMREVISION=$(PKGREVISION)
 
 ifeq ($(OS), Windows_NT)
     EXE=$(BINDIR)/lume.exe
@@ -60,15 +64,15 @@ install: install-man
 	$(Q) install -p -D -m 0644 .lumerc.sample $(DESTDIR)${PREFIX}/share/lume/lumerc
 
 .PHONY: deb
-deb:
+deb: deb-clean
 	$(Q) mkdir -p $(DEBBUILDDIR)
 	$(Q) git archive --format tar --prefix lume-$(DEBVERSION)/ $(LUME_VERSION) | xz > $(DEBBUILDDIR)/$(DEBORIGSRC)
 	$(Q) tar xf $(DEBBUILDDIR)/$(DEBORIGSRC) -C $(DEBBUILDDIR)
 	$(Q) mkdir $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian
 	$(Q) mkdir $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/source
-	$(Q) sed -e 's/__VERSION__/$(DEBVERSION)/g' $(DEBTMPLDIR)/rules > $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/rules
+	$(Q) sed -e 's/__VERSION__/$(DEBVERSION)/g' -e 's/__REVISION__/$(DEBREVISION)/g' $(DEBTMPLDIR)/rules > $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/rules
 	$(Q) chmod 0755 $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/rules
-	$(Q) sed -e 's/__VERSION__/$(DEBVERSION)/g' -e 's/__DATE__/$(DEBDATE)/g' $(DEBTMPLDIR)/changelog > $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/changelog
+	$(Q) sed -e 's/__VERSION__/$(DEBVERSION)/g' -e 's/__DATE__/$(DEBDATE)/g' -e 's/__REVISION__/$(DEBREVISION)/g' $(DEBTMPLDIR)/changelog > $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/changelog
 	$(Q) echo 10 > $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/compat
 	$(Q) echo "3.0 (quilt)" > $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/source/format
 	$(Q) cp $(DEBTMPLDIR)/control $(DEBBUILDDIR)/$(DEBORIGSRCDIR)/debian/control
@@ -82,10 +86,10 @@ deb:
 	$(Q) mv $(DEBBUILDDIR)/*.tar.* $(BUILDDIR)
 
 .PHONY: rpm
-rpm:
+rpm: rpm-clean
 	$(Q) mkdir -p $(RPMBUILDDIR)/SPECS
 	$(Q) mkdir -p $(RPMBUILDDIR)/SOURCES
-	$(Q) sed -e 's/__VERSION__/$(RPMVERSION)/g' -e 's/__DATE__/$(RPMDATE)/g' $(RPMTMPLDIR)/lume.spec > $(RPMBUILDDIR)/SPECS/lume.spec
+	$(Q) sed -e 's/__VERSION__/$(RPMVERSION)/g' -e 's/__DATE__/$(RPMDATE)/g' -e 's/__REVISION__/$(RPMREVISION)/g' $(RPMTMPLDIR)/lume.spec > $(RPMBUILDDIR)/SPECS/lume.spec
 	$(Q) git archive --format tar --prefix $(RPMORIGSRCDIR)/ $(LUME_VERSION) | xz > $(RPMBUILDDIR)/SOURCES/$(RPMORIGSRC)
 	$(Q) rpmbuild --define "_topdir $(RPMBUILDDIR)"  -ba $(RPMBUILDDIR)/SPECS/lume.spec
 	$(Q) mv $(RPMBUILDDIR)/RPMS/*/*.rpm $(BUILDDIR)

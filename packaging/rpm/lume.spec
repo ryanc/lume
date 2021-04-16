@@ -1,6 +1,6 @@
 Name:           lume
 Version:        __VERSION__
-Release:        1%{?dist}
+Release:        __REVISION__%{?dist}
 Summary:        A CLI tool for the LIFX HTTP API
 
 License:        MPL

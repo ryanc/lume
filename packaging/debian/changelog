@@ -1,4 +1,4 @@
-lume (__VERSION__) unstable; urgency=medium
+lume (__VERSION__-__REVISION__) unstable; urgency=medium
 
   * Package generated with make deb
 
