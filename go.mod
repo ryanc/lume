@@ -3,7 +3,7 @@ module git.kill0.net/chill9/lume
 go 1.15
 
 require (
-	git.kill0.net/chill9/lifx-go v0.0.0-20210329222320-2107a0586447
+	git.kill0.net/chill9/lifx-go v0.0.0-20210418161634-4c1678b62c73
 	github.com/BurntSushi/toml v0.3.1
 	github.com/fatih/color v1.10.0
 	github.com/mattn/go-runewidth v0.0.10 // indirect

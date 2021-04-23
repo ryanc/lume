@@ -4,6 +4,8 @@ git.kill0.net/chill9/lifx-go v0.0.0-20210323044657-dbe1c40e1621 h1:koWq2W08Hjmvs
 git.kill0.net/chill9/lifx-go v0.0.0-20210323044657-dbe1c40e1621/go.mod h1:jInpjEqTBhrFpQKk7zPIWISvgjjfS2djXeKB3yB/8dY=
 git.kill0.net/chill9/lifx-go v0.0.0-20210329222320-2107a0586447 h1:tN+zR5aszesrZRrhS3uOqAIWLcADCIH7GFJ6SOQS9r0=
 git.kill0.net/chill9/lifx-go v0.0.0-20210329222320-2107a0586447/go.mod h1:jInpjEqTBhrFpQKk7zPIWISvgjjfS2djXeKB3yB/8dY=
+git.kill0.net/chill9/lifx-go v0.0.0-20210418161634-4c1678b62c73 h1:fteCAelwAcfam2Q8eeJFyK4+sXGOpR6Me5YMKBi+MYY=
+git.kill0.net/chill9/lifx-go v0.0.0-20210418161634-4c1678b62c73/go.mod h1:jInpjEqTBhrFpQKk7zPIWISvgjjfS2djXeKB3yB/8dY=
 github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/fatih/color v1.10.0 h1:s36xzo75JdqLaaWoiEHk767eHiwo0598uUxyfiPkDsg=
