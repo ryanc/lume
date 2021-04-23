@@ -2,6 +2,7 @@ package lumecmd
 
 import (
 	"flag"
+	"fmt"
 
 	"git.kill0.net/chill9/lifx-go"
 )
@@ -48,7 +49,7 @@ func PoweronCmd(ctx Context) (int, error) {
 	}
 
 	p = NewPrinter(format)
-	p.Results(r.Results)
+	fmt.Print(p.Results(r.Results))
 
 	return ExitSuccess, nil
 }

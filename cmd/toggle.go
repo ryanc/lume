@@ -2,6 +2,7 @@ package lumecmd
 
 import (
 	"flag"
+	"fmt"
 )
 
 func NewCmdToggle() Command {
@@ -45,7 +46,7 @@ func ToggleCmd(ctx Context) (int, error) {
 	}
 
 	p = NewPrinter(format)
-	p.Results(r.Results)
+	fmt.Print(p.Results(r.Results))
 
 	return ExitSuccess, nil
 }

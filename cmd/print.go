@@ -2,7 +2,8 @@ package lumecmd
 
 import (
 	"fmt"
-	"os"
+	"io"
+	"strings"
 	"time"
 
 	"git.kill0.net/chill9/lifx-go"
@@ -11,8 +12,8 @@ import (
 )
 
 type Printer interface {
-	Results(results []lifx.Result)
-	Lights(lights []lifx.Light)
+	Results(results []lifx.Result) string
+	Lights(lights []lifx.Light) string
 }
 
 type defaultPrinter struct{}
@@ -28,17 +29,19 @@ func NewPrinter(format string) Printer {
 	}
 }
 
-func (dp *defaultPrinter) Results(results []lifx.Result) {
+func (dp *defaultPrinter) Results(results []lifx.Result) string {
+	var b strings.Builder
+
 	sortResults(results)
 
-	table := tablewriter.NewWriter(os.Stdout)
+	table := tablewriter.NewWriter(&b)
 	_, rows := makeResultsTable(results)
 
 	for _, v := range rows {
 		table.Append(v)
 	}
 
-	fmt.Printf("total %d\n", len(results))
+	fmt.Fprintf(&b, "total %d\n", len(results))
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
 	table.SetAutoWrapText(false)
 	table.SetBorder(false)
@@ -49,12 +52,16 @@ func (dp *defaultPrinter) Results(results []lifx.Result) {
 	table.SetRowSeparator("")
 	table.SetTablePadding(" ")
 	table.Render()
+
+	return b.String()
 }
 
-func (tp *tablePrinter) Results(results []lifx.Result) {
+func (tp *tablePrinter) Results(results []lifx.Result) string {
+	var b strings.Builder
+
 	sortResults(results)
 
-	table := tablewriter.NewWriter(os.Stdout)
+	table := tablewriter.NewWriter(&b)
 	hdr, rows := makeResultsTable(results)
 
 	for _, v := range rows {
@@ -63,19 +70,23 @@ func (tp *tablePrinter) Results(results []lifx.Result) {
 
 	table.SetHeader(hdr)
 	table.Render()
+
+	return b.String()
 }
 
-func (dp *defaultPrinter) Lights(lights []lifx.Light) {
+func (dp *defaultPrinter) Lights(lights []lifx.Light) string {
+	var b strings.Builder
+
 	sortLights(lights)
 
-	table := tablewriter.NewWriter(os.Stdout)
+	table := tablewriter.NewWriter(&b)
 	_, rows := makeLightsTable(lights)
 
 	for _, v := range rows {
 		table.Append(v)
 	}
 
-	fmt.Printf("total %d\n", len(lights))
+	fmt.Fprintf(&b, "total %d\n", len(lights))
 	table.SetAlignment(tablewriter.ALIGN_LEFT)
 	table.SetAutoWrapText(false)
 	table.SetBorder(false)
@@ -86,12 +97,16 @@ func (dp *defaultPrinter) Lights(lights []lifx.Light) {
 	table.SetRowSeparator("")
 	table.SetTablePadding(" ")
 	table.Render()
+
+	return b.String()
 }
 
-func (tp *tablePrinter) Lights(lights []lifx.Light) {
+func (tp *tablePrinter) Lights(lights []lifx.Light) string {
+	var b strings.Builder
+
 	sortLights(lights)
 
-	table := tablewriter.NewWriter(os.Stdout)
+	table := tablewriter.NewWriter(&b)
 	hdr, rows := makeLightsTable(lights)
 
 	for _, v := range rows {
@@ -100,6 +115,8 @@ func (tp *tablePrinter) Lights(lights []lifx.Light) {
 
 	table.SetHeader(hdr)
 	table.Render()
+
+	return b.String()
 }
 
 func ColorizeIndicator(s string) string {
@@ -136,6 +153,11 @@ func PrintWithIndent(indent int, s string) {
 func PrintfWithIndent(indent int, format string, a ...interface{}) (n int, err error) {
 	format = fmt.Sprintf("%*s%s", indent, "", format)
 	return fmt.Printf(format, a...)
+}
+
+func FprintfWithIndent(w io.Writer, indent int, format string, a ...interface{}) (n int, err error) {
+	format = fmt.Sprintf("%*s%s", indent, "", format)
+	return fmt.Fprintf(w, format, a...)
 }
 
 func makeLightsTable(lights []lifx.Light) (hdr []string, rows [][]string) {

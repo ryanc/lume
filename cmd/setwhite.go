@@ -2,6 +2,7 @@ package lumecmd
 
 import (
 	"flag"
+	"fmt"
 
 	"git.kill0.net/chill9/lifx-go"
 )
@@ -114,7 +115,7 @@ func SetWhiteCmd(ctx Context) (int, error) {
 
 	if !fast {
 		p = NewPrinter(format)
-		p.Results(r.Results)
+		fmt.Print(p.Results(r.Results))
 	}
 
 	return ExitSuccess, nil

@@ -3,6 +3,7 @@ package lumecmd
 import (
 	"flag"
 	"fmt"
+	"strings"
 )
 
 const Tabstop int = 2
@@ -26,6 +27,8 @@ func NewCmdShow() Command {
 
 func ShowCmd(ctx Context) (int, error) {
 	var indent int
+	var b strings.Builder
+
 	c := ctx.Client
 	selector := ctx.Flags.String("selector")
 	lights, err := c.ListLights(selector)
@@ -38,7 +41,8 @@ func ShowCmd(ctx Context) (int, error) {
 
 	for i, l := range lights {
 		indent = 0
-		fmt.Printf(
+		fmt.Fprintf(
+			&b,
 			"%s Light ID: %s, %s, Power: %s\n",
 			ColorizeIndicator(l.Power),
 			l.Id,
@@ -46,41 +50,43 @@ func ShowCmd(ctx Context) (int, error) {
 			ColorizePower(l.Power),
 		)
 		indent += Tabstop + 2
-		PrintfWithIndent(indent, "Label: %s, ID: %s\n", l.Label, l.Id)
-		PrintfWithIndent(indent, "UUID: %s\n", l.UUID)
-		PrintfWithIndent(indent, "Location: %s, ID: %s\n", l.Location.Name, l.Location.Id)
-		PrintfWithIndent(indent, "Group: %s, ID: %s\n", l.Group.Name, l.Group.Id)
-		PrintfWithIndent(indent, "Color: Hue: %.1f, Saturation: %.1f%%, Kelvin: %d\n",
+		FprintfWithIndent(&b, indent, "Label: %s, ID: %s\n", l.Label, l.Id)
+		FprintfWithIndent(&b, indent, "UUID: %s\n", l.UUID)
+		FprintfWithIndent(&b, indent, "Location: %s, ID: %s\n", l.Location.Name, l.Location.Id)
+		FprintfWithIndent(&b, indent, "Group: %s, ID: %s\n", l.Group.Name, l.Group.Id)
+		FprintfWithIndent(&b, indent, "Color: Hue: %.1f, Saturation: %.1f%%, Kelvin: %d\n",
 			*l.Color.H, *l.Color.S, *l.Color.K)
-		PrintfWithIndent(indent, "Brightness: %.1f%%\n", l.Brightness*100)
+		FprintfWithIndent(&b, indent, "Brightness: %.1f%%\n", l.Brightness*100)
 		if l.Effect != "" {
-			PrintfWithIndent(indent, "Effect: %s\n", l.Effect)
+			FprintfWithIndent(&b, indent, "Effect: %s\n", l.Effect)
 		}
-		PrintfWithIndent(indent, "Product: %s\n", l.Product.Name)
-		PrintfWithIndent(indent, "Capabilities: ")
-		fmt.Printf("Color: %s, ", YesNo(l.Product.Capabilities.HasColor))
-		fmt.Printf("Variable Color Temp: %s, ", YesNo(l.Product.Capabilities.HasVariableColorTemp))
-		fmt.Printf("IR: %s, ", YesNo(l.Product.Capabilities.HasIR))
-		fmt.Printf("Chain: %s, ", YesNo(l.Product.Capabilities.HasChain))
-		fmt.Printf("Multizone: %s, ", YesNo(l.Product.Capabilities.HasMultizone))
-		fmt.Printf("Min Kelvin: %.1f, ", l.Product.Capabilities.MinKelvin)
-		fmt.Printf("Max Kelvin: %.1f ", l.Product.Capabilities.MaxKelvin)
-		fmt.Println()
+		FprintfWithIndent(&b, indent, "Product: %s\n", l.Product.Name)
+		FprintfWithIndent(&b, indent, "Capabilities: ")
+		fmt.Fprintf(&b, "Color: %s, ", YesNo(l.Product.Capabilities.HasColor))
+		fmt.Fprintf(&b, "Variable Color Temp: %s, ", YesNo(l.Product.Capabilities.HasVariableColorTemp))
+		fmt.Fprintf(&b, "IR: %s, ", YesNo(l.Product.Capabilities.HasIR))
+		fmt.Fprintf(&b, "Chain: %s, ", YesNo(l.Product.Capabilities.HasChain))
+		fmt.Fprintf(&b, "Multizone: %s, ", YesNo(l.Product.Capabilities.HasMultizone))
+		fmt.Fprintf(&b, "Min Kelvin: %.1f, ", l.Product.Capabilities.MinKelvin)
+		fmt.Fprintf(&b, "Max Kelvin: %.1f ", l.Product.Capabilities.MaxKelvin)
+		fmt.Fprintln(&b)
 		// List applicable selectors (most to least specific)
-		PrintfWithIndent(indent, "Selectors:\n")
+		FprintfWithIndent(&b, indent, "Selectors:\n")
 		indent += Tabstop
-		PrintfWithIndent(indent, "id:%s\n", l.Id)
-		PrintfWithIndent(indent, "label:%s\n", l.Label)
-		PrintfWithIndent(indent, "group_id:%s\n", l.Group.Id)
-		PrintfWithIndent(indent, "group:%s\n", l.Group.Name)
-		PrintfWithIndent(indent, "location_id:%s\n", l.Location.Id)
-		PrintfWithIndent(indent, "location:%s\n", l.Location.Name)
+		FprintfWithIndent(&b, indent, "id:%s\n", l.Id)
+		FprintfWithIndent(&b, indent, "label:%s\n", l.Label)
+		FprintfWithIndent(&b, indent, "group_id:%s\n", l.Group.Id)
+		FprintfWithIndent(&b, indent, "group:%s\n", l.Group.Name)
+		FprintfWithIndent(&b, indent, "location_id:%s\n", l.Location.Id)
+		FprintfWithIndent(&b, indent, "location:%s\n", l.Location.Name)
 		indent -= Tabstop
-		PrintfWithIndent(indent, "Last Seen: %s (%.1fs ago)\n", l.LastSeen, l.SecondsLastSeen)
+		FprintfWithIndent(&b, indent, "Last Seen: %s (%.1fs ago)\n", l.LastSeen, l.SecondsLastSeen)
 
 		if i < len(lights)-1 {
-			fmt.Println()
+			fmt.Fprintln(&b)
 		}
+
+		fmt.Print(b.String())
 	}
 	return ExitSuccess, nil
 }

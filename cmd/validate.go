@@ -4,6 +4,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"strings"
 
 	"git.kill0.net/chill9/lifx-go"
 )
@@ -23,10 +24,11 @@ func NewCmdValidate() Command {
 }
 
 func ValidateCmd(ctx Context) (int, error) {
+	var b strings.Builder
 	c := ctx.Client
 
 	if len(ctx.Args) != 1 {
-		printCmdHelp(ctx.Name)
+		fmt.Print(printCmdHelp(ctx.Name))
 		return ExitFailure, nil
 	}
 
@@ -38,11 +40,12 @@ func ValidateCmd(ctx Context) (int, error) {
 	}
 
 	if validColor, ok := i.(*lifx.HSBKColor); ok {
-		fmt.Print(validColor)
+		fmt.Fprintln(&b, validColor)
 	} else {
 		return ExitFailure, errors.New("go type %T but wanted *HSBKColor")
 	}
-	fmt.Println()
+
+	fmt.Print(b.String())
 
 	return ExitSuccess, nil
 }

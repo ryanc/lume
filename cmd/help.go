@@ -3,6 +3,7 @@ package lumecmd
 import (
 	"fmt"
 	"sort"
+	"strings"
 )
 
 func NewCmdHelp() Command {
@@ -16,15 +17,21 @@ func NewCmdHelp() Command {
 
 func HelpCmd(ctx Context) (int, error) {
 	if len(ctx.Args) == 0 {
-		printHelp(commandRegistry)
+		fmt.Print(printHelp(commandRegistry))
 	} else if len(ctx.Args) >= 1 {
-		printCmdHelp(ctx.Args[0])
+		if cmdHelp, err := printCmdHelp(ctx.Args[0]); err == nil {
+			fmt.Print(cmdHelp)
+		} else {
+			fmt.Print(err)
+		}
 	}
 
 	return ExitSuccess, nil
 }
 
-func printHelp(commands map[string]Command) {
+func printHelp(commands map[string]Command) string {
+	var b strings.Builder
+
 	var maxLen, cmdLen int
 	var keys []string
 
@@ -36,34 +43,45 @@ func printHelp(commands map[string]Command) {
 		}
 	}
 
-	fmt.Printf("usage:\n  lume <command> [<args...>]")
-	fmt.Println()
-	fmt.Println("\ncommands:")
+	fmt.Fprintf(&b, "usage:\n  lume <command> [<args...>]")
+	fmt.Fprintln(&b)
+	fmt.Fprintln(&b, "\ncommands:")
 
 	sort.Strings(keys)
+
 	for _, k := range keys {
 		c := commands[k]
-		fmt.Printf("  %-*s    %s\n", maxLen, c.Name, c.Short)
+		fmt.Fprintf(&b, "  %-*s    %s\n", maxLen, c.Name, c.Short)
 	}
+
+	return b.String()
 }
 
-func printCmdHelp(name string) error {
+func printCmdHelp(name string) (string, error) {
+	var b strings.Builder
+
 	subCmd, ok := commandRegistry[name]
+
 	if !ok {
-		return fmt.Errorf("unknown commnnd: %s\n", name)
+		return "", fmt.Errorf("unknown commnnd: %s\n", name)
 	}
 
 	if subCmd.Use != "" {
-		fmt.Printf("usage:\n  lume %s %s\n", subCmd.Name, subCmd.Use)
+		fmt.Fprintf(&b, "usage:\n  lume %s %s\n", subCmd.Name, subCmd.Use)
 	} else {
-		fmt.Printf("usage:\n  lume %s\n", subCmd.Name)
+		fmt.Fprintf(&b, "usage:\n  lume %s\n", subCmd.Name)
 	}
 
 	if subCmd.Flags != nil {
-		fmt.Println()
-		fmt.Print("flags:\n")
+		out := subCmd.Flags.Output()
+		defer subCmd.Flags.SetOutput(out)
+
+		fmt.Fprintln(&b)
+		fmt.Fprint(&b, "flags:\n")
+
+		subCmd.Flags.SetOutput(&b)
 		subCmd.Flags.PrintDefaults()
 	}
 
-	return nil
+	return b.String(), nil
 }

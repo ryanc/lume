@@ -2,6 +2,7 @@ package lumecmd
 
 import (
 	"flag"
+	"fmt"
 )
 
 func NewCmdLs() Command {
@@ -42,7 +43,7 @@ func LsCmd(ctx Context) (int, error) {
 	}
 
 	p = NewPrinter(format)
-	p.Lights(lights)
+	fmt.Print(p.Lights(lights))
 
 	return ExitSuccess, nil
 }

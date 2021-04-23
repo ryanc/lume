@@ -130,7 +130,7 @@ func SetColorCmd(ctx Context) (int, error) {
 
 	if !fast {
 		p = NewPrinter(format)
-		p.Results(r.Results)
+		fmt.Print(p.Results(r.Results))
 	}
 
 	return ExitSuccess, nil
